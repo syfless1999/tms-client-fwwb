@@ -165,11 +165,10 @@ export default {
   manifest: {
     basePath: '/',
   }, // chainWebpack: webpackPlugin,
-  // proxy: {
-  //   '/server/api/': {
-  //     target: 'https://preview.pro.ant.design/',
-  //     changeOrigin: true,
-  //     pathRewrite: { '^/server': '' },
-  //   },
-  // },
+  proxy: {
+    '/api/login': {
+      target: 'https://273008fd-2d9b-4ff5-a864-86017eacf20c.mock.pstmn.io',
+      changeOrigin: true,
+    },
+  },
 };

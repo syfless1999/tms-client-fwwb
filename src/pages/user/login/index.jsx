@@ -98,7 +98,8 @@ class Login extends Component {
                 }),
               )}
             <UserName
-              name="userName"
+              //name="userName"
+              name="no"
               placeholder={`${formatMessage({
                 id: 'user-login.login.userName',
               })}: admin or user`}
@@ -112,7 +113,8 @@ class Login extends Component {
               ]}
             />
             <Password
-              name="password"
+              //name="password"
+              name="pwd"
               placeholder={`${formatMessage({
                 id: 'user-login.login.password',
               })}: ant.design`}

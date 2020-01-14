@@ -16,7 +16,12 @@ const Model = {
         payload: response,
       }); // Login successfully
 
-      if (response.status === 'ok') {
+      // localStorage存储accessToken和authority
+      localStorage.setItem("accessToken", response.data.token);
+      localStorage.setItem("antd-pro-authority", response.data.user.position);
+
+
+      if (response.status === 'success') {
         const urlParams = new URL(window.location.href);
         const params = getPageQuery();
         let { redirect } = params;
