@@ -10,6 +10,7 @@ export default {
   'layout.user.link.privacy': '隱私',
   'layout.user.link.terms': '條款',
   'app.preview.down.block': '下載此頁面到本地項目',
+  company: '捷普無錫',
   ...globalHeader,
   ...menu,
   ...settingDrawer,

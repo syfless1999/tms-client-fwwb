@@ -91,7 +91,7 @@ export default {
         {
           path: '/',
           component: '../layouts/BasicLayout',
-          authority: ['admin', 'user'],
+          authority: ['operator 1', 'operator 2', 'supervisor', 'manager', 'admin'],
           routes: [
             {
               path: '/',
@@ -167,8 +167,14 @@ export default {
   }, // chainWebpack: webpackPlugin,
   proxy: {
     '/api/login': {
-      target: 'https://273008fd-2d9b-4ff5-a864-86017eacf20c.mock.pstmn.io',
+      target: 'http://localhost:8080',
       changeOrigin: true,
+      pathRewrite: { '^/api/login': '/user/login' },
+    },
+    '/api/currentUser': {
+      target: 'http://localhost:8080',
+      changeOrigin: true,
+      pathRewrite: { '^/api/currentUser': '/user/checkMe' },
     },
   },
 };

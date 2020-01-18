@@ -23,6 +23,8 @@ export function getAuthority(str) {
     return ['admin'];
   }
 
+  console.log(`authority${authority}`);
+
   return authority;
 }
 export function setAuthority(authority) {

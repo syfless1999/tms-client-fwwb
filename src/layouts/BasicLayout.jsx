@@ -37,24 +37,18 @@ const menuDataRender = menuList =>
 
 const defaultFooterDom = (
   <DefaultFooter
-    copyright="2019 蚂蚁金服体验技术部出品"
+    copyright="东大坂46团队"
     links={[
       {
-        key: 'Ant Design Pro',
-        title: 'Ant Design Pro',
-        href: 'https://pro.ant.design',
+        key: 'yuque group',
+        title: <Icon type="yuque" />,
+        href: 'https://www.yuque.com/syfless',
         blankTarget: true,
       },
       {
-        key: 'github',
-        title: <Icon type="github" />,
-        href: 'https://github.com/ant-design/ant-design-pro',
-        blankTarget: true,
-      },
-      {
-        key: 'Ant Design',
-        title: 'Ant Design',
-        href: 'https://ant.design',
+        key: 'syfless',
+        title: 'syfless',
+        href: 'https://www.syfless.com',
         blankTarget: true,
       },
     ]}
@@ -155,8 +149,8 @@ const BasicLayout = props => {
         return first ? (
           <Link to={paths.join('/')}>{route.breadcrumbName}</Link>
         ) : (
-            <span>{route.breadcrumbName}</span>
-          );
+          <span>{route.breadcrumbName}</span>
+        );
       }}
       footerRender={footerRender}
       menuDataRender={menuDataRender}
