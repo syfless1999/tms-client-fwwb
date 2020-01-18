@@ -1,4 +1,5 @@
-import { reloadAuthorized } from './Authorized'; // use localStorage to store the authority info, which might be sent from server in actual project.
+import { reloadAuthorized } from './Authorized';
+// use localStorage to store the authority info, which might be sent from server in actual project.
 
 export function getAuthority(str) {
   const authorityString =
@@ -22,14 +23,30 @@ export function getAuthority(str) {
   if (!authority && ANT_DESIGN_PRO_ONLY_DO_NOT_USE_IN_YOUR_PRODUCTION === 'site') {
     return ['admin'];
   }
-
-  console.log(`authority${authority}`);
-
   return authority;
 }
 export function setAuthority(authority) {
   const proAuthority = typeof authority === 'string' ? [authority] : authority;
   localStorage.setItem('antd-pro-authority', JSON.stringify(proAuthority)); // auto reload
-
   reloadAuthorized();
 }
+
+/**
+ * 获取token
+ */
+const getToken = () => {
+  if (localStorage.getItem('accessToken') && localStorage.getItem('accessToken') !== "") {
+    return localStorage.getItem('accessToken');
+  } else {
+    setToken("");
+    return localStorage.getItem('accessToken');
+  }
+}
+
+/**
+ * 更改token
+ */
+const setToken = (token) => {
+  localStorage.setItem('accessToken', token);
+}
+export { getToken, setToken };

@@ -27,7 +27,6 @@ const codeMessage = {
 
 const errorHandler = error => {
   const { response } = error;
-
   if (response && response.status) {
     const errorText = codeMessage[response.status] || response.statusText;
     const { status, url } = response;
@@ -44,17 +43,19 @@ const errorHandler = error => {
 
   return response;
 };
+
+
+
+
 /**
  * 配置request请求时的默认参数
  */
-
 const request = extend({
   errorHandler,
   // 默认错误处理
-  credentials: 'include', // 默认请求是否带上cookie
-  headers: {
-    'Content-Type': 'application/json',
-    Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
-  },
+  credentials: 'include', // 默认请求是否带上cookie,
+  // headers: {
+  //   'Content-Type': 'application/json',
+  // }
 });
 export default request;

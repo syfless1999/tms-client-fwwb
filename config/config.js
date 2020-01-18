@@ -30,11 +30,11 @@ const plugins = [
       },
       pwa: pwa
         ? {
-            workboxPluginMode: 'InjectManifest',
-            workboxOptions: {
-              importWorkboxFrom: 'local',
-            },
-          }
+          workboxPluginMode: 'InjectManifest',
+          workboxOptions: {
+            importWorkboxFrom: 'local',
+          },
+        }
         : false, // default close dll, because issue https://github.com/ant-design/ant-design-pro/issues/4665
       // dll features https://webpack.js.org/plugins/dll-plugin/
       // dll: {
@@ -165,16 +165,13 @@ export default {
   manifest: {
     basePath: '/',
   }, // chainWebpack: webpackPlugin,
-  proxy: {
-    '/api/login': {
-      target: 'http://localhost:8080',
-      changeOrigin: true,
-      pathRewrite: { '^/api/login': '/user/login' },
-    },
-    '/api/currentUser': {
-      target: 'http://localhost:8080',
-      changeOrigin: true,
-      pathRewrite: { '^/api/currentUser': '/user/checkMe' },
-    },
-  },
+
+  // 反向代理设置
+  // proxy: {
+  //   '/api/login': {
+  //     target: 'http://localhost:8080',
+  //     changeOrigin: true,
+  //     pathRewrite: { '^/api/login': '/user/login' },
+  //   },
+  // },
 };

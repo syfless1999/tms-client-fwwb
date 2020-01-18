@@ -29,7 +29,7 @@ class SecurityLayout extends React.Component {
 
     // const isLogin = currentUser && currentUser.userId;
     const isLogin = currentUser && currentUser.no;
-    console.log(`isLogin:${isLogin}`);
+    // console.log(`isLogin:${isLogin}`);
     const queryString = stringify({
       redirect: window.location.href,
     });

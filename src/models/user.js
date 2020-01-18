@@ -1,4 +1,5 @@
 import { queryCurrent, query as queryUsers } from '@/services/user';
+import { setToken } from '@/utils/authority';
 const UserModel = {
   namespace: 'user',
   state: {
@@ -15,9 +16,8 @@ const UserModel = {
 
     *fetchCurrent(_, { call, put }) {
       const response = yield call(queryCurrent);
-
       if (response.status === 'success') {
-        localStorage.setItem('accessToken', response.data.token);
+        setToken(response.data.token);
         yield put({
           type: 'saveCurrentUser',
           payload: response,

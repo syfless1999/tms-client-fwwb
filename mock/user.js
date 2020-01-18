@@ -2,8 +2,11 @@ function getFakeCaptcha(req, res) {
   return res.json('captcha-xxx');
 } // 代码中会兼容本地 service mock 以及部署站点的静态数据
 
+// 暂定传送默认的token
 const adminToken =
   'eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE1NzkxNDU1NDgsImV4cCI6MTU3OTE0OTE0OCwiYXVkIjoiMTIzMDkzNiIsInBvc3Rpb24iOiJzdXBlcnZpc29yIiwicGFzc3dvcmQiOiIxMjM0NTYifQ.H1VFIy6531u6p08YDa2buM563-emtoa8y89z0VXfvXA';
+
+
 export default {
   // 支持值为 Object 和 Array
   // 'GET /api/currentUser': {
@@ -106,7 +109,7 @@ export default {
     if (password === 'ant.design' && userName === 'user') {
       res.send({
         status: 'ok',
-        type,
+        // type,
         currentAuthority: 'user',
       });
       return;
@@ -114,7 +117,7 @@ export default {
 
     res.send({
       status: 'error',
-      type,
+      // type,
       currentAuthority: 'guest',
     });
   },
@@ -122,6 +125,7 @@ export default {
   'POST /api/currentUser': (req, res) => {
     const currentAuthority = req.headers.authorization;
 
+    // 认证成功
     if (currentAuthority === 'Bearer ' + adminToken) {
       res.send({
         status: 'success',
@@ -145,17 +149,14 @@ export default {
         },
       });
     } else {
-      res.status(401).send({
+      // 认证失败，用户名、密码不匹配
+      res.status(200).send({
         status: 'no user or number can not match password.',
-        data: {},
+        data: {
+          token: '',
+        },
       });
     }
-  },
-  'POST /api/register': (req, res) => {
-    res.send({
-      status: 'ok',
-      currentAuthority: 'user',
-    });
   },
   'GET /api/500': (req, res) => {
     res.status(500).send({
