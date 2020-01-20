@@ -111,6 +111,24 @@ export default {
               authority: ['admin'],
             },
             {
+              name: 'bills',
+              icon: 'arrow-right',
+              path: '/bills',
+              authority: ['operator 1', 'operator 2', 'supervisor', 'manager', 'admin'],
+              routes: [
+                {
+                  path: '/bills/list',
+                  name: 'list',
+                  component: './bills',
+                },
+                {
+                  name: 'append',
+                  path: '/bills/append',
+                  component: './bills/billAppend',
+                },
+              ],
+            },
+            {
               component: './404',
             },
           ],
@@ -165,7 +183,6 @@ export default {
   manifest: {
     basePath: '/',
   }, // chainWebpack: webpackPlugin,
-
   // 反向代理设置
   // proxy: {
   //   '/api/login': {

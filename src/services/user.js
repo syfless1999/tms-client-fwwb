@@ -7,9 +7,7 @@ export async function query() {
   return request('/api/users');
 }
 export async function queryCurrent() {
-  console.log(`services queryCurrent`);
 
-  console.log(getToken());
   return request('/api/currentUser', {
     method: 'POST',
     // headers: {
