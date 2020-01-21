@@ -1,7 +1,7 @@
 import { InfoCircleOutlined } from '@ant-design/icons';
-import { Form } from '@ant-design/compatible';
+// import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
-import { Button, Card, DatePicker, Input, InputNumber, Radio, Select, Tooltip } from 'antd';
+import { Form, Button, Card, DatePicker, Input, InputNumber, Select, Tooltip, Upload, Icon } from 'antd';
 import { FormattedMessage, formatMessage } from 'umi-plugin-react/locale';
 import React, { Component } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
@@ -14,18 +14,69 @@ const { RangePicker } = DatePicker;
 const { TextArea } = Input;
 
 class BillAppend extends Component {
+
+  state = {
+    fileData: [],
+  }
+
   handleSubmit = e => {
     const { dispatch, form } = this.props;
+
+    // 文件组
+    const files = this.state.fileData;
+
     e.preventDefault();
     form.validateFieldsAndScroll((err, values) => {
+      let formData = new FormData();
+      formData.append("image", files[0]);
+
+      for (let item in values) {
+        if (item !== 'image' && values[item]) {
+          formData.append(item, values[item]);
+        }
+      }
+
       if (!err) {
         dispatch({
-          type: 'billsAndbillAppend/submitRegularForm',
-          payload: values,
+          type: 'bills/appendBill',
+          payload: formData,
         });
       }
     });
   };
+
+
+  // 复制的代码
+  //这个是监听文件变化的
+  fileChange = (params) => {
+    const { file, fileList } = params;
+    if (file.status === 'uploading') {
+      setTimeout(() => {
+        this.setState({
+          percent: fileList.percent
+        })
+      }, 1000)
+    }
+  }
+  // 拦截文件上传
+  beforeUploadHandle = (file) => {
+    this.setState(({ fileData }) => ({
+      fileData: [...fileData, file],
+    }))
+    return false;
+  }
+  // 文件列表的删除
+  fileRemove = (file) => {
+    this.setState(({ fileData }) => {
+      const index = fileData.indexOf(file);
+      return {
+        fileData: fileData.filter((_, i) => i !== index)
+      }
+    })
+  }
+  // 完
+
+
 
   render() {
     const { submitting } = this.props;
@@ -77,65 +128,135 @@ class BillAppend extends Component {
           >
             <FormItem
               {...formItemLayout}
-              label={<FormattedMessage id="billsandbillappend.title.label" />}
+              label="夹具代码"
             >
-              {getFieldDecorator('title', {
+              {getFieldDecorator('code', {
                 rules: [
                   {
                     required: true,
-                    message: formatMessage({
-                      id: 'billsandbillappend.title.required',
-                    }),
+                    message: "请输入夹具代码"
                   },
                 ],
               })(
                 <Input
-                  placeholder={formatMessage({
-                    id: 'billsandbillappend.title.placeholder',
-                  })}
+                  placeholder='例如：EF2189'
                 />,
               )}
             </FormItem>
+
             <FormItem
               {...formItemLayout}
-              label={<FormattedMessage id="billsandbillappend.date.label" />}
+              label="夹具名称"
             >
-              {getFieldDecorator('date', {
+              {getFieldDecorator('name', {
                 rules: [
                   {
                     required: true,
-                    message: formatMessage({
-                      id: 'billsandbillappend.date.required',
-                    }),
+                    message: "请输入夹具名称"
                   },
                 ],
               })(
-                <RangePicker
-                  style={{
-                    width: '100%',
-                  }}
-                  placeholder={[
-                    formatMessage({
-                      id: 'billsandbillappend.placeholder.start',
-                    }),
-                    formatMessage({
-                      id: 'billsandbillappend.placeholder.end',
-                    }),
-                  ]}
+                <Input
+                  placeholder='例如：MOD 3XM2 调谐夹具'
                 />,
               )}
             </FormItem>
+
             <FormItem
               {...formItemLayout}
-              label={<FormattedMessage id="billsandbillappend.goal.label" />}
+              label="所属大类"
             >
-              {getFieldDecorator('goal', {
+              {getFieldDecorator('family', {
                 rules: [
                   {
                     required: true,
-                    message: formatMessage({
-                      id: 'billsandbillappend.goal.required',
-                    }),
+                    message: "请输入夹具所属大类"
+                  },
+                ],
+              })(
+                <Input
+                  placeholder='例如：JABIL FU'
+                />,
+              )}
+            </FormItem>
+
+            <FormItem
+              {...formItemLayout}
+              label="夹具模组"
+            >
+              {getFieldDecorator('model', {
+                rules: [
+                  {
+                    required: true,
+                    message: "请输入夹具模组"
+                  },
+                ],
+              })(
+                <Input
+                  placeholder='例如：MOD 3XM2'
+                />,
+              )}
+            </FormItem>
+
+            <FormItem
+              {...formItemLayout}
+              label="夹具料号（多个）"
+            >
+              {getFieldDecorator('partNo', {
+                rules: [
+                  {
+                    required: true,
+                    message: "请输入夹具料号"
+                  },
+                ],
+              })(
+                <Input
+                  placeholder='例如：PNA90320/1 PNA90320/2 PNA90322/1'
+                />,
+              )}
+            </FormItem>
+
+            <FormItem
+              {...formItemLayout}
+              label="夹具存储点"
+            >
+              {getFieldDecorator('location', {
+                rules: [
+                  {
+                    required: true,
+                    message: "请输入夹具存储点"
+                  },
+                ],
+              })(
+                <Input
+                  placeholder='例如：16-A2'
+                />,
+              )}
+            </FormItem>
+
+            <FormItem {...formItemLayout} label='物品图片上传'>
+              {getFieldDecorator('image')(
+                <Upload action='路径'
+                  multiple uploadList
+                  beforeUpload={this.beforeUploadHandle}
+                  onChange={this.fileChange}
+                  onRemove={this.fileRemove}
+                  fileList={this.state.fileData}>
+                  <Button><Icon type='upload' />上传图片</Button>
+                </Upload>
+              )}
+            </FormItem>
+
+
+            <FormItem
+              {...formItemLayout}
+              label="用途"
+            >
+              {getFieldDecorator('usedFor', {
+                rules: [
+                  {
+                    required: true,
+                    message: "请输入用途描述"
                   },
                 ],
               })(
@@ -143,38 +264,13 @@ class BillAppend extends Component {
                   style={{
                     minHeight: 32,
                   }}
-                  placeholder={formatMessage({
-                    id: 'billsandbillappend.goal.placeholder',
-                  })}
                   rows={4}
                 />,
               )}
             </FormItem>
-            <FormItem
-              {...formItemLayout}
-              label={<FormattedMessage id="billsandbillappend.standard.label" />}
-            >
-              {getFieldDecorator('standard', {
-                rules: [
-                  {
-                    required: true,
-                    message: formatMessage({
-                      id: 'billsandbillappend.standard.required',
-                    }),
-                  },
-                ],
-              })(
-                <TextArea
-                  style={{
-                    minHeight: 32,
-                  }}
-                  placeholder={formatMessage({
-                    id: 'billsandbillappend.standard.placeholder',
-                  })}
-                  rows={4}
-                />,
-              )}
-            </FormItem>
+
+
+
             <FormItem
               {...formItemLayout}
               label={
@@ -222,77 +318,41 @@ class BillAppend extends Component {
             </FormItem>
             <FormItem
               {...formItemLayout}
-              label={
-                <span>
-                  <FormattedMessage id="billsandbillappend.weight.label" />
-                  <em className={styles.optional}>
-                    <FormattedMessage id="billsandbillappend.form.optional" />
-                  </em>
-                </span>
-              }
+              label="采购数量"
             >
-              {getFieldDecorator('weight')(
+              {getFieldDecorator('number')(
                 <InputNumber
-                  placeholder={formatMessage({
-                    id: 'billsandbillappend.weight.placeholder',
-                  })}
                   min={0}
-                  max={100}
+                  step={1}
                 />,
               )}
-              <span className="ant-form-text">%</span>
             </FormItem>
+
             <FormItem
               {...formItemLayout}
-              label={<FormattedMessage id="billsandbillappend.public.label" />}
-              help={<FormattedMessage id="billsandbillappend.label.help" />}
+              label="该夹具在每条产线上需要配备的数量"
             >
-              <div>
-                {getFieldDecorator('public', {
-                  initialValue: '1',
-                })(
-                  <Radio.Group>
-                    <Radio value="1">
-                      <FormattedMessage id="billsandbillappend.radio.public" />
-                    </Radio>
-                    <Radio value="2">
-                      <FormattedMessage id="billsandbillappend.radio.partially-public" />
-                    </Radio>
-                    <Radio value="3">
-                      <FormattedMessage id="billsandbillappend.radio.private" />
-                    </Radio>
-                  </Radio.Group>,
-                )}
-                <FormItem
-                  style={{
-                    marginBottom: 0,
-                  }}
-                >
-                  {getFieldDecorator('publicUsers')(
-                    <Select
-                      mode="multiple"
-                      placeholder={formatMessage({
-                        id: 'billsandbillappend.publicUsers.placeholder',
-                      })}
-                      style={{
-                        margin: '8px 0',
-                        display: getFieldValue('public') === '2' ? 'block' : 'none',
-                      }}
-                    >
-                      <Option value="1">
-                        <FormattedMessage id="billsandbillappend.option.A" />
-                      </Option>
-                      <Option value="2">
-                        <FormattedMessage id="billsandbillappend.option.B" />
-                      </Option>
-                      <Option value="3">
-                        <FormattedMessage id="billsandbillappend.option.C" />
-                      </Option>
-                    </Select>,
-                  )}
-                </FormItem>
-              </div>
+              {getFieldDecorator('upl')(
+                <InputNumber
+                  min={0}
+                  step={1}
+                />,
+              )}
             </FormItem>
+
+            <FormItem
+              {...formItemLayout}
+              label="保养点检周期"
+            >
+              {getFieldDecorator('pmPeriod')(
+                <InputNumber
+                  min={0}
+                  step={30}
+                />,
+              )}
+            </FormItem>
+
+
             <FormItem
               {...submitFormLayout}
               style={{
@@ -319,6 +379,6 @@ class BillAppend extends Component {
 
 export default Form.create()(
   connect(({ loading }) => ({
-    submitting: loading.effects['billsAndbillAppend/submitRegularForm'],
+    submitting: loading.effects['bills/appendBill'],
   }))(BillAppend),
 );

@@ -14,8 +14,12 @@ export async function queryBills(params) {
 export async function addBill(params) {
   return request('/api/bills', {
     method: 'POST',
-    params,
+    data: params,
   });
+}
+
+export async function queryInfo(params) {
+  return request(`/api/bills/${params.id}`)
 }
 
 export async function removeFakeList(params) {

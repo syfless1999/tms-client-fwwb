@@ -1,4 +1,7 @@
-import { addFakeList, removeFakeList, updateFakeList, queryBills, addBill } from '../services/bills';
+import { addFakeList, removeFakeList, updateFakeList, queryBills, addBill, queryInfo } from '../services/bills';
+import { message } from 'antd';
+import { router } from 'umi';
+
 
 const Model = {
   namespace: 'bills',
@@ -7,14 +10,17 @@ const Model = {
     total: 0,
     page: 1,
     pageSize: 5,
-    status: 0
+    status: 0,
+    info: {
+      subPerson: {},
+      tDef: {},
+      firstPerson: {},
+      secondPerson: {},
+    },
   },
   effects: {
     *fetch({ payload }, { call, put, select }) {
-      console.log(payload);
-      // const response = yield call(queryFakeList, payload);
       const response = yield call(queryBills, payload);
-      console.log(response);
       const status = yield select(state => state.status);
       yield put({
         type: 'setData',
@@ -32,20 +38,30 @@ const Model = {
       // });
     },
 
-    *appendFetch({ payload }, { call, put }) {
+    *appendBill({ payload }, { call }) {
       const response = yield call(addBill, payload);
       // yield put({
       //   type: 'appendList',
       //   payload: Array.isArray(response) ? response : [],
       // });
       if (response.status === "success") {
+        message.success("采购入库申请成功");
         router.replace(`/bills/${response.data.bill.id}`)
+      }
+    },
+
+    *fetchInfo({ payload }, { call, put }) {
+      const response = yield call(queryInfo, payload);
+      if (response && response.status === 'success') {
+        yield put({
+          type: 'setInfo',
+          payload: response.data.info || {},
+        });
       }
     },
 
     *submit({ payload }, { call, put }) {
       let callback;
-
       if (payload.id) {
         callback = Object.keys(payload).length === 1 ? removeFakeList : updateFakeList;
       } else {
@@ -68,6 +84,22 @@ const Model = {
 
       return { ...state, list, total, page, status }
     },
+    setInfo(state, { payload }) {
+      if (!payload.tDef) {
+        payload.tDef={};
+      }
+      if (!payload.subPerson) {
+        payload.subPerson={};
+      }
+      if (!payload.secondPerson) {
+        payload.secondPerson={};
+      }
+      if (!payload.firstPerson) {
+        payload.firstPerson={};
+      }
+      return { ...state, info: payload };
+    },
+
     appendList(
       state = {
         list: [],

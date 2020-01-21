@@ -1,6 +1,8 @@
 import { DownOutlined, PlusOutlined } from '@ant-design/icons';
 import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
+import { router } from 'umi';
+
 import {
   Avatar,
   Button,
@@ -65,12 +67,13 @@ class Bills extends Component {
 
   }
 
-  showModal = () => {
-    this.setState({
-      visible: true,
-      current: undefined,
-    });
+  routerAppend = () => {
+    router.replace('/bills/append');
   };
+
+  getProfile = (id) => {
+    router.replace(`/bills/${id}`);
+  }
 
   showEditModal = item => {
     this.setState({
@@ -131,7 +134,6 @@ class Bills extends Component {
     } = this.props;
 
     const { list, page, pageSize, total } = this.props.bills;
-    console.log(total);
 
     const {
       form: { getFieldDecorator },
@@ -213,28 +215,6 @@ class Bills extends Component {
       onChange: pageChange,
     };
 
-    // const ListContent = ({ data: { owner, createdAt, percent, status } }) => (
-    //   <div className={styles.listContent}>
-    //     <div className={styles.listContentItem}>
-    //       <span>Owner</span>
-    //       <p>{owner}</p>
-    //     </div>
-    //     <div className={styles.listContentItem}>
-    //       <span>开始时间</span>
-    //       <p>{moment(createdAt).format('YYYY-MM-DD HH:mm')}</p>
-    //     </div>
-    //     <div className={styles.listContentItem}>
-    //       <Progress
-    //         percent={percent}
-    //         status={status}
-    //         strokeWidth={6}
-    //         style={{
-    //           width: 180,
-    //         }}
-    //       />
-    //     </div>
-    //   </div>
-    // );
 
     const getPercent = status => {
       let percent = 0;
@@ -422,7 +402,7 @@ class Bills extends Component {
                   width: '100%',
                   marginBottom: 8,
                 }}
-                onClick={this.showModal}
+                onClick={this.routerAppend}
                 ref={component => {
                   // eslint-disable-next-line  react/no-find-dom-node
                   this.addBtn = findDOMNode(component);
@@ -461,7 +441,7 @@ class Bills extends Component {
 
                     <List.Item.Meta
                       avatar={<Avatar src={item.image} shape="square" size="large" />}
-                      title={<a href={item.image}>{item.tDef.name}</a>}
+                      title={<a onClick={() => this.getProfile(item.id)}>{item.tDef.name}</a>}
                       description={item.tDef.usedFor}
                     />
                     <ListContent data={item} />

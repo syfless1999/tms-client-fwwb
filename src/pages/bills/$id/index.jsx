@@ -18,6 +18,8 @@ import {
   Table,
   Tooltip,
   Empty,
+  Row,
+  Col,
 } from 'antd';
 import { GridContent, PageHeaderWrapper, RouteContext } from '@ant-design/pro-layout';
 import React, { Component, Fragment } from 'react';
@@ -26,107 +28,118 @@ import { connect } from 'dva';
 import styles from './style.less';
 
 const { Step } = Steps;
-const ButtonGroup = Button.Group;
-const menu = (
-  <Menu>
-    <Menu.Item key="1">选项一</Menu.Item>
-    <Menu.Item key="2">选项二</Menu.Item>
-    <Menu.Item key="3">选项三</Menu.Item>
-  </Menu>
-);
-const mobileMenu = (
-  <Menu>
-    <Menu.Item key="1">操作一</Menu.Item>
-    <Menu.Item key="2">操作二</Menu.Item>
-    <Menu.Item key="3">选项一</Menu.Item>
-    <Menu.Item key="4">选项二</Menu.Item>
-    <Menu.Item key="">选项三</Menu.Item>
-  </Menu>
-);
-const action = (
-  <RouteContext.Consumer>
-    {({ isMobile }) => {
-      if (isMobile) {
-        return (
-          <Dropdown.Button
-            type="primary"
-            icon={<DownOutlined />}
-            overlay={mobileMenu}
-            placement="bottomRight"
-          >
-            主操作
-          </Dropdown.Button>
-        );
-      }
+// const ButtonGroup = Button.Group;
+// const menu = (
+//   <Menu>
+//     <Menu.Item key="1">选项一</Menu.Item>
+//     <Menu.Item key="2">选项二</Menu.Item>
+//     <Menu.Item key="3">选项三</Menu.Item>
+//   </Menu>
+// );
+// const mobileMenu = (
+//   <Menu>
+//     <Menu.Item key="1">操作一</Menu.Item>
+//     <Menu.Item key="2">操作二</Menu.Item>
+//     <Menu.Item key="3">选项一</Menu.Item>
+//     <Menu.Item key="4">选项二</Menu.Item>
+//     <Menu.Item key="">选项三</Menu.Item>
+//   </Menu>
+// );
+// const action = (
+//   <RouteContext.Consumer>
+//     {({ isMobile }) => {
+//       if (isMobile) {
+//         return (
+//           <Dropdown.Button
+//             type="primary"
+//             icon={<DownOutlined />}
+//             overlay={mobileMenu}
+//             placement="bottomRight"
+//           >
+//             主操作
+//           </Dropdown.Button>
+//         );
+//       }
 
-      return (
-        <Fragment>
-          <ButtonGroup>
-            <Button>操作一</Button>
-            <Button>操作二</Button>
-            <Dropdown overlay={menu} placement="bottomRight">
-              <Button>
-                <EllipsisOutlined />
-              </Button>
-            </Dropdown>
-          </ButtonGroup>
-          <Button type="primary">主操作</Button>
-        </Fragment>
-      );
-    }}
-  </RouteContext.Consumer>
+//       return (
+//         <Fragment>
+//           <ButtonGroup>
+//             <Button>操作一</Button>
+//             <Button>操作二</Button>
+//             <Dropdown overlay={menu} placement="bottomRight">
+//               <Button>
+//                 <EllipsisOutlined />
+//               </Button>
+//             </Dropdown>
+//           </ButtonGroup>
+//           <Button type="primary">主操作</Button>
+//         </Fragment>
+//       );
+//     }}
+//   </RouteContext.Consumer>
+// );
+
+
+const getStr = status => {
+  let percent = 0;
+  switch (status) {
+    case "已提交未初审":
+      percent = "已提交";
+      break;
+    case "已提交初审未通过":
+      percent = "已初审";
+      break;
+    case "已初审未终审":
+      percent = "已初审";
+      break;
+    case "已初审终审未通过":
+      percent = "已终审";
+      break;
+    case "已终审":
+      percent = "已终审";
+      break;
+    default:
+      break;
+  }
+  return percent;
+}
+const extra = (status, number) => (
+  <Row className={styles.moreInfo}>
+    <Col span={12}>
+      <Statistic title="状态" value={getStr(status)} />
+    </Col>
+    <Col span={12}>
+      <Statistic title="申请数量" value={number} />
+    </Col>
+  </Row>
 );
-const extra = (
-  <div className={styles.moreInfo}>
-    <Statistic title="状态" value="待审批" />
-    <Statistic title="订单金额" value={568.08} prefix="¥" />
-  </div>
-);
-const description = (
+
+const description = (subPersonName, tDefName, subTime, id) => (
   <RouteContext.Consumer>
     {({ isMobile }) => (
       <Descriptions className={styles.headerList} size="small" column={isMobile ? 1 : 2}>
-        <Descriptions.Item label="创建人">曲丽丽</Descriptions.Item>
-        <Descriptions.Item label="订购产品">XX 服务</Descriptions.Item>
-        <Descriptions.Item label="创建时间">2017-07-07</Descriptions.Item>
-        <Descriptions.Item label="关联单据">
-          <a href="">12421</a>
-        </Descriptions.Item>
-        <Descriptions.Item label="生效日期">2017-07-07 ~ 2017-08-08</Descriptions.Item>
-        <Descriptions.Item label="备注">请于两个工作日内确认</Descriptions.Item>
+        <Descriptions.Item label="申请人">{subPersonName || ""}</Descriptions.Item>
+        <Descriptions.Item label="夹具名称">{tDefName || ""}</Descriptions.Item>
+        <Descriptions.Item label="创建时间">{subTime || ""}</Descriptions.Item>
+        <Descriptions.Item label="申请单号">{id || ""}</Descriptions.Item>
       </Descriptions>
     )}
   </RouteContext.Consumer>
 );
-const desc1 = (
+const desc = (personName, time) => (
   <div className={classNames(styles.textSecondary, styles.stepDescription)}>
     <Fragment>
-      曲丽丽
+      {personName}
       <DingdingOutlined
         style={{
           marginLeft: 8,
         }}
       />
     </Fragment>
-    <div>2016-12-12 12:32</div>
+    <div>{time}</div>
   </div>
 );
-const desc2 = (
-  <div className={styles.stepDescription}>
-    <Fragment>
-      周毛毛
-      <DingdingOutlined
-        style={{
-          color: '#00A0E9',
-          marginLeft: 8,
-        }}
-      />
-    </Fragment>
-    <div>
-      <a href="">催一下</a>
-    </div>
-  </div>
-);
+
 const popoverContent = (
   <div
     style={{
@@ -233,8 +246,10 @@ class $id extends Component {
 
   componentDidMount() {
     const { dispatch } = this.props;
+
     dispatch({
-      type: 'billsAndId/fetchAdvanced',
+      type: 'bills/fetchInfo',
+      payload: { id: this.props.match.params.id }
     });
   }
 
@@ -252,8 +267,12 @@ class $id extends Component {
 
   render() {
     const { operationKey, tabActiveKey } = this.state;
-    const { billsAndId, loading } = this.props;
+    const { billsAndId, loading, bills } = this.props;
     const { advancedOperation1, advancedOperation2, advancedOperation3 } = billsAndId;
+    const info = bills.info;
+
+    console.log(info);
+
     const contentList = {
       tab1: (
         <Table
@@ -280,25 +299,58 @@ class $id extends Component {
         />
       ),
     };
+
+    const getStatus = (status = "") => {
+
+      if (status.includes("通过")) {
+        return "error";
+      }
+      return "process";
+    }
+
+    const getCurrent = status => {
+      let percent = 0;
+      switch (status) {
+        case "已提交未初审":
+          percent = 1;
+          break;
+        case "已提交初审未通过":
+          percent = 1;
+          break;
+        case "已初审未终审":
+          percent = 2;
+          break;
+        case "已初审终审未通过":
+          percent = 2;
+          break;
+        case "已终审":
+          percent = 3;
+          break;
+        default:
+          break;
+      }
+      return percent;
+    }
+
     return (
-      <PageHeaderWrapper
-        title="单号：234231029431"
-        extra={action}
+      (<PageHeaderWrapper
+        title="采购入库申请详细信息"
+        //extra={action}
         className={styles.pageHeader}
-        content={description}
-        extraContent={extra}
+        extraContent={extra(info.status, info.number)}
+        content={description(info.subPerson.name, info.tDef.name, info.subTime, info.id)}
         tabActiveKey={tabActiveKey}
         onTabChange={this.onTabChange}
-        tabList={[
-          {
-            key: 'detail',
-            tab: '详情',
-          },
-          {
-            key: 'rule',
-            tab: '规则',
-          },
-        ]}
+      // tabList={[
+      //   {
+      //     key: 'detail',
+      //     tab: '详情',
+      //   },
+      //   {
+      //     key: 'rule',
+      //     tab: '规则',
+      //   },
+      // ]}
       >
         <div className={styles.main}>
           <GridContent>
@@ -313,18 +365,19 @@ class $id extends Component {
                   <Steps
                     direction={isMobile ? 'vertical' : 'horizontal'}
                     progressDot={customDot}
-                    current={1}
+                    current={getCurrent(info.status)}
+                    status={getStatus(info.status)}
                   >
-                    <Step title="创建项目" description={desc1} />
-                    <Step title="部门初审" description={desc2} />
-                    <Step title="财务复核" />
+                    <Step title="提出申请" description={desc(info.subPerson.name || "", info.subTime || "")} />
+                    <Step title="初审" description={desc(info.firstPerson.name || "", info.firstTime || "")} />
+                    <Step title="终审" description={desc(info.secondPerson.name || "", info.secondTime || "")} />
                     <Step title="完成" />
                   </Steps>
                 )}
               </RouteContext.Consumer>
             </Card>
             <Card
-              title="用户信息"
+              title="夹具信息"
               style={{
                 marginBottom: 24,
               }}
@@ -335,40 +388,23 @@ class $id extends Component {
                   marginBottom: 24,
                 }}
               >
-                <Descriptions.Item label="用户姓名">付小小</Descriptions.Item>
-                <Descriptions.Item label="会员卡号">32943898021309809423</Descriptions.Item>
-                <Descriptions.Item label="身份证">3321944288191034921</Descriptions.Item>
-                <Descriptions.Item label="联系方式">18112345678</Descriptions.Item>
-                <Descriptions.Item label="联系地址">
-                  曲丽丽 18100000000 浙江省杭州市西湖区黄姑山路工专路交叉路口
-                </Descriptions.Item>
+                <Descriptions.Item label="夹具代码">{info.tDef.code}</Descriptions.Item>
+                <Descriptions.Item label="名称">{info.tDef.name}</Descriptions.Item>
+                <Descriptions.Item label="所属大类">{info.tDef.family}</Descriptions.Item>
+                <Descriptions.Item label="点检周期">{info.tDef.pmPeriod}</Descriptions.Item>
+                <Descriptions.Item label="用途">{info.tDef.usedFor}</Descriptions.Item>
+                <Descriptions.Item label="每条生产线配备的数量">{info.tDef.upl}</Descriptions.Item>
+                <Descriptions.Item label="partNo">{info.tDef.partNo}</Descriptions.Item>
               </Descriptions>
               <Descriptions
                 style={{
                   marginBottom: 24,
                 }}
-                title="信息组"
+                title="夹具预览图"
               >
-                <Descriptions.Item label="某某数据">725</Descriptions.Item>
-                <Descriptions.Item label="该数据更新时间">2017-08-08</Descriptions.Item>
-                <Descriptions.Item
-                  label={
-                    <span>
-                      某某数据
-                      <Tooltip title="数据说明">
-                        <InfoCircleOutlined
-                          style={{
-                            color: 'rgba(0, 0, 0, 0.43)',
-                            marginLeft: 4,
-                          }}
-                        />
-                      </Tooltip>
-                    </span>
-                  }
-                >
-                  725
+                <Descriptions.Item>
+                  <img src={info.image} alt="" />
                 </Descriptions.Item>
-                <Descriptions.Item label="该数据更新时间">2017-08-08</Descriptions.Item>
               </Descriptions>
               <h4
                 style={{
@@ -439,12 +475,13 @@ class $id extends Component {
             </Card>
           </GridContent>
         </div>
-      </PageHeaderWrapper>
+      </PageHeaderWrapper>)
     );
   }
 }
 
-export default connect(({ billsAndId, loading }) => ({
+export default connect(({ billsAndId, loading, bills }) => ({
   billsAndId,
-  loading: loading.effects['billsAndId/fetchAdvanced'],
+  bills,
+  loading: loading.effects['bills/fetchInfo'],
 }))($id);

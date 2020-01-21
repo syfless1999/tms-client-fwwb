@@ -1,7 +1,7 @@
 export default {
-  'billsandbillappend.basic.title': '基础表单',
+  'billsandbillappend.basic.title': '提交采购入库申请表单',
   'billsandbillappend.basic.description':
-    '表单页用于向用户收集或验证信息，基础表单常见于数据项较少的表单场景。',
+    '单项采购入库申请需要填写需要采购的夹具定义的相关信息、数量、放置地点',
   'billsandbillappend.email.required': '请输入邮箱地址！',
   'billsandbillappend.email.wrong-format': '邮箱地址格式错误！',
   'billsandbillappend.userName.required': '请输入用户名!',

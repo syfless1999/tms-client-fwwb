@@ -60,6 +60,17 @@ const subPerson = {
   name: "syf"
 }
 
+const firstPerson = {
+  id: 3,
+  name: "ozj"
+}
+
+const secondPerson = {
+  id: 4,
+  name: "sxy"
+}
+
+
 const bills = [{
   id: 1,
   tDef: tDef,
@@ -67,6 +78,7 @@ const bills = [{
   subTime: new Date(),
   status: "已提交未初审",
   image: covers[0],
+  number: 3,
 },
 {
   id: 2,
@@ -75,6 +87,10 @@ const bills = [{
   subTime: new Date(),
   status: "已提交初审未通过",
   image: covers[1],
+  firstPerson: firstPerson,
+  firstTime: new Date(),
+  number: 3,
+
 },
 {
   id: 3,
@@ -83,6 +99,10 @@ const bills = [{
   subTime: new Date(),
   status: "已初审未终审",
   image: covers[2],
+  firstPerson: firstPerson,
+  firstTime: new Date(),
+  number: 3,
+
 },
 {
   id: 4,
@@ -91,6 +111,12 @@ const bills = [{
   subTime: new Date(),
   status: "已初审终审未通过",
   image: covers[3],
+  firstPerson: firstPerson,
+  firstTime: new Date(),
+  secondPerson: secondPerson,
+  secondTime: new Date(),
+  number: 3,
+
 },
 {
   id: 5,
@@ -99,6 +125,12 @@ const bills = [{
   subTime: new Date(),
   status: "已终审",
   image: avatars[0],
+  firstPerson: firstPerson,
+  firstTime: new Date(),
+  secondPerson: secondPerson,
+  secondTime: new Date(),
+  number: 3,
+
 },
 {
   id: 6,
@@ -107,6 +139,8 @@ const bills = [{
   subTime: new Date(),
   status: "已提交未初审",
   image: avatars[1],
+  number: 3,
+
 },
 {
   id: 7,
@@ -115,6 +149,8 @@ const bills = [{
   subTime: new Date(),
   status: "已提交未初审",
   image: avatars[2],
+  number: 3,
+
 },
 {
   id: 8,
@@ -123,6 +159,8 @@ const bills = [{
   subTime: new Date(),
   status: "已提交未初审",
   image: avatars[3],
+  number: 3,
+
 },
 {
   id: 9,
@@ -139,6 +177,8 @@ const bills = [{
   subTime: new Date(),
   status: "已提交未初审",
   image: avatars[5],
+  number: 3,
+
 },
 {
   id: 11,
@@ -147,6 +187,8 @@ const bills = [{
   subTime: new Date(),
   status: "已提交未初审",
   image: avatars[6],
+  number: 3,
+
 },
 ];
 
@@ -267,6 +309,17 @@ function postBill(req, res) {
   })
 }
 
+function getInfo(req, res) {
+  const { id } = req.params;
+  const info = bills.find(bill => bill.id === +id);
+  return res.json({
+    status: "success",
+    data: {
+      info: info
+    }
+  });
+}
+
 function postFakeList(req, res) {
   const {
     /* url = '', */
@@ -319,4 +372,5 @@ export default {
   'GET /api/bills': getBillList,
   'POST /api/bills': postBill,
   'POST  /api/fake_list': postFakeList,
+  'GET /api/bills/:id': getInfo
 };

@@ -3,7 +3,7 @@ import { getToken } from '../utils/authority';
 
 
 export default function request(url, payload) {
-
+    payload = payload || {};
     if (payload.headers === undefined) payload.headers = {};
     payload.headers.Authorization = "Bearer " + getToken();
     if (!payload.headers['Content-Type']) {
