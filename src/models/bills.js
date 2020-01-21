@@ -1,4 +1,4 @@
-import { addFakeList, queryFakeList, removeFakeList, updateFakeList, queryFakeBills } from '../services/bills';
+import { addFakeList, removeFakeList, updateFakeList, queryBills, addBill } from '../services/bills';
 
 const Model = {
   namespace: 'bills',
@@ -13,10 +13,9 @@ const Model = {
     *fetch({ payload }, { call, put, select }) {
       console.log(payload);
       // const response = yield call(queryFakeList, payload);
-      const response = yield call(queryFakeBills, payload);
+      const response = yield call(queryBills, payload);
       console.log(response);
       const status = yield select(state => state.status);
-      const total = yield select(state => state.total);
       yield put({
         type: 'setData',
         payload: {
@@ -34,11 +33,14 @@ const Model = {
     },
 
     *appendFetch({ payload }, { call, put }) {
-      const response = yield call(queryFakeList, payload);
-      yield put({
-        type: 'appendList',
-        payload: Array.isArray(response) ? response : [],
-      });
+      const response = yield call(addBill, payload);
+      // yield put({
+      //   type: 'appendList',
+      //   payload: Array.isArray(response) ? response : [],
+      // });
+      if (response.status === "success") {
+        router.replace(`/bills/${response.data.bill.id}`)
+      }
     },
 
     *submit({ payload }, { call, put }) {

@@ -5,12 +5,18 @@ export async function queryFakeList(params) {
   });
 }
 
-export async function queryFakeBills(params) {
+export async function queryBills(params) {
   return request('/api/bills', {
     params,
   });
 }
 
+export async function addBill(params) {
+  return request('/api/bills', {
+    method: 'POST',
+    params,
+  });
+}
 
 export async function removeFakeList(params) {
   const { count = 5, ...restParams } = params;

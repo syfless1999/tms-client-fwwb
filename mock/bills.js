@@ -249,6 +249,24 @@ function getBillList(req, res) {
   });
 }
 
+function postBill(req, res) {
+  const newBill = {
+    id: bills.length + 1,
+    tDef: tDef,
+    subPerson: subPerson,
+    subTime: new Date(),
+    status: "已终审",
+    image: avatars[6],
+  };
+  bills.push(newBill);
+  res.json({
+    status: "success",
+    data: {
+      bill: newBill
+    }
+  })
+}
+
 function postFakeList(req, res) {
   const {
     /* url = '', */
@@ -299,5 +317,6 @@ function postFakeList(req, res) {
 export default {
   'GET  /api/fake_list': getFakeList,
   'GET /api/bills': getBillList,
+  'POST /api/bills': postBill,
   'POST  /api/fake_list': postFakeList,
 };
