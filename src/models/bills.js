@@ -1,4 +1,4 @@
-import { addFakeList, removeFakeList, updateFakeList, queryBills, addBill, queryInfo } from '../services/bills';
+import { addFakeList, removeFakeList, updateFakeList, queryBills, addBill, queryInfo, firstCheck, secondCheck } from '../services/bills';
 import { message } from 'antd';
 import { router } from 'umi';
 
@@ -59,7 +59,26 @@ const Model = {
         });
       }
     },
-
+    *firstCheck({ payload }, { call, put }) {
+      const response = yield call(firstCheck, payload);
+      if (response && response.status === 'success') {
+        yield put({
+          type: 'setInfo',
+          payload: response.data.bill || {},
+        });
+        message.success("状态已更新")
+      }
+    },
+    *secondCheck({ payload }, { call, put }) {
+      const response = yield call(secondCheck, payload);
+      if (response && response.status === 'success') {
+        yield put({
+          type: 'setInfo',
+          payload: response.data.bill || {},
+        });
+        message.success("状态已更新")
+      }
+    },
     *submit({ payload }, { call, put }) {
       let callback;
       if (payload.id) {
@@ -86,16 +105,16 @@ const Model = {
     },
     setInfo(state, { payload }) {
       if (!payload.tDef) {
-        payload.tDef={};
+        payload.tDef = {};
       }
       if (!payload.subPerson) {
-        payload.subPerson={};
+        payload.subPerson = {};
       }
       if (!payload.secondPerson) {
-        payload.secondPerson={};
+        payload.secondPerson = {};
       }
       if (!payload.firstPerson) {
-        payload.firstPerson={};
+        payload.firstPerson = {};
       }
       return { ...state, info: payload };
     },

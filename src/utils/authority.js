@@ -31,6 +31,24 @@ export function setAuthority(authority) {
   reloadAuthorized();
 }
 
+
+/**
+ * 权限比较，返回正数表示当前权限大于所需权限
+ * @param {string}} compareAuthority 需要被对比的权限
+ */
+export function compareAuthority(compareAuthority) {
+  const nowA = getAuthority()[0];
+  const dic = {
+    "": 0,
+    "operatorI": 1,
+    "operatorII": 2,
+    "supervisor": 3,
+    "manager": 4,
+    "admin": 5
+  }
+
+  return dic[nowA] - dic[compareAuthority];
+}
 /**
  * 获取token
  */

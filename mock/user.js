@@ -6,6 +6,8 @@ function getFakeCaptcha(req, res) {
 const adminToken =
   'eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE1NzkxNDU1NDgsImV4cCI6MTU3OTE0OTE0OCwiYXVkIjoiMTIzMDkzNiIsInBvc3Rpb24iOiJzdXBlcnZpc29yIiwicGFzc3dvcmQiOiIxMjM0NTYifQ.H1VFIy6531u6p08YDa2buM563-emtoa8y89z0VXfvXA';
 
+const authorities = { 'operatorI': 1, 'operatirII': 2, 'supervisor': 3, 'manager': 4, 'admin': 5 };
+
 
 export default {
   // 支持值为 Object 和 Array
@@ -83,7 +85,8 @@ export default {
   'POST /api/login': (req, res) => {
     const { no, pwd } = req.body;
 
-    if (no === 'admin' && pwd === 'admin') {
+    // if (no === 'admin' && pwd === 'admin') {
+    if (pwd === '123456' && no in authorities) {
       res.send({
         status: 'success',
         data: {
@@ -98,7 +101,7 @@ export default {
             },
             position: {
               id: 1,
-              name: 'admin',
+              name: no,
             },
           },
           token: adminToken,

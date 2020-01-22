@@ -1,9 +1,5 @@
 import request from './request';
-export async function queryFakeList(params) {
-  return request('/api/fake_list', {
-    params,
-  });
-}
+
 
 export async function queryBills(params) {
   return request('/api/bills', {
@@ -20,6 +16,33 @@ export async function addBill(params) {
 
 export async function queryInfo(params) {
   return request(`/api/bills/${params.id}`)
+}
+
+export async function firstCheck(params) {
+  return request(`/api/bills/${params.id}/firstCheck`, {
+    method: "PATCH",
+    data: {
+      status: params.status,
+    }
+  });
+}
+export async function secondCheck(params) {
+  return request(`/api/bills/${params.id}/secondCheck`, {
+    method: "PATCH",
+    data: {
+      status: params.status,
+    }
+  });
+}
+
+
+
+
+// 未用到
+export async function queryFakeList(params) {
+  return request('/api/fake_list', {
+    params,
+  });
 }
 
 export async function removeFakeList(params) {

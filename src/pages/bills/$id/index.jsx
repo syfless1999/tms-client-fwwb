@@ -20,22 +20,20 @@ import {
   Empty,
   Row,
   Col,
+  Popconfirm,
+  message,
 } from 'antd';
 import { GridContent, PageHeaderWrapper, RouteContext } from '@ant-design/pro-layout';
 import React, { Component, Fragment } from 'react';
 import classNames from 'classnames';
 import { connect } from 'dva';
 import styles from './style.less';
+import { compareAuthority } from '../../../utils/authority';
+
 
 const { Step } = Steps;
-// const ButtonGroup = Button.Group;
-// const menu = (
-//   <Menu>
-//     <Menu.Item key="1">选项一</Menu.Item>
-//     <Menu.Item key="2">选项二</Menu.Item>
-//     <Menu.Item key="3">选项三</Menu.Item>
-//   </Menu>
-// );
+const ButtonGroup = Button.Group;
+
 // const mobileMenu = (
 //   <Menu>
 //     <Menu.Item key="1">操作一</Menu.Item>
@@ -45,39 +43,69 @@ const { Step } = Steps;
 //     <Menu.Item key="">选项三</Menu.Item>
 //   </Menu>
 // );
-// const action = (
-//   <RouteContext.Consumer>
-//     {({ isMobile }) => {
-//       if (isMobile) {
-//         return (
-//           <Dropdown.Button
-//             type="primary"
-//             icon={<DownOutlined />}
-//             overlay={mobileMenu}
-//             placement="bottomRight"
-//           >
-//             主操作
-//           </Dropdown.Button>
-//         );
-//       }
 
-//       return (
-//         <Fragment>
-//           <ButtonGroup>
-//             <Button>操作一</Button>
-//             <Button>操作二</Button>
-//             <Dropdown overlay={menu} placement="bottomRight">
-//               <Button>
-//                 <EllipsisOutlined />
-//               </Button>
-//             </Dropdown>
-//           </ButtonGroup>
-//           <Button type="primary">主操作</Button>
-//         </Fragment>
-//       );
-//     }}
-//   </RouteContext.Consumer>
-// );
+
+const action = (status, click1, click2) => (
+  <RouteContext.Consumer>
+    {({ isMobile }) => {
+      {/* if (isMobile) {
+        return (
+          <Dropdown.Button
+            type="primary"
+            icon={<DownOutlined />}
+            //overlay={mobileMenu}
+            placement="bottomRight"
+          >
+            主操作
+          </Dropdown.Button>
+        );
+      } */}
+
+      return (
+        <Fragment>
+          审核操作：
+          {/* <ButtonGroup>
+            <Button>操作一</Button>
+            <Button>操作二</Button>
+            <Dropdown overlay={menu} placement="bottomRight">
+              <Button>
+                <EllipsisOutlined />
+              </Button>
+            </Dropdown>
+          </ButtonGroup> */}
+          <Popconfirm
+            placement="bottomLeft"
+            title="是否通过初审"
+            onConfirm={() => click1("已初审未终审")}
+            onCancel={() => click1("已提交初审未通过")}
+            okText="Yes"
+            cancelText="No">
+            <Button type="primary" disabled={judgeDisabled("supervisor", status, 1)}>初审</Button>
+          </Popconfirm>
+          <Popconfirm
+            placement="bottomLeft"
+            title="是否通过终审"
+            onConfirm={() => click2("已终审")}
+            onCancel={() => click2("已初审终审未通过")}
+            okText="Yes"
+            cancelText="No">
+            <Button type="danger" disabled={judgeDisabled("manager", status, 2)}>终审</Button>
+          </Popconfirm>
+        </Fragment>
+      );
+    }}
+  </RouteContext.Consumer >
+);
+
+const judgeDisabled = (compareA, status, targetS) => {
+
+  if (targetS === 1) {
+    return (compareAuthority(compareA) < 0) || getStr(status) === "已初审" || getStr(status) === "已终审";
+  }
+  if (targetS === 2) {
+    return compareAuthority(compareA) < 0 || getStr(status) === "已终审";
+  }
+}
 
 
 const getStr = status => {
@@ -265,13 +293,38 @@ class $id extends Component {
     });
   };
 
+  firstConfirm = status => {
+    const { dispatch } = this.props;
+    const id = this.props.match.params.id;
+
+    dispatch({
+      type: 'bills/firstCheck',
+      payload: {
+        id: id,
+        status: status
+      }
+    });
+  }
+
+  secondConfirm = status => {
+    const { dispatch } = this.props;
+    const id = this.props.match.params.id;
+
+    dispatch({
+      type: 'bills/secondCheck',
+      payload: {
+        id: id,
+        status: status
+      }
+    });
+  }
+
   render() {
     const { operationKey, tabActiveKey } = this.state;
     const { billsAndId, loading, bills } = this.props;
     const { advancedOperation1, advancedOperation2, advancedOperation3 } = billsAndId;
     const info = bills.info;
 
-    console.log(info);
 
     const contentList = {
       tab1: (
@@ -335,7 +388,7 @@ class $id extends Component {
     return (
       (<PageHeaderWrapper
         title="采购入库申请详细信息"
-        //extra={action}
+        extra={action(info.status, this.firstConfirm, this.secondConfirm)}
         className={styles.pageHeader}
         extraContent={extra(info.status, info.number)}
         content={description(info.subPerson.name, info.tDef.name, info.subTime, info.id)}

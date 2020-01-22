@@ -193,8 +193,6 @@ const bills = [{
 ];
 
 function fakeBills(page, pageSize, status) {
-  console.log(`fakeBills${status}`);
-
   let res = bills.concat();
   if (status != 0) {
     res = res.filter(bill => bill.status === status);
@@ -279,11 +277,9 @@ function getBillList(req, res) {
   if (!page) page = 1;
   if (!pageSize) pageSize = 5;
   if (!status) status = 0;
-  console.log(page,
-    pageSize,
-    status);
+
   const result = fakeBills(page, pageSize, status);
-  console.log(result.bills.length);
+
 
   return res.json({
     status: "success",
@@ -367,10 +363,36 @@ function postFakeList(req, res) {
   });
 }
 
+
+function patchCheck(req, res) {
+  const { id } = req.params;
+  const { status } = req.body;
+  const bill = bills.find(bill => bill.id === +id);
+  bill.status = status || bill.status;
+  if (status === ("已提交初审未通过") || status === ("已初审未终审")) {
+    bill.firstPerson = firstPerson;
+    bill.firstTime = new Date();
+  } else if (status === ("已初审终审未通过") || status === ("已终审")) {
+    bill.firstPerson = bill.firstPerson || secondPerson;
+    bill.firstTime = bill.firstTime || new Date();
+    bill.secondPerson = secondPerson;
+    bill.secondTime = new Date();
+  }
+  return res.json({
+    status: "success",
+    data: {
+      bill: bill
+    }
+  });
+
+}
+
 export default {
   'GET  /api/fake_list': getFakeList,
   'GET /api/bills': getBillList,
   'POST /api/bills': postBill,
   'POST  /api/fake_list': postFakeList,
-  'GET /api/bills/:id': getInfo
+  'GET /api/bills/:id': getInfo,
+  'PATCH /api/bills/:id/firstCheck': patchCheck,
+  'PATCH /api/bills/:id/secondCheck': patchCheck,
 };

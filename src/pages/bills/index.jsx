@@ -241,6 +241,9 @@ class Bills extends Component {
     }
 
     const ListContent = ({ data: { subPerson, subTime, status } }) => {
+      console.log("status");
+      console.log(status);
+      
       return (
         <div className={styles.listContent}>
           <div className={styles.listContentItem}>
