@@ -7,6 +7,7 @@ export default {
   'menu.register': 'Register',
   'menu.bills':'Bills',
   'menu.bills.list':'Bill List',
+  'menu.userManage': 'User Manage',
   'menu.bills.append': 'Append Bill',
   'menu.register.result': 'Register Result',
   'menu.dashboard': 'Dashboard',

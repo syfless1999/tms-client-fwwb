@@ -30,11 +30,11 @@ const plugins = [
       },
       pwa: pwa
         ? {
-            workboxPluginMode: 'InjectManifest',
-            workboxOptions: {
-              importWorkboxFrom: 'local',
-            },
-          }
+          workboxPluginMode: 'InjectManifest',
+          workboxOptions: {
+            importWorkboxFrom: 'local',
+          },
+        }
         : false, // default close dll, because issue https://github.com/ant-design/ant-design-pro/issues/4665
       // dll features https://webpack.js.org/plugins/dll-plugin/
       // dll: {
@@ -103,13 +103,13 @@ export default {
               icon: 'smile',
               component: './Welcome',
             },
-            {
-              path: '/admin',
-              name: 'admin',
-              icon: 'crown',
-              component: './Admin',
-              authority: ['admin'],
-            },
+            // {
+            //   path: '/admin',
+            //   name: 'admin',
+            //   icon: 'crown',
+            //   component: './Admin',
+            //   authority: ['admin'],
+            // },
             {
               name: 'bills',
               icon: 'arrow-right',
@@ -127,11 +127,17 @@ export default {
                   component: './bills/billAppend',
                 },
                 {
-                  // name: 'profile',
                   path: '/bills/:id',
                   component: './bills/$id',
                 },
               ],
+            },
+            {
+              name: 'userManage',
+              icon: 'user',
+              path: '/usermanage',
+              authority: ['admin'],
+              component: './userManage',
             },
             {
               component: './404',

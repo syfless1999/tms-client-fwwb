@@ -5,6 +5,7 @@ export default {
   'menu.login': 'Login',
   'menu.admin': 'admin',
   'menu.bills':'Bills',
+  'menu.userManage': 'User Manage',
   'menu.bills.list':'Bill List',
   'menu.bills.append': 'Append Bill',
   'menu.register': 'Registro',

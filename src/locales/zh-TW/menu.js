@@ -5,6 +5,7 @@ export default {
   'menu.login': '登錄',
   'menu.admin': '权限',
   'menu.bills': '採購入庫',
+  'menu.userManage': '用户管理',
   'menu.bills.list': '查看采購入庫列表',
   'menu.bills.append': '添加採購入庫申請',
   'menu.exception.403': '403',

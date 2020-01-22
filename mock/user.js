@@ -109,7 +109,7 @@ export default {
       });
       return;
     }
-    if (password === 'ant.design' && userName === 'user') {
+    if (pwd === 'ant.design' && no === 'user') {
       res.send({
         status: 'ok',
         // type,
