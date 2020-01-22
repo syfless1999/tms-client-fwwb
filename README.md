@@ -1,4 +1,4 @@
-# Ant Design Pro
+# TMS-Client 
 
 This project is initialized with [Ant Design Pro](https://pro.ant.design). Follow is the quick guide for how to use.
 
@@ -16,42 +16,25 @@ or
 yarn
 ```
 
-## Provided Scripts
+## Run Project
 
-Ant Design Pro provides some useful script to help you quick start and build with web project, code style check and test.
+Run project with these command :
 
-Scripts provided in `package.json`. It's safe to modify or add additional script:
-
-### Start project
-
-```bash
-npm start
+```sh
+npm run start
 ```
 
-### Build project
+or
 
-```bash
-npm run build
+```sh
+yarn start
 ```
 
-### Check code style
+Login with ID following authorities
 
-```bash
-npm run lint
+```js
+['operatorI','operatorII','supervisor','manager','admin']
 ```
 
-You can also use script to auto fix some lint error:
+all the password `123456` and test.
 
-```bash
-npm run lint:fix
-```
-
-### Test code
-
-```bash
-npm test
-```
-
-## More
-
-You can view full document on our [official website](https://pro.ant.design). And welcome any feedback in our [github](https://github.com/ant-design/ant-design-pro).
