@@ -1,12 +1,14 @@
 import { InfoCircleOutlined } from '@ant-design/icons';
 // import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
-import { Form, Button, Card, DatePicker, Input, InputNumber, Select, Tooltip, Upload, Icon } from 'antd';
+import { Form, Button, Card, DatePicker, Input, InputNumber, message, Select, Tooltip, Upload, Icon } from 'antd';
 import { FormattedMessage, formatMessage } from 'umi-plugin-react/locale';
 import React, { Component } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { connect } from 'dva';
 import styles from './style.less';
+import { router } from 'umi';
+
 
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -40,6 +42,11 @@ class BillAppend extends Component {
         dispatch({
           type: 'bills/appendBill',
           payload: formData,
+        }).then(res => {
+          if (res && res.status === "success") {
+            message.success("添加成功");
+            router.replace(`/bills/${res.data.bill.id}`)
+          }
         });
       }
     });

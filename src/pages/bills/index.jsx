@@ -200,7 +200,8 @@ class Bills extends Component {
       this.props.dispatch({
         type: 'bills/fetch',
         payload: {
-          page: page
+          page: page,
+          pageSize: 5
         }
       });
     }
@@ -243,7 +244,7 @@ class Bills extends Component {
     const ListContent = ({ data: { subPerson, subTime, status } }) => {
       console.log("status");
       console.log(status);
-      
+
       return (
         <div className={styles.listContent}>
           <div className={styles.listContentItem}>

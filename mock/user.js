@@ -6,10 +6,223 @@ function getFakeCaptcha(req, res) {
 const adminToken =
   'eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE1NzkxNDU1NDgsImV4cCI6MTU3OTE0OTE0OCwiYXVkIjoiMTIzMDkzNiIsInBvc3Rpb24iOiJzdXBlcnZpc29yIiwicGFzc3dvcmQiOiIxMjM0NTYifQ.H1VFIy6531u6p08YDa2buM563-emtoa8y89z0VXfvXA';
 
-const authorities = { 'operatorI': 1, 'operatirII': 2, 'supervisor': 3, 'manager': 4, 'admin': 5 };
+const authorities = { 'operatorI': 1, 'operatorII': 2, 'supervisor': 3, 'manager': 4, 'admin': 5 };
+
+const positions = ['operatorI', 'operatorII', 'supervisor', 'manager', 'admin'];
+
+
+// 部门
+const workcells = [
+  {
+    "id": 1,
+    "name": "公关部"
+  },
+  {
+    "id": 0,
+    "name": "事业部"
+  }
+];
+
+const users = [
+  {
+    "workcell": workcells[0],
+    "no": 1,
+    "name": "商一帆",
+    "pwd": "123456",
+    "position": {
+      "id": 1,
+      "name": "operatorII"
+    }
+  },
+  {
+    "workcell": workcells[1],
+    "no": 2,
+    "name": "商一帆",
+    "pwd": "123456",
+    "position": {
+      "id": 1,
+      "name": "operatorI"
+    }
+  },
+  {
+    "workcell": workcells[0],
+    "no": 3,
+    "name": "商一帆",
+    "pwd": "123456",
+    "position": {
+      "id": 1,
+      "name": "manager"
+    }
+  },
+  {
+    "workcell": workcells[0],
+    "no": 4,
+    "name": "商一帆",
+    "pwd": "123456",
+    "position": {
+      "id": 1,
+      "name": "manager"
+    }
+  }, {
+    "workcell": workcells[0],
+    "no": 5,
+    "name": "商一帆",
+    "pwd": "123456",
+    "position": {
+      "id": 1,
+      "name": "admin"
+    }
+  }, {
+    "workcell": workcells[0],
+    "no": 6,
+    "name": "商一帆",
+    "pwd": "123456",
+    "position": {
+      "id": 1,
+      "name": "supervisor"
+    }
+  }, {
+    "workcell": workcells[0],
+    "no": 7,
+    "name": "商一帆",
+    "pwd": "123456",
+    "position": {
+      "id": 1,
+      "name": "OperatorII"
+    }
+  }, {
+    "workcell": workcells[0],
+    "no": 8,
+    "name": "商一帆",
+    "pwd": "123456",
+    "position": {
+      "id": 1,
+      "name": "OperatorII"
+    }
+  }, {
+    "workcell": workcells[0],
+    "no": 9,
+    "name": "商一帆",
+    "pwd": "123456",
+    "position": {
+      "id": 1,
+      "name": "OperatorII"
+    }
+  }
+]
+
+
+
+
+function getWorkcells(req, res) {
+  return res.json({
+    status: "success",
+    data: {
+      workcells: workcells
+    }
+  })
+}
+
+function appendWorkcell(req, res) {
+  const { name } = req.body;
+
+  const newWorkcell = {
+    id: workcells.length + 1,
+    name: name
+  }
+  workcells.push(newWorkcell);
+  return res.json({
+    status: "success",
+    data: {
+      workcell: newWorkcell
+    }
+  })
+}
+
+function getUsers(req, res) {
+  let { page, pageSize, workcell } = req.query;
+  let allUsers = users;
+  if (workcell) {
+    allUsers = users.filter(user => user.workcell.id === +workcell);
+  }
+  const total = allUsers.length;
+  let start = (page - 1) * pageSize;
+  let end = Math.min(page * pageSize, total);
+
+  return res.json({
+    status: "success",
+    data: {
+      users: allUsers.slice(start, end),
+      total: total
+    }
+  });
+}
+
+function appendUser(req, res) {
+  const { workcell, no, pwd, name, position } = req.body;
+
+  const theWc = workcells.find(wc => wc.id === +workcell);
+
+  const theP = positions.find(p => p === position);
+
+  const newUser = {
+    "workcell": theWc,
+    "no": no,
+    "name": name,
+    "pwd": pwd,
+    "position": {
+      name: theP,
+      id: authorities[theP]
+    }
+  };
+
+  users.push(newUser);
+
+  return res.json({
+    status: "success",
+    data: {
+      user: newUser
+    }
+  });
+}
+
+function patchUser(req, res) {
+  const { no } = req.params;
+  const { position } = req.body;
+  const user = users.find(u => u.no === +no);
+
+  if (user) {
+    user.position.name = position;
+  }
+  return res.json({
+    status: "success",
+    data: {
+      user: user
+    }
+  });
+}
+
+function deleteUser(req, res) {
+  const { no } = req.params;
+
+  const user = users.find(u => u.no === +no);
+  return res.json({
+    status: "success",
+    data: {
+      user: user
+    }
+  });
+}
+
 
 
 export default {
+  'GET /api/workcells': getWorkcells,
+  'GET /api/users': getUsers,
+  'POST /api/workcells': appendWorkcell,
+  'POST /api/users': appendUser,
+  'PATCH /api/users/:no': patchUser,
+  'DELETE /api/users/:no': deleteUser,
   // 支持值为 Object 和 Array
   // 'GET /api/currentUser': {
   //   name: 'Serati Ma',
@@ -62,26 +275,26 @@ export default {
   //   phone: '0752-268888888',
   // },
   // GET POST 可省略
-  'GET /api/users': [
-    {
-      key: '1',
-      name: 'John Brown',
-      age: 32,
-      address: 'New York No. 1 Lake Park',
-    },
-    {
-      key: '2',
-      name: 'Jim Green',
-      age: 42,
-      address: 'London No. 1 Lake Park',
-    },
-    {
-      key: '3',
-      name: 'Joe Black',
-      age: 32,
-      address: 'Sidney No. 1 Lake Park',
-    },
-  ],
+  // 'GET /api/users': [
+  //   {
+  //     key: '1',
+  //     name: 'John Brown',
+  //     age: 32,
+  //     address: 'New York No. 1 Lake Park',
+  //   },
+  //   {
+  //     key: '2',
+  //     name: 'Jim Green',
+  //     age: 42,
+  //     address: 'London No. 1 Lake Park',
+  //   },
+  //   {
+  //     key: '3',
+  //     name: 'Joe Black',
+  //     age: 32,
+  //     address: 'Sidney No. 1 Lake Park',
+  //   },
+  // ],
   'POST /api/login': (req, res) => {
     const { no, pwd } = req.body;
 

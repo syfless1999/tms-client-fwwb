@@ -44,10 +44,8 @@ const Model = {
       //   type: 'appendList',
       //   payload: Array.isArray(response) ? response : [],
       // });
-      if (response.status === "success") {
-        message.success("采购入库申请成功");
-        router.replace(`/bills/${response.data.bill.id}`)
-      }
+      //router.replace(`/bills/${response.data.bill.id}`)
+      return response;
     },
 
     *fetchInfo({ payload }, { call, put }) {
