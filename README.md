@@ -36,5 +36,5 @@ Login with ID following authorities
 ['operatorI','operatorII','supervisor','manager','admin']
 ```
 
-all the password `123456` and test.
+all the password is  `123456` .
 
