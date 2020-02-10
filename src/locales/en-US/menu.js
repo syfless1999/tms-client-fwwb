@@ -6,6 +6,7 @@ export default {
   'menu.login': 'Login',
   'menu.register': 'Register',
   'menu.bills':'Bills',
+  'menu.editorMap':'Map Editor',
   'menu.bills.list':'Bill List',
   'menu.userManage': 'User Manage',
   'menu.bills.append': 'Append Bill',

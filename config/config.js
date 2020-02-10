@@ -140,6 +140,13 @@ export default {
               component: './userManage',
             },
             {
+              name: 'editorMap',
+              icon: 'global',
+              path: '/editormap',
+              component: './EditorMap',
+              authority: ['manager', 'admin'],
+            },
+            {
               component: './404',
             },
           ],

@@ -7,6 +7,7 @@ export default {
   'menu.register': '注册',
   'menu.bills': '采购入库',
   'menu.userManage': '用户管理',
+  'menu.editorMap':'地图编辑器',
   'menu.bills.list': '查看采购入库列表',
   'menu.bills.append': '添加采购入库申请',
   'menu.register.result': '注册结果',

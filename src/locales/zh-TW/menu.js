@@ -12,6 +12,7 @@ export default {
   'menu.exception.404': '404',
   'menu.exception.500': '500',
   'menu.register': '註冊',
+  'menu.editorMap':'地图编辑器',
   'menu.register.result': '註冊結果',
   'menu.dashboard': 'Dashboard',
   'menu.dashboard.analysis': '分析頁',
