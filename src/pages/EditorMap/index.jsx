@@ -9,6 +9,7 @@ import { FlowItemPanel } from './components/EditorItemPanel';
 import { FlowToolbar } from './components/EditorToolbar';
 import { Button } from 'antd';
 import styles from './index.less';
+import { formatMessage } from 'umi-plugin-react/locale';
 
 GGEditor.setTrackable(false);
 
@@ -16,7 +17,7 @@ GGEditor.setTrackable(false);
 class ggEditor extends Component {
   render() {
     return (
-      <PageHeaderWrapper content="圆形表示夹具柜，方形表示生产线，拖动即可放置设施">
+      <PageHeaderWrapper content={formatMessage({id:'editormap.guidance'})}>
         <GGEditor className={styles.editor}>
           <Row type="flex" className={styles.editorHd}>
             <Col span={24}>
@@ -28,14 +29,14 @@ class ggEditor extends Component {
               <FlowItemPanel />
             </Col>
             <Col span={16} className={styles.editorContent}>
-              <Flow className={styles.flow} ref="flow" 
-              onNodeMouseLeave={(e) => { console.log(e) }} 
-              onNodeDragEnd={() => { console.log("onNodeDragEnd") }} />
+              <Flow className={styles.flow} ref="flow"
+                onNodeMouseLeave={(e) => { console.log(e) }}
+                onNodeDragEnd={() => { console.log("onNodeDragEnd") }} />
             </Col>
             <Col span={4} className={styles.editorSidebar}>
               <FlowDetailPanel />
               <EditorMinimap />
-              <Button type="primary">保存</Button>
+              <Button type="primary">{formatMessage({id:'editormap.save'})}</Button>
             </Col>
           </Row>
           <FlowContextMenu />
