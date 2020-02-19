@@ -295,7 +295,7 @@ export default {
   //     address: 'Sidney No. 1 Lake Park',
   //   },
   // ],
-  'POST /api/login': (req, res) => {
+  'POST /api/users/login': (req, res) => {
     const { no, pwd } = req.body;
 
     // if (no === 'admin' && pwd === 'admin') {
@@ -338,7 +338,7 @@ export default {
     });
   },
 
-  'POST /api/currentUser': (req, res) => {
+  'POST /api/users/currentUser': (req, res) => {
     const currentAuthority = req.headers.authorization;
 
     // 认证成功
