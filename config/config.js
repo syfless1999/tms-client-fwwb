@@ -30,11 +30,11 @@ const plugins = [
       },
       pwa: pwa
         ? {
-          workboxPluginMode: 'InjectManifest',
-          workboxOptions: {
-            importWorkboxFrom: 'local',
-          },
-        }
+            workboxPluginMode: 'InjectManifest',
+            workboxOptions: {
+              importWorkboxFrom: 'local',
+            },
+          }
         : false, // default close dll, because issue https://github.com/ant-design/ant-design-pro/issues/4665
       // dll features https://webpack.js.org/plugins/dll-plugin/
       // dll: {
@@ -102,8 +102,7 @@ export default {
               name: 'welcome',
               icon: 'smile',
               component: './Welcome',
-            },
-            // {
+            }, // {
             //   path: '/admin',
             //   name: 'admin',
             //   icon: 'crown',
@@ -133,6 +132,28 @@ export default {
               ],
             },
             {
+              name: 'scraps',
+              icon: 'arrow-right',
+              path: '/scraps',
+              authority: ['operator 1', 'operator 2', 'supervisor', 'manager', 'admin'],
+              routes: [
+                {
+                  path: '/scraps/list',
+                  name: 'list',
+                  component: './scraps',
+                },
+                {
+                  name: 'append',
+                  path: '/scraps/append',
+                  component: './scraps/scrapAppend',
+                },
+                {
+                  path: '/scraps/:id',
+                  component: './scraps/$id',
+                },
+              ],
+            },
+            {
               name: 'userManage',
               icon: 'user',
               path: '/usermanage',
@@ -145,6 +166,24 @@ export default {
               path: '/editormap',
               component: './EditorMap',
               authority: ['manager', 'admin'],
+            },
+            {
+              name: '个人设置',
+              icon: 'smile',
+              path: '/accountsettings',
+              component: './AccountSettings',
+            },
+            {
+              name: '个人中心',
+              icon: 'smile',
+              path: '/accountcenter',
+              component: './AccountCenter',
+            },
+            {
+              name: '修改工夹具基本信息',
+              icon: 'arrow-right',
+              path: '/changetdefs',
+              component: './ChangetDefs',
             },
             {
               component: './404',

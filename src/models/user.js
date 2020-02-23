@@ -1,4 +1,4 @@
-import { queryCurrent, query as queryUsers, fetchUsers, fetchWorkcells, addUser, addWorkcell, deleteUser, updateAuthority } from '@/services/user';
+import { queryCurrent, query as queryUsers, fetchUsers, fetchWorkcells, addUser, addWorkcell, deleteUser, updateAuthority , changePwd} from '@/services/user';
 import { setToken } from '@/utils/authority';
 const UserModel = {
   namespace: 'user',
@@ -50,6 +50,14 @@ const UserModel = {
     *updateAuthority({ payload }, { call }) {
       return yield call(updateAuthority, payload);
     },
+    
+    *changePwd({ payload , callback }, { call}) {
+      const response = yield call(changePwd, payload);
+      if(callback){
+        callback(response);
+      }
+    },
+
   },
   reducers: {
     saveCurrentUser(state, action) {
