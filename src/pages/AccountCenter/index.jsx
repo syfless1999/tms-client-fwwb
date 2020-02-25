@@ -120,11 +120,6 @@ class AccountCenter extends Component {
     });
   };
 
-  // showcurrentUser = e =>{
-  //   const { currentUser = {}} = this.props;
-  //   console.log('Received values of form: ', currentUser);
-  // }
-
   handleInputConfirm = () => {
     const { state } = this;
     const { inputValue } = state;
@@ -181,97 +176,22 @@ class AccountCenter extends Component {
               {!dataLoading && (
                 <div>
                   <div className={styles.avatarHolder}>
-                    <img alt="" src={currentUser.avatar} />
+                    <img alt="" src='https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png' />
                     <div className={styles.name}>{currentUser.name}</div>
-                    <div>{currentUser.no}</div>
-                    {/* <Button type="primary" onClick={this.showcurrentUser()}>showcurrentUser</Button> */}
-
                   </div>
                   <div className={styles.detail}>
                     <p>
-                      <i className={styles.title} />
-                      {currentUser.phone}
-                      {/* <Icon type="environment" /> */}
-                    </p>
-                    
-                     {/* <p>
-                      <i className={styles.group} />
-                      {currentUser.group}
+                      <Icon type="yuque" />
+                      <i className={styles.no} />
+                      {currentUser.no}
                     </p>
                     <p>
-                      <i className={styles.address} />
-                      {
-                        (
-                          currentUser.geographic || {
-                            province: {
-                              label: '',
-                            },
-                          }
-                        ).province.label
-                      }
-                      {
-                        (
-                          currentUser.geographic || {
-                            city: {
-                              label: '',
-                            },
-                          }
-                        ).city.label
-                      }
-                    </p>  */}
+                      <Icon type="phone" />
+                      <i className={styles.phone} />
+                      {currentUser.phone}
+                    </p>
                   </div>
                   <Divider dashed />
-                  <div className={styles.tags}>
-                    <div className={styles.tagsTitle}>标签</div>
-                    {(currentUser.tags || []).concat(newTags).map(item => (
-                      <Tag key={item.key}>{item.label}</Tag>
-                    ))}
-                    {inputVisible && (
-                      <Input
-                        ref={ref => this.saveInputRef(ref)}
-                        type="text"
-                        size="small"
-                        style={{
-                          width: 78,
-                        }}
-                        value={inputValue}
-                        onChange={this.handleInputChange}
-                        onBlur={this.handleInputConfirm}
-                        onPressEnter={this.handleInputConfirm}
-                      />
-                    )}
-                    {!inputVisible && (
-                      <Tag
-                        onClick={this.showInput}
-                        style={{
-                          background: '#fff',
-                          borderStyle: 'dashed',
-                        }}
-                      >
-                        <PlusOutlined />
-                      </Tag>
-                    )}
-                  </div>
-                  {/* <Divider
-                    style={{
-                      marginTop: 16,
-                    }}
-                    dashed
-                  />
-                  <div className={styles.team}>
-                    <div className={styles.teamTitle}>团队</div>
-                    <Row gutter={36}>
-                      {currentUser.notice &&
-                        currentUser.notice.map(item => (
-                          <Col key={item.id} lg={24} xl={12}>
-                            <Link to={item.href}>
-                              <Avatar size="small" src={item.logo} />
-                              {item.member}
-                            </Link>
-                          </Col>
-                        ))}
-                    </Row>
-                  </div> */}
                 </div>
               )}
             </Card>
@@ -293,7 +213,7 @@ class AccountCenter extends Component {
   }
 }
 
-export default connect(({ loading, accountCenter }) => ({
-  currentUser: accountCenter.currentUser,
-  currentUserLoading: loading.effects['accountCenter/fetchCurrent'],
+export default connect(({ loading, user}) => ({
+  currentUser: user.currentUser,
+  currentUserLoading: loading.effects['user/fetchCurrent'],
 }))(AccountCenter);

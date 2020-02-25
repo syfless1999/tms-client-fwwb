@@ -10,23 +10,15 @@ handleSubmitEmail = e => {
     const {form,onCancel} = this.props;
     form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        console.log('Received values of form: ', values);
-        onCancel();
-      //   const {dispatch} = this.props;
-      //   dispatch({
-      //     type: "/users/changePwd",
-      //     payload: values,
-      //     callback:response=>{
-      //       if(response.type === "success"){
-      //         this.setState({
-      //           visible: false,
-      //         });
-      //       }else{
-      //         message.error(response.content);
-      //       }
-      //     }
-      //   })
-       }
+        // this.props.dispatch({
+        //   type: "/users/changeEmail",
+        //   payload: values,
+        // }).then(res => {
+        //   if (res && res.status === "success") {
+        //     message.success("修改成功");
+        //   }
+        // });
+      }
     });
   };
 
@@ -77,4 +69,7 @@ handleSubmitEmail = e => {
   }
 }
 
-export default Form.create()(ChangeEmail);
+export default Form.create()(connect(({ loading , user}) => ({
+  user,
+  loading: loading.effects['user/fetchCurrent']
+}))(ChangeEmail));

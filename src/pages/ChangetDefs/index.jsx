@@ -1,4 +1,4 @@
-import { InfoCircleOutlined } from '@ant-design/icons';
+import { InfoCircleOutlined, ConsoleSqlOutlined } from '@ant-design/icons';
 import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
 import { Button, Card, DatePicker, Input, InputNumber, Radio, Select, Tooltip } from 'antd';
@@ -23,6 +23,7 @@ class ChangetDefs extends Component {
           type: 'changetDefs/submitRegularForm',
           payload: values,
         });
+//        console.log('Received values of form: ', values);
       }
     });
   };

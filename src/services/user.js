@@ -65,3 +65,9 @@ export async function deleteUser(params) {
   });
 }
 
+export async function changePwd(params) {
+  return request('/api/users', {
+    method: 'PATCH',
+    data: params
+  });
+}

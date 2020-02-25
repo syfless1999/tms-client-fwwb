@@ -1,4 +1,3 @@
-import { FormattedMessage, formatMessage } from 'umi-plugin-react/locale';
 import React, { Component, Fragment } from 'react';
 import { Modal , Form , Input , message} from 'antd';
 import { connect } from 'dva';
@@ -7,28 +6,33 @@ class ChangePwd extends Component {
    
   handleSubmitPwd = e => {
     e.preventDefault();
-    const {form,onCancel} = this.props;
+    const {form} = this.props;
     form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        console.log('Received values of form: ', values);
-        onCancel();
-      //   const {dispatch} = this.props;
-      //   dispatch({
-      //     type: "/users/changePwd",
-      //     payload: values,
-      //     callback:response=>{
-      //       if(response.type === "success"){
-      //         this.setState({
-      //           visible: false,
-      //         });
-      //       }else{
-      //         message.error(response.content);
-      //       }
-      //     }
-      //   })
-       }
+        this.props.dispatch({
+          type: "/users/changePwd",
+          payload: values,
+        }).then(res => {
+          if (res && res.status === "success") {
+            message.success("修改成功");
+          }
+        });
+      }
     });
   };
+
+  CheckOldPwd =(rule,value,callback)=>{
+    const { currentUser = {}} = this.props;
+    if(value){
+        if(value !== currentUser.pwd){
+          callback("原密码不正确！");
+        }else{
+          callback();
+        } 
+    }else{
+        callback();
+    }
+  }
 
   CheckPwd =(rule,value,callback)=>{
     const {form} = this.props;
@@ -89,7 +93,7 @@ class ChangePwd extends Component {
                     message: 'Please input your oldpwd!',
                   },
                   {
-                    validator: this.validateToNextPassword,
+                    validator: this.CheckOldPwd,
                   },
                 ],
               })(<Input />)}
@@ -129,4 +133,8 @@ class ChangePwd extends Component {
   }
 }
 
-export default Form.create()(ChangePwd);
+export default Form.create()(connect(({ loading , user}) => ({
+  user,
+  currentUser: user.currentUser,
+  currentUserLoading: loading.effects['user/fetchCurrent']
+}))(ChangePwd));

@@ -51,11 +51,8 @@ const UserModel = {
       return yield call(updateAuthority, payload);
     },
     
-    *changePwd({ payload , callback }, { call}) {
-      const response = yield call(changePwd, payload);
-      if(callback){
-        callback(response);
-      }
+    *changePwd({ payload }, { call}) {
+      return yield call(changePwd, payload);
     },
 
   },

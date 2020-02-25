@@ -214,6 +214,13 @@ function deleteUser(req, res) {
   });
 }
 
+function changePwd(req,res) {
+  console.log(req.params);
+  return res.josn({
+    status: "success",
+  })
+}
+
 
 
 export default {
@@ -223,6 +230,7 @@ export default {
   'POST /api/users': appendUser,
   'PATCH /api/users/:no': patchUser,
   'DELETE /api/users/:no': deleteUser,
+  'PATCH /api/users': changePwd,
   // 支持值为 Object 和 Array
   // 'GET /api/currentUser': {
   //   name: 'Serati Ma',
@@ -308,7 +316,7 @@ export default {
             name: 'sxy',
             email: '123@qq.com',
             phone: '13911112222',
-            pwd: '12345678',
+            pwd: '123456',
             workcell: {
               id: 1,
             },
@@ -351,7 +359,7 @@ export default {
             name: 'sxy',
             email: '123@qq.com',
             phone: '13911112222',
-            pwd: '12345678',
+            pwd: '123456',
             workcell: {
               id: 1,
               name: '事业部',
