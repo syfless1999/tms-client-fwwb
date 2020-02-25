@@ -40,7 +40,7 @@ class ChangePwd extends Component {
           callback();
         } 
     }else{
-        callback("请输入密码！");
+        callback();
     } 
   }
 
@@ -92,7 +92,7 @@ class ChangePwd extends Component {
                     validator: this.validateToNextPassword,
                   },
                 ],
-              })(<Input.Password />)}
+              })(<Input />)}
             </Form.Item>
 
             <Form.Item label="newpwd" hasFeedback>

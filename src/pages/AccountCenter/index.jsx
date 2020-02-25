@@ -1,5 +1,5 @@
 import { PlusOutlined } from '@ant-design/icons';
-import { Avatar, Card, Col, Divider, Input, Row, Tag , Button} from 'antd';
+import { Avatar, Card, Col, Divider, Input, Row, Tag , Button , Icon} from 'antd';
 import React, { Component } from 'react';
 import { GridContent } from '@ant-design/pro-layout';
 import Link from 'umi/link';
@@ -120,10 +120,10 @@ class AccountCenter extends Component {
     });
   };
 
-  showcurrentUser = e =>{
-    const { currentUser = {}} = this.props;
-    console.log('Received values of form: ', currentUser);
-  }
+  // showcurrentUser = e =>{
+  //   const { currentUser = {}} = this.props;
+  //   console.log('Received values of form: ', currentUser);
+  // }
 
   handleInputConfirm = () => {
     const { state } = this;
@@ -184,15 +184,17 @@ class AccountCenter extends Component {
                     <img alt="" src={currentUser.avatar} />
                     <div className={styles.name}>{currentUser.name}</div>
                     <div>{currentUser.no}</div>
-                    <Button type="primary" onClick={this.showcurrentUser()}>添加用户</Button>
-                    
+                    {/* <Button type="primary" onClick={this.showcurrentUser()}>showcurrentUser</Button> */}
+
                   </div>
                   <div className={styles.detail}>
                     <p>
                       <i className={styles.title} />
-                      {currentUser.title}
+                      {currentUser.phone}
+                      {/* <Icon type="environment" /> */}
                     </p>
-                    <p>
+                    
+                     {/* <p>
                       <i className={styles.group} />
                       {currentUser.group}
                     </p>
@@ -216,7 +218,7 @@ class AccountCenter extends Component {
                           }
                         ).city.label
                       }
-                    </p>
+                    </p>  */}
                   </div>
                   <Divider dashed />
                   <div className={styles.tags}>
@@ -250,7 +252,7 @@ class AccountCenter extends Component {
                       </Tag>
                     )}
                   </div>
-                  <Divider
+                  {/* <Divider
                     style={{
                       marginTop: 16,
                     }}
@@ -269,7 +271,7 @@ class AccountCenter extends Component {
                           </Col>
                         ))}
                     </Row>
-                  </div>
+                  </div> */}
                 </div>
               )}
             </Card>

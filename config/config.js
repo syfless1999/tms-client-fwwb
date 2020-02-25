@@ -168,19 +168,19 @@ export default {
               authority: ['manager', 'admin'],
             },
             {
-              name: '个人设置',
+              name: 'accountsettings',
               icon: 'smile',
               path: '/accountsettings',
               component: './AccountSettings',
             },
             {
-              name: '个人中心',
+              name: 'accountcenter',
               icon: 'smile',
               path: '/accountcenter',
               component: './AccountCenter',
             },
             {
-              name: '修改工夹具基本信息',
+              name: 'changetdefs',
               icon: 'arrow-right',
               path: '/changetdefs',
               component: './ChangetDefs',

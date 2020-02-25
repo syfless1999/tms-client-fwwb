@@ -66,7 +66,7 @@ class ChangetDefs extends Component {
       },
     };
     return (
-      <PageHeaderWrapper content={<FormattedMessage id="changetdefs.basic.description" />}>
+      <PageHeaderWrapper>
         <Card bordered={false}>
           <Form
             onSubmit={this.handleSubmit}
@@ -128,15 +128,12 @@ class ChangetDefs extends Component {
             <FormItem {...formItemLayout} label={<FormattedMessage id="changetdefs.UPL.label" />}>
               {getFieldDecorator('UPL', {
                 initialValue: '3',
-                rules: [
-                  {
-                    required: true,
-                    message: formatMessage({
-                      id: 'changetdefs.UPL.required',
-                    }),
-                  },
-                ],
-              })(<Input/>)}
+              })(
+                <InputNumber
+                  min={0}
+                  step={1}
+                />,
+              )}
             </FormItem>
 
             <FormItem
