@@ -214,13 +214,12 @@ function deleteUser(req, res) {
   });
 }
 
-function changePwd(req,res) {
-  console.log(req.params);
-  return res.josn({
+function change(req,res) {
+  console.log(req.body);
+  return res.json({
     status: "success",
   })
 }
-
 
 
 export default {
@@ -230,7 +229,7 @@ export default {
   'POST /api/users': appendUser,
   'PATCH /api/users/:no': patchUser,
   'DELETE /api/users/:no': deleteUser,
-  'PATCH /api/users': changePwd,
+  'PATCH /api/users': change,
   // 支持值为 Object 和 Array
   // 'GET /api/currentUser': {
   //   name: 'Serati Ma',

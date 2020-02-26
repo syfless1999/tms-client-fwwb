@@ -1,4 +1,4 @@
-import { queryCurrent, query as queryUsers, fetchUsers, fetchWorkcells, addUser, addWorkcell, deleteUser, updateAuthority , changePwd} from '@/services/user';
+import { queryCurrent, query as queryUsers, fetchUsers, fetchWorkcells, addUser, addWorkcell, deleteUser, updateAuthority , changePwd ,changeEmail} from '@/services/user';
 import { setToken } from '@/utils/authority';
 const UserModel = {
   namespace: 'user',
@@ -53,6 +53,10 @@ const UserModel = {
     
     *changePwd({ payload }, { call}) {
       return yield call(changePwd, payload);
+    },
+
+    *changeEmail({ payload }, { call}) {
+      return yield call(changeEmail, payload);
     },
 
   },

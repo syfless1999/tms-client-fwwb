@@ -7,17 +7,18 @@ class ChangeEmail extends Component {
    
 handleSubmitEmail = e => {
     e.preventDefault();
-    const {form,onCancel} = this.props;
+    const {form , onCancel} = this.props;
     form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        // this.props.dispatch({
-        //   type: "/users/changeEmail",
-        //   payload: values,
-        // }).then(res => {
-        //   if (res && res.status === "success") {
-        //     message.success("修改成功");
-        //   }
-        // });
+        this.props.dispatch({
+          type: "user/changeEmail",
+          payload: values,
+        }).then(res => {
+          if (res && res.status === "success") {
+            message.success("修改成功");
+            onCancel();
+          }
+        })
       }
     });
   };

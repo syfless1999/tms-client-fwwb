@@ -181,14 +181,29 @@ class AccountCenter extends Component {
                   </div>
                   <div className={styles.detail}>
                     <p>
+                      <i className={styles.no}/>{"No：    "}
                       <Icon type="yuque" />
-                      <i className={styles.no} />
-                      {currentUser.no}
+                      <i className={styles.no}/>{currentUser.no}
                     </p>
                     <p>
+                      <i className={styles.no}/>{"电话：    "}
                       <Icon type="phone" />
-                      <i className={styles.phone} />
-                      {currentUser.phone}
+                      <i className={styles.phone}/>{currentUser.phone}
+                    </p>
+                    <p>
+                      <i className={styles.no}/>{"邮箱：    "}
+                      <Icon type="mail" />
+                      <i className={styles.phone}/>{currentUser.email}
+                    </p>
+                    <p>
+                      <i className={styles.no}/>{"部门：    "}
+                      <Icon type="team" />
+                      <i className={styles.phone}/>{currentUser.workcell.name}
+                    </p>
+                    <p>
+                      <i className={styles.no}/>{"职位：    "}
+                      <Icon type="user" />
+                      <i className={styles.phone}/>{currentUser.position.name}
                     </p>
                   </div>
                   <Divider dashed />

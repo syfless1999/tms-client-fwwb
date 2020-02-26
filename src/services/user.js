@@ -71,3 +71,10 @@ export async function changePwd(params) {
     data: params
   });
 }
+
+export async function changeEmail(params) {
+  return request('/api/users', {
+    method: 'PATCH',
+    data: params
+  });
+}
