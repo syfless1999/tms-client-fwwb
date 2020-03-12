@@ -134,6 +134,25 @@ class Login extends Component {
                 }
               }}
             />
+
+            <UserName
+              //name="password"
+              name="workcellId"
+              placeholder="部门编号：JW05"
+              rules={[
+                {
+                  required: true,
+                  message: "部门编号不能为空",
+                },
+              ]}
+              onPressEnter={e => {
+                e.preventDefault();
+
+                if (this.loginForm) {
+                  this.loginForm.validateFields(this.handleSubmit);
+                }
+              }}
+            />
           </Tab>
           <Tab
             key="mobile"
