@@ -28,7 +28,7 @@ const Model = {
           list: response.data.bills,
           total: response.data.total,
           page: payload.page || 1,
-          page: payload.status || status,
+          status: payload.status || status,
         }
       });
 

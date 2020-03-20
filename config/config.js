@@ -132,6 +132,28 @@ export default {
               ],
             },
             {
+              name: 'repairs',
+              icon: 'tool',
+              path: '/repairs',
+              authority: ['operator 1', 'operator 2', 'supervisor', 'manager', 'admin'],
+              routes:[
+                {
+                  path: '/repairs/list',
+                  name: 'list',
+                  component: './repairs',
+                },
+                {
+                  name: 'append',
+                  path: '/repairs/append',
+                  component: './repairs/repairAppend',
+                },
+                {
+                  path: '/repairs/:id',
+                  component: './repairs/$id',
+                },
+              ]
+            },
+            {
               name: 'scraps',
               icon: 'arrow-right',
               path: '/scraps',
