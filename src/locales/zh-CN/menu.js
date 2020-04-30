@@ -62,4 +62,8 @@ export default {
   'menu.editor.flow': '流程编辑器',
   'menu.editor.mind': '脑图编辑器',
   'menu.editor.koni': '拓扑编辑器',
+  'menu.useRecords': '进出库',
+  'menu.useRecords.list': '查看进出库操作记录',
+  'menu.useRecords.useout': '出库',
+  'menu.useRecords.usein': '入库',
 };

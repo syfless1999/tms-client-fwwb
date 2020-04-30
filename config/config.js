@@ -136,7 +136,7 @@ export default {
               icon: 'tool',
               path: '/repairs',
               authority: ['operator 1', 'operator 2', 'supervisor', 'manager', 'admin'],
-              routes:[
+              routes: [
                 {
                   path: '/repairs/list',
                   name: 'list',
@@ -151,7 +151,34 @@ export default {
                   path: '/repairs/:id',
                   component: './repairs/$id',
                 },
-              ]
+              ],
+            },
+            {
+              name: 'useRecords',
+              icon: 'arrow-right',
+              path: '/useRecords',
+              authority: ['operator 1', 'operator 2', 'supervisor', 'manager', 'admin'],
+              routes: [
+                {
+                  path: '/useRecords/list',
+                  name: 'list',
+                  component: './useRecords',
+                },
+                {
+                  name: 'useout',
+                  path: '/useRecords/useout',
+                  component: './useRecords/useout',
+                },
+                {
+                   name: 'usein',
+                   path: '/useRecords/usein',
+                   component: './useRecords/usein',
+                },
+                {
+                  path: '/useRecords/:id',
+                  component: './useRecords/$id',
+                },
+              ],
             },
             {
               name: 'scraps',
@@ -261,13 +288,15 @@ export default {
   },
   manifest: {
     basePath: '/',
-  }, // chainWebpack: webpackPlugin,
+  }, 
+  // chainWebpack: webpackPlugin,
   // 反向代理设置
-  // proxy: {
-  //   '/api/login': {
-  //     target: 'http://localhost:8080',
-  //     changeOrigin: true,
-  //     pathRewrite: { '^/api/login': '/user/login' },
-  //   },
-  // },
+
+  proxy: {
+    '/api': {
+      target: 'http://www.ozjxh.com:8080',
+      changeOrigin: true, // pathRewrite: { '^/api/login': '/user/login' },
+    },
+  },
+  mock: false,
 };

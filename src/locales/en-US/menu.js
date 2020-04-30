@@ -59,4 +59,8 @@ export default {
   'menu.editor.flow': 'Flow Editor',
   'menu.editor.mind': 'Mind Editor',
   'menu.editor.koni': 'Koni Editor',
+  'menu.useRecords': 'Use Records',
+  'menu.useRecords.list': 'History',
+  'menu.useRecords.useout': 'Tool Out',
+  'menu.useRecords.usein': 'Tool In',
 };

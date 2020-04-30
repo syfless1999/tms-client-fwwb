@@ -71,138 +71,226 @@ const secondPerson = {
 }
 
 
-const bills = [{
-  id: 1,
-  tDef: tDef,
-  subPerson: subPerson,
-  subTime: new Date(),
-  status: "已提交未初审",
-  image: covers[0],
-  number: 3,
-},
-{
-  id: 2,
-  tDef: tDef,
-  subPerson: subPerson,
-  subTime: new Date(),
-  status: "已提交初审未通过",
-  image: covers[1],
-  firstPerson: firstPerson,
-  firstTime: new Date(),
-  number: 3,
-
-},
-{
-  id: 3,
-  tDef: tDef,
-  subPerson: subPerson,
-  subTime: new Date(),
-  status: "已初审未终审",
-  image: covers[2],
-  firstPerson: firstPerson,
-  firstTime: new Date(),
-  number: 3,
-
-},
-{
-  id: 4,
-  tDef: tDef,
-  subPerson: subPerson,
-  subTime: new Date(),
-  status: "已初审终审未通过",
-  image: covers[3],
-  firstPerson: firstPerson,
-  firstTime: new Date(),
-  secondPerson: secondPerson,
-  secondTime: new Date(),
-  number: 3,
-
-},
-{
-  id: 5,
-  tDef: tDef,
-  subPerson: subPerson,
-  subTime: new Date(),
-  status: "已终审",
-  image: avatars[0],
-  firstPerson: firstPerson,
-  firstTime: new Date(),
-  secondPerson: secondPerson,
-  secondTime: new Date(),
-  number: 3,
-
-},
-{
-  id: 6,
-  tDef: tDef,
-  subPerson: subPerson,
-  subTime: new Date(),
-  status: "已提交未初审",
-  image: avatars[1],
-  number: 3,
-
-},
-{
-  id: 7,
-  tDef: tDef,
-  subPerson: subPerson,
-  subTime: new Date(),
-  status: "已提交未初审",
-  image: avatars[2],
-  number: 3,
-
-},
-{
-  id: 8,
-  tDef: tDef,
-  subPerson: subPerson,
-  subTime: new Date(),
-  status: "已提交未初审",
-  image: avatars[3],
-  number: 3,
-
-},
-{
-  id: 9,
-  tDef: tDef,
-  subPerson: subPerson,
-  subTime: new Date(),
-  status: "已提交未初审",
-  image: avatars[4],
-},
-{
-  id: 10,
-  tDef: tDef,
-  subPerson: subPerson,
-  subTime: new Date(),
-  status: "已提交未初审",
-  image: avatars[5],
-  number: 3,
-
-},
-{
-  id: 11,
-  tDef: tDef,
-  subPerson: subPerson,
-  subTime: new Date(),
-  status: "已提交未初审",
-  image: avatars[6],
-  number: 3,
-
-},
+const useRecords = [
+  {
+    id: 48,
+    location: {
+      id: 1,
+      name: "17-C1-2",
+      workcell: {
+        id: 7,
+        name: "JW05"
+      },
+      x: 100,
+      y: 100
+    },
+    productLine: {
+      name: "JCXA02_L3",
+      no: 37,
+      workcell: {
+        id: 7,
+        name: "JW05"
+      },
+      x: 50,
+      y: 450
+    },
+    recorder: {
+      email: "2956901287@qq.com",
+      id: 5,
+      name: "Li Wang3",
+      no: "1215074",
+      position: {
+        id: 1,
+        name: "ROLE_operator1"
+      },
+      workcell: {
+        id: 7,
+        name: "JW05"
+      }
+    },
+    staff: {
+      email: "1111@qq.com",
+      id: 2,
+      name: "ooo",
+      no: "1234567"
+    },
+    status: {
+      id: 1,
+      name: "出库"
+    },
+    time: "2003-05-01 13:15:00",
+    tool: {
+      billNo: "BO19070500000008",
+      code: "LM2132-3",
+      id: 38,
+      location: {
+        id: 1,
+        name: "17-C1-2",
+        workcell: {
+          id: 7,
+          name: "JW05"
+        },
+        x: 100,
+        y: 100
+      },
+      rate: 0.0,
+      regDate: "2019-10-01 12:41:00",
+      seqId: 1,
+      status: {
+        id: 1,
+        name: "在产线"
+      },
+      tDef: {
+        code: "LM2132-3",
+        editOn: "2020-01-14 11:49:13",
+        family: "BFC SQ 2218",
+        familyId: 1,
+        id: 1184,
+        maxCount: 0,
+        model: "BFC SQ 2218 B42",
+        name: "BFC SQ 2218 B42 螺丝紧固夹具",
+        partNo: "KBZ233500/1",
+        pmPeriod: 30,
+        recOn: "2020-01-14 11:15:18",
+        recer: {
+          email: "2956901287@qq.com",
+          id: 2,
+          name: "Xianghai Zhang",
+          no: "1215072",
+          position: {
+            id: 2,
+            name: "ROLE_operator2"
+          },
+          workcell: {
+            id: 7,
+            name: "JW05"
+          }
+        },
+        upl: 11,
+        workcell: {
+          id: 7,
+          name: "JW05"
+        }
+      },
+      usedCount: 11
+    }
+  },
+  {
+    id: 48,
+    location: {
+      id: 1,
+      name: "17-C1-2",
+      workcell: {
+        id: 7,
+        name: "JW05"
+      },
+      x: 100,
+      y: 100
+    },
+    productLine: {
+      name: "JCXA02_L3",
+      no: 37,
+      workcell: {
+        id: 7,
+        name: "JW05"
+      },
+      x: 50,
+      y: 450
+    },
+    recorder: {
+      email: "2956901287@qq.com",
+      id: 5,
+      name: "Li Wang3",
+      no: "1215074",
+      position: {
+        id: 1,
+        name: "ROLE_operator1"
+      },
+      workcell: {
+        id: 7,
+        name: "JW05"
+      }
+    },
+    staff: {
+      email: "1111@qq.com",
+      id: 2,
+      name: "ooo",
+      no: "1234567"
+    },
+    status: {
+      id: 1,
+      name: "出库"
+    },
+    time: "2003-05-01 13:15:00",
+    tool: {
+      billNo: "BO19070500000008",
+      code: "LM2132-3",
+      id: 38,
+      location: {
+        id: 1,
+        name: "17-C1-2",
+        workcell: {
+          id: 7,
+          name: "JW05"
+        },
+        x: 100,
+        y: 100
+      },
+      rate: 0.0,
+      regDate: "2019-10-01 12:41:00",
+      seqId: 1,
+      status: {
+        id: 1,
+        name: "在产线"
+      },
+      tDef: {
+        code: "LM2132-3",
+        editOn: "2020-01-14 11:49:13",
+        family: "BFC SQ 2218",
+        familyId: 1,
+        id: 1184,
+        maxCount: 0,
+        model: "BFC SQ 2218 B42",
+        name: "BFC SQ 2218 B42 螺丝紧固夹具",
+        partNo: "KBZ233500/1",
+        pmPeriod: 30,
+        recOn: "2020-01-14 11:15:18",
+        recer: {
+          email: "2956901287@qq.com",
+          id: 2,
+          name: "Xianghai Zhang",
+          no: "1215072",
+          position: {
+            id: 2,
+            name: "ROLE_operator2"
+          },
+          workcell: {
+            id: 7,
+            name: "JW05"
+          }
+        },
+        upl: 11,
+        workcell: {
+          id: 7,
+          name: "JW05"
+        }
+      },
+      usedCount: 11
+    }
+  },
 ];
 
-function fakeBills(page, pageSize, status) {
-  let res = bills.concat();
+function fakeUseRecords(page, pageSize, status) {
+  let res = useRecords.concat();
   if (status != 0) {
-    res = res.filter(bill => bill.status === status);
+    res = res.filter(useRecord => useRecord.status === status);
   }
   const total = res.length;
   let start = (page - 1) * pageSize;
   let end = Math.min(page * pageSize, res.length);
 
   return {
-    bills: res.slice(start, end),
+    useRecords: res.slice(start, end),
     total: total
   };
 }
@@ -267,7 +355,7 @@ function getFakeList(req, res) {
 /**
  * 获取所有入库订单
  */
-function getBillList(req, res) {
+function getUseRecordList(req, res) {
   let {
     page,
     pageSize,
@@ -278,7 +366,7 @@ function getBillList(req, res) {
   if (!pageSize) pageSize = 5;
   if (!status) status = 0;
 
-  const result = fakeBills(page, pageSize, status);
+  const result = fakeUseRecords(page, pageSize, status);
 
 
   return res.json({
@@ -287,28 +375,28 @@ function getBillList(req, res) {
   });
 }
 
-function postBill(req, res) {
-  const newBill = {
-    id: bills.length + 1,
+function postUseRecord(req, res) {
+  const newUseRecords = {
+    id: useRecords.length + 1,
     tDef: tDef,
     subPerson: subPerson,
     subTime: new Date(),
-    status: "已终审",
+    status: "出库",
     image: avatars[6],
   };
   console.log(req.body);
-  bills.push(newBill);
+  useRecords.push(newUseRecords);
   res.json({
     status: "success",
     data: {
-      bill: newBill
+      useRecord: newUseRecords
     }
   })
 }
 
 function getInfo(req, res) {
   const { id } = req.params;
-  const info = bills.find(bill => bill.id === +id);
+  const info = useRecords.find(useRecord => useRecord.id === +id);
   return res.json({
     status: "success",
     data: {
@@ -368,21 +456,21 @@ function postFakeList(req, res) {
 function patchCheck(req, res) {
   const { id } = req.params;
   const { status } = req.body;
-  const bill = bills.find(bill => bill.id === +id);
-  bill.status = status || bill.status;
+  const useRecord = useRecords.find(useRecord => useRecord.id === +id);
+  useRecord.status = status || useRecord.status;
   if (status === ("已提交初审未通过") || status === ("已初审未终审")) {
-    bill.firstPerson = firstPerson;
-    bill.firstTime = new Date();
+    useRecord.firstPerson = firstPerson;
+    useRecord.firstTime = new Date();
   } else if (status === ("已初审终审未通过") || status === ("已终审")) {
-    bill.firstPerson = bill.firstPerson || secondPerson;
-    bill.firstTime = bill.firstTime || new Date();
-    bill.secondPerson = secondPerson;
-    bill.secondTime = new Date();
+    useRecord.firstPerson = useRecord.firstPerson || secondPerson;
+    useRecord.firstTime = useRecord.firstTime || new Date();
+    useRecord.secondPerson = secondPerson;
+    useRecord.secondTime = new Date();
   }
   return res.json({
     status: "success",
     data: {
-      bill: bill
+      useRecord: useRecord
     }
   });
 
@@ -390,10 +478,10 @@ function patchCheck(req, res) {
 
 export default {
   'GET  /api/fake_list': getFakeList,
-  'GET /api/bills': getBillList,
-  'POST /api/bills': postBill,
+//  'GET /api/useRecords': getUseRecordList,
+  'POST /api/useRecords': postUseRecord,
   'POST  /api/fake_list': postFakeList,
-  'GET /api/bills/:id': getInfo,
-  'PATCH /api/bills/:id/firstCheck': patchCheck,
-  'PATCH /api/bills/:id/secondCheck': patchCheck,
+  'GET /api/useRecords/:id': getInfo,
+  'PATCH /api/useRecords/:id/firstCheck': patchCheck,
+  'PATCH /api/useRecords/:id/secondCheck': patchCheck,
 };
