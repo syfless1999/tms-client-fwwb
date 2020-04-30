@@ -7,7 +7,8 @@ import React, { Component } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { connect } from 'dva';
 import { router } from 'umi';
-
+import moment from 'moment';
+import { getToken } from '../../../utils/authority';
 
 const FormItem = Form.Item;
 
@@ -29,6 +30,7 @@ class RepairAppend extends Component {
     form.validateFieldsAndScroll((err, values) => {
       let formData = new FormData();
       formData.append("image", files[0]);
+      formData.append('subTime', new moment(new Date()).format('YYYY-MM-DD h:mm:ss'));
 
       for (let item in values) {
         if (item !== 'image' && values[item]) {
@@ -36,17 +38,33 @@ class RepairAppend extends Component {
         }
       }
 
-      if (!err) {
-        dispatch({
-          type: 'repairs/appendRepair',
-          payload: formData,
-        }).then(res => {
-          if (res && res.status === "success") {
-            message.success("添加成功");
-            router.replace('/repairs/list')
-          }
-        });
-      }
+
+      fetch('/api/repairApps', {
+        method: 'POST',
+        body: formData,
+        headers: {
+          Authorization: "Bearer " + getToken(),
+        }
+      }).then(res => res.json()).then((res) => {
+        if (res && res.status === 'success') {
+          message.success('添加成功');
+          router.replace(`/repairs/${res.data.repairApp.id}`);
+        } else {
+          message.success(res.description);
+        }
+      })
+
+      // if (!err) {
+      //   dispatch({
+      //     type: 'repairs/appendRepair',
+      //     payload: formData,
+      //   }).then(res => {
+      //     if (res && res.status === "success") {
+      //       message.success("添加成功");
+      //       router.replace('/repairs/list')
+      //     }
+      //   });
+      // }
     });
   };
 

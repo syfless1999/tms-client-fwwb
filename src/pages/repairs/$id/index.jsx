@@ -15,7 +15,8 @@ import classNames from 'classnames';
 import { connect } from 'dva';
 import styles from './style.less';
 import { compareAuthority } from '../../../utils/authority';
-
+import { IMAGE_URL_SUFFIX } from '../../../constants';
+import moment from 'moment';
 
 const { Step } = Steps;
 
@@ -128,26 +129,24 @@ class $id extends Component {
     dispatch({
       type: 'repairs/checkRepair',
       payload: {
-        id: id,
-        status: status
+        id,
+        checkTime: new moment(new Date()).format('YYYY-MM-DD h:mm:ss')
       }
     });
   }
 
   render() {
     const { repairs } = this.props;
-
     const info = repairs.info;
 
-
-    if (info.tDef.name) {
+    if (info.tool.tDef.name) {
       return (
         <PageHeaderWrapper
           title="报修详细信息"
-          extra={action(info.status, this.repairConfirm)}
+          extra={ action(info.tool.status.name, this.repairConfirm)}
           className={styles.pageHeader}
-          extraContent={extra(info.status)}
-          content={description(info.subPerson.name, info.tDef.name, info.subTime, info.id)}
+          extraContent={extra(info.tool.status.name)}
+          content={description(info.subPerson.name, info.tool.tDef.name, info.subTime, info.id)}
         >
           <div className={styles.main}>
             <GridContent>
@@ -161,10 +160,10 @@ class $id extends Component {
                   {({ isMobile }) => (
                     <Steps
                       direction={isMobile ? 'vertical' : 'horizontal'}
-                      current={getCurrent(info.status)}
+                      current={getCurrent(info.tool.status.name)}
                     >
                       <Step title="提出申请" description={desc(info.subPerson.name || "", info.subTime || "")} />
-                      <Step title="已修复" description={desc(info.checkPerson.name || "", info.checkTime || "")} />
+                      <Step title="已修复" description={desc(info.checkPerson ? info.checkPerson.name : "", info.checkTime || "")} />
                     </Steps>
                   )}
                 </RouteContext.Consumer>
@@ -181,13 +180,13 @@ class $id extends Component {
                     marginBottom: 24,
                   }}
                 >
-                  <Descriptions.Item label="夹具代码">{info.tDef.code}</Descriptions.Item>
-                  <Descriptions.Item label="名称">{info.tDef.name}</Descriptions.Item>
-                  <Descriptions.Item label="所属大类">{info.tDef.family}</Descriptions.Item>
-                  <Descriptions.Item label="点检周期">{info.tDef.pmPeriod}</Descriptions.Item>
-                  <Descriptions.Item label="用途">{info.tDef.usedFor}</Descriptions.Item>
-                  <Descriptions.Item label="每条生产线配备的数量">{info.tDef.upl}</Descriptions.Item>
-                  <Descriptions.Item label="partNo">{info.tDef.partNo}</Descriptions.Item>
+                  <Descriptions.Item label="夹具代码">{info.tool.tDef.code}</Descriptions.Item>
+                  <Descriptions.Item label="名称">{info.tool.tDef.name}</Descriptions.Item>
+                  <Descriptions.Item label="所属大类">{info.tool.tDef.family}</Descriptions.Item>
+                  <Descriptions.Item label="点检周期">{info.tool.tDef.pmPeriod}</Descriptions.Item>
+                  <Descriptions.Item label="用途">{info.tool.tDef.usedFor}</Descriptions.Item>
+                  <Descriptions.Item label="每条生产线配备的数量">{info.tool.tDef.upl}</Descriptions.Item>
+                  <Descriptions.Item label="partNo">{info.tool.tDef.partNo}</Descriptions.Item>
                 </Descriptions>
 
                 <Descriptions
@@ -197,7 +196,7 @@ class $id extends Component {
                   title="夹具损坏预览"
                 >
                   <Descriptions.Item>
-                    <img src={info.image} alt="" />
+                    <img src={IMAGE_URL_SUFFIX + info.image} alt="" width={750} />
                   </Descriptions.Item>
                 </Descriptions>
               </Card>

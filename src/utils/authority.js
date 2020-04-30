@@ -67,4 +67,17 @@ const getToken = () => {
 const setToken = (token) => {
   localStorage.setItem('accessToken', token);
 }
-export { getToken, setToken };
+
+
+/**
+ * 更新workcell
+ */
+const setWorkcell = id => {
+  localStorage.setItem('workcellId', id);
+}
+
+
+const getWorkcell = _ => {
+  return localStorage.getItem('workcellId');
+}
+export { getToken, setToken, setWorkcell, getWorkcell };

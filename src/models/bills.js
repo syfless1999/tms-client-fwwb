@@ -1,6 +1,6 @@
 import { addFakeList, removeFakeList, updateFakeList, queryBills, addBill, queryInfo, firstCheck, secondCheck } from '../services/bills';
 import { message } from 'antd';
-import { router } from 'umi';
+
 
 
 const Model = {
@@ -8,11 +8,9 @@ const Model = {
   state: {
     list: [],
     total: 0,
-    page: 1,
-    pageSize: 5,
-    status: 0,
     info: {
-      subPerson: {},
+      submitPerson: {},
+      status: {},
       tDef: {},
       firstPerson: {},
       secondPerson: {},
@@ -21,30 +19,17 @@ const Model = {
   effects: {
     *fetch({ payload }, { call, put, select }) {
       const response = yield call(queryBills, payload);
-      const status = yield select(state => state.status);
       yield put({
         type: 'setData',
         payload: {
-          list: response.data.bills,
-          total: response.data.total,
-          page: payload.page || 1,
-          status: payload.status || status,
+          list: response.data.bills.list,
+          total: response.data.bills.total,
         }
       });
-
-      // yield put({
-      //   type: 'queryList',
-      //   payload: Array.isArray(response) ? response : [],
-      // });
     },
 
     *appendBill({ payload }, { call }) {
       const response = yield call(addBill, payload);
-      // yield put({
-      //   type: 'appendList',
-      //   payload: Array.isArray(response) ? response : [],
-      // });
-      //router.replace(`/bills/${response.data.bill.id}`)
       return response;
     },
 
@@ -53,7 +38,7 @@ const Model = {
       if (response && response.status === 'success') {
         yield put({
           type: 'setInfo',
-          payload: response.data.info || {},
+          payload: response.data.bill || {},
         });
       }
     },
@@ -97,24 +82,13 @@ const Model = {
     // queryList(state, action) {
     //   return { ...state, list: action.payload };
     // },
-    setData(state, { payload: { list, total, page, status } }) {
+    setData(state, { payload: { list, total } }) {
 
-      return { ...state, list, total, page, status }
+      return { ...state, list, total }
     },
     setInfo(state, { payload }) {
-      if (!payload.tDef) {
-        payload.tDef = {};
-      }
-      if (!payload.subPerson) {
-        payload.subPerson = {};
-      }
-      if (!payload.secondPerson) {
-        payload.secondPerson = {};
-      }
-      if (!payload.firstPerson) {
-        payload.firstPerson = {};
-      }
-      return { ...state, info: payload };
+      const info = { ...state.info, ...payload };
+      return { ...state, info };
     },
 
     appendList(

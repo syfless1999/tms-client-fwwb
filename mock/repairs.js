@@ -325,7 +325,6 @@ function postRepair(req, res) {
 
 function getInfo(req, res) {
   const { id } = req.params;
-  console.log(id);
   const info = repairs.find(repair => repair.id === +id);
   return res.json({
     status: "success",
@@ -356,10 +355,10 @@ function patchCheck(req, res) {
 }
 
 export default {
-  'GET /api/repairApps': getRepairList,
-  'POST /api/repairApps': postRepair,
-  'GET /api/repairApps/:id': getInfo,
-  'PATCH /api/repairApps/:id': patchCheck,
+  // 'GET /api/repairApps': getRepairList,
+  // 'POST /api/repairApps': postRepair,
+  // 'GET /api/repairApps/:id': getInfo,
+  // 'PATCH /api/repairApps/:id': patchCheck,
 };
 
 

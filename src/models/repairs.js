@@ -1,6 +1,5 @@
 import { queryRepairs, queryInfo, addRepair, checkRepair } from '../services/repairs';
 import { message } from 'antd';
-import { router } from 'umi';
 
 
 const Model = {
@@ -8,16 +7,14 @@ const Model = {
   state: {
     list: [],
     total: 0,
-    page: 1,
-    pageSize: 16,
-    status: 0,
     info: {
       toolId: "",
       description: "",
       image: null,
       subTime: null,
-      tDef:{
-
+      tool: {
+        tDef: {},
+        status: {},
       },
       subPerson: {
         name: '',
@@ -32,18 +29,19 @@ const Model = {
   effects: {
     *fetch({ payload }, { call, put, select }) {
       const response = yield call(queryRepairs, payload);
-      const status = yield select(state => state.status);
-      const page = yield select(state => state.page);
 
-      yield put({
-        type: 'setData',
-        payload: {
-          list: response.data.repairApps,
-          total: response.data.total,
-          page: payload.page || page,
-          status: payload.status || status,
-        }
-      });
+      if (response.status === "success") {
+        yield put({
+          type: 'setData',
+          payload: {
+            list: response.data.repairApps.list,
+            total: response.data.repairApps.total,
+          }
+        });
+      } else {
+        message.error(response.message);
+      }
+
     },
 
     *appendRepair({ payload }, { call }) {
@@ -70,16 +68,16 @@ const Model = {
       if (response && response.status === 'success') {
         yield put({
           type: 'setInfo',
-          payload: response.data.repairApp || {},
+          payload: response.data.repairApp,
         });
         message.success("状态已更新")
       }
     },
   },
   reducers: {
-    setData(state, { payload: { list, total, page, status } }) {
+    setData(state, { payload: { list, total } }) {
 
-      return { ...state, list, total, page, status }
+      return { ...state, list, total }
     },
     setInfo(state, { payload }) {
       return { ...state, info: payload };

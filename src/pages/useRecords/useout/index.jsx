@@ -41,12 +41,12 @@ class UseOut extends Component {
       if (!err) {
         dispatch({
           type: 'useRecords/useOut',
-          // payload: {
-          //     values,
-          //     time : new Date(),
-          // }
+          payload: {
+              ...values,
+              time : new Date(),
+          }
 //          this.props.form.getFieldsValue()
-          payload : values
+//          payload : ...values
         }).then(res => {
           if (res && res.status === "success") {
             message.success("添加成功");

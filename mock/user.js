@@ -215,7 +215,6 @@ function deleteUser(req, res) {
 }
 
 function change(req,res) {
-  console.log(req.body);
   return res.json({
     status: "success",
   })
@@ -223,12 +222,12 @@ function change(req,res) {
 
 
 export default {
-  'GET /api/workcells': getWorkcells,
-  'GET /api/users': getUsers,
-  'POST /api/workcells': appendWorkcell,
-  'POST /api/users': appendUser,
-  'PATCH /api/users/:no': patchUser,
-  'DELETE /api/users/:no': deleteUser,
+  // 'GET /api/workcells': getWorkcells,
+  // 'GET /api/users': getUsers,
+//   'POST /api/workcells': appendWorkcell,
+//   'POST /api/users': appendUser,
+//   'PATCH /api/users/:no': patchUser,
+  // 'DELETE /api/users/:no': deleteUser,
   'PATCH /api/users': change,
   // 支持值为 Object 和 Array
   // 'GET /api/currentUser': {
@@ -302,85 +301,85 @@ export default {
   //     address: 'Sidney No. 1 Lake Park',
   //   },
   // ],
-  'POST /api/users/login': (req, res) => {
-    const { no, pwd } = req.body;
+  // 'POST /api/users/login': (req, res) => {
+  //   const { no, pwd } = req.body;
 
-    // if (no === 'admin' && pwd === 'admin') {
-    if (pwd === '123456' && no in authorities) {
-      res.send({
-        status: 'success',
-        data: {
-          user: {
-            no: '12345678',
-            name: 'sxy',
-            email: '123@qq.com',
-            phone: '13911112222',
-            pwd: '123456',
-            workcell: {
-              id: 1,
-            },
-            position: {
-              id: 1,
-              name: no,
-            },
-          },
-          token: adminToken,
-        },
-      });
-      return;
-    }
-    if (pwd === 'ant.design' && no === 'user') {
-      res.send({
-        status: 'ok',
-        // type,
-        currentAuthority: 'user',
-      });
-      return;
-    }
+  //   // if (no === 'admin' && pwd === 'admin') {
+  //   if (pwd === '123456' && no in authorities) {
+  //     res.send({
+  //       status: 'success',
+  //       data: {
+  //         user: {
+  //           no: '12345678',
+  //           name: 'sxy',
+  //           email: '123@qq.com',
+  //           phone: '13911112222',
+  //           pwd: '123456',
+  //           workcell: {
+  //             id: 1,
+  //           },
+  //           position: {
+  //             id: 1,
+  //             name: no,
+  //           },
+  //         },
+  //         token: adminToken,
+  //       },
+  //     });
+  //     return;
+  //   }
+  //   if (pwd === 'ant.design' && no === 'user') {
+  //     res.send({
+  //       status: 'ok',
+  //       // type,
+  //       currentAuthority: 'user',
+  //     });
+  //     return;
+  //   }
 
-    res.send({
-      status: 'error',
-      // type,
-      currentAuthority: 'guest',
-    });
-  },
+  //   res.send({
+  //     status: 'error',
+  //     // type,
+  //     currentAuthority: 'guest',
+  //   });
+  // },
 
-  'POST /api/users/currentUser': (req, res) => {
-    const currentAuthority = req.headers.authorization;
+  // 'POST /api/users/currentUser': (req, res) => {
+  //   const currentAuthority = req.headers.authorization;
 
-    // 认证成功
-    if (currentAuthority === 'Bearer ' + adminToken) {
-      res.send({
-        status: 'success',
-        data: {
-          user: {
-            no: 'admin',
-            name: 'sxy',
-            email: '123@qq.com',
-            phone: '13911112222',
-            pwd: '123456',
-            workcell: {
-              id: 1,
-              name: '事业部',
-            },
-            position: {
-              id: 1,
-              name: 'admin',
-            },
-          },
-          token: adminToken,
-        },
-      });
-    } else {
-      // 认证失败，用户名、密码不匹配
-      res.status(200).send({
-        status: 'no user or number can not match password.',
-        data: {
-          token: '',
-        },
-      });
-    }
-  },
+  //   // 认证成功
+  //   if (currentAuthority === 'Bearer ' + adminToken) {
+  //     res.send({
+  //       status: 'success',
+  //       data: {
+  //         user: {
+  //           no: 'admin',
+  //           name: 'sxy',
+  //           email: '123@qq.com',
+  //           phone: '13911112222',
+  //           pwd: '123456',
+  //           workcell: {
+  //             id: 1,
+  //             name: '事业部',
+  //           },
+  //           position: {
+  //             id: 1,
+  //             name: 'admin',
+  //           },
+  //         },
+  //         token: adminToken,
+  //       },
+  //     });
+  //   } else {
+  //     // 认证失败，用户名、密码不匹配
+  //     res.status(200).send({
+  //       status: 'no user or number can not match password.',
+  //       data: {
+  //         token: '',
+  //       },
+  //     });
+  //   }
+  // },
   'GET /api/500': (req, res) => {
     res.status(500).send({
       timestamp: 1513932555104,

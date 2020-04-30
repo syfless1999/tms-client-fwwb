@@ -53,3 +53,28 @@ export const getRouteAuthority = (path, routeData) => {
   });
   return authorities;
 };
+
+
+export const getStatusWord = (status) => {
+  let result = '';
+  switch (status) {
+    case 0:
+      result = "已提交未初审";
+      break;
+    case 1:
+      result = "已提交初审未通过";
+      break;
+    case 2:
+      result = "已初审未终审";
+      break;
+    case 3:
+      result = "已初审终审未通过";
+      break;
+    case 4:
+      result = "已终审";
+      break;
+    default:
+      break;
+  }
+  return result;
+}

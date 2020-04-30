@@ -1,13 +1,11 @@
 import { Card, Col, Form, List, Row, Select, Typography } from 'antd';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'dva';
-import moment from 'moment';
-import AvatarList from './components/AvatarList';
 import StandardFormRow from './components/StandardFormRow';
 import TagSelect from './components/TagSelect';
 import styles from './style.less';
 import { router } from 'umi';
-
+import { IMAGE_URL_SUFFIX } from '../../constants';
 
 const { Option } = Select;
 const FormItem = Form.Item;
@@ -16,28 +14,35 @@ const { Paragraph } = Typography;
 
 // const getKey = (id, index) => `${id}-${index}`;
 
-const Repairs = ({ dispatch, repairs: { list = [], pageSize, total }, loading }) => {
+const Repairs = ({ dispatch, repairs: { list = [], total }, loading }) => {
+
+  const [params, setParams] = useState({
+    page: 1,
+    pageSize: 4,
+    status: null
+  })
+
   useEffect(() => {
+    const { page, pageSize, status } = params;
+    const payload = { page, pageSize };
+    if (status) payload.status = status;
     dispatch({
       type: 'repairs/fetch',
-      payload: {
-        page: 1,
-      },
+      payload,
     });
-  }, []);
+  }, [params]);
 
   const getInfo = id => {
     router.replace(`/repairs/${id}`);
-
   }
 
+
+  // 更改页码
   const pageChange = page => {
-    dispatch({
-      type: 'repairs/fetch',
-      payload: {
-        page: page,
-      },
-    });
+    setParams({
+      ...params,
+      page
+    })
   }
 
 
@@ -55,15 +60,18 @@ const Repairs = ({ dispatch, repairs: { list = [], pageSize, total }, loading })
       }}
       pagination={{
         onChange: pageChange,
-        pageSize: pageSize,
+        pageSize: params.pageSize,
         total: total,
       }}
       dataSource={list}
       renderItem={item => (
         <List.Item>
-          <Card className={styles.card} hoverable cover={<img src={item.image} onClick={() => getInfo(item.id)} />}>
+          <Card
+            className={styles.card}
+            hoverable
+            cover={<img src={IMAGE_URL_SUFFIX + item.image} onClick={() => getInfo(item.id)} />}>
             <Card.Meta
-              title={<a>{item.tDef.name}</a>}
+              title={<a>{item.tool.tDef.name}</a>}
               description={
                 <Paragraph
                   className={styles.item}
@@ -145,8 +153,8 @@ const Repairs = ({ dispatch, repairs: { list = [], pageSize, total }, loading })
                       width: '100%',
                     }}
                   >
-                    <Option value="good">优秀</Option>
-                    <Option value="normal">普通</Option>
+                    <Option value={0}>未修</Option>
+                    <Option value={1}>已修</Option>
                   </Select>
                 </FormItem>
               </Col>

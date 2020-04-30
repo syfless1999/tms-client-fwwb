@@ -10,6 +10,9 @@ export async function queryRepairs(params) {
 export async function addRepair(params) {
   return request('/api/repairApps', {
     method: 'POST',
+    headers: {
+      'content-type': 'multipart/form-data'
+    },
     data: params,
   });
 }
