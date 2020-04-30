@@ -73,12 +73,12 @@ class EditableCell extends React.Component {
     const { children, dataIndex, record, title } = this.props;
     const { editing } = this.state;
     return editing ? (
-      <Select defaultValue="operatorI" ref={node => (this.input = node)} onPressEnter={this.save} onSelect={this.save} onBlur={this.save} >
-        <Option value="operatorI">初级用户</Option>
-        <Option value="operatorII">高级用户</Option>
-        <Option value="supervisor">监管员</Option>
-        <Option value="manager">Workcell经理</Option>
-        <Option value="admin">管理员</Option>
+      <Select defaultValue="ROLE_operator1" ref={node => (this.input = node)} onPressEnter={this.save} onSelect={this.save} onBlur={this.save} >
+        <Option value="ROLE_operator1">初级用户</Option>
+        <Option value="ROLE_operator2">高级用户</Option>
+        <Option value="ROLE_supervisor">监管员</Option>
+        <Option value="ROLE_manager">Workcell经理</Option>
+        <Option value="ROLE_admin">管理员</Option>
       </Select>
     ) : (
         <div
@@ -198,16 +198,18 @@ class TableList extends Component {
           payload: values,
         }).then(res => {
           if (res && res.status === "success") {
-            message.success("创建成功");
+            message.success("创建用户成功");
           }
-        });
-        this.props.dispatch({
-          type: 'user/fetchUsers',
-          payload: {
-            page: 1,
-            pageSize: this.props.user.pageSize
-          }
-        });
+        }).then(_ => {
+          this.props.dispatch({
+            type: 'user/fetchUsers',
+            payload: {
+              page: 1,
+              pageSize: this.props.user.pageSize
+            }
+          });
+        })
+
       }
     });
 
@@ -235,12 +237,12 @@ class TableList extends Component {
     })
   }
 
-  deleteConfirm = no => {
+  deleteConfirm = id => {
     const { dispatch } = this.props;
     dispatch({
       type: 'user/deleteUser',
       payload: {
-        no: no,
+        id: id,
       }
     }).then(res => {
       if (res && res.status === "success") {
@@ -252,17 +254,19 @@ class TableList extends Component {
           }
         });
         message.success("删除成功");
+      } else {
+        message.error(res.description);
       }
     });
   }
 
   getPositionName = position => {
     const authorities = {
-      'operatorI': "初级用户",
-      'operatorII': "高级用户",
-      'supervisor': "监管员",
-      'manager': "workcell经理",
-      'admin': "管理员"
+      'ROLE_operator1': "初级用户",
+      'ROLE_operator2': "高级用户",
+      'ROLE_supervisor': "监管员",
+      'ROLE_manager': "workcell经理",
+      'ROLE_admin': "管理员"
     };
     return authorities[position] || position;
 
@@ -301,7 +305,7 @@ class TableList extends Component {
       width: '20%',
       render: (text, record) => (
         <span>
-          <Popconfirm title="确认要删除此用户吗？" onConfirm={() => this.deleteConfirm(record.no)} okText="确认" cancelText="取消">
+          <Popconfirm title="确认要删除此用户吗？" onConfirm={() => this.deleteConfirm(record.id)} okText="确认" cancelText="取消">
             <Icon type="delete" />
           </Popconfirm>
         </span>
@@ -311,7 +315,6 @@ class TableList extends Component {
 
   handleSave = params => {
     const { position, no } = params;
-    console.log(position, no);
     this.props.dispatch({
       type: "user/updateAuthority",
       payload: {
@@ -322,15 +325,15 @@ class TableList extends Component {
       if (res && res.status === "success") {
         message.success("权限修改完成");
       }
-    });
-    this.props.dispatch({
-      type: 'user/fetchUsers',
-      payload: {
-        page: this.props.user.page,
-        pageSize: 5
-      }
-    });
-
+    }).then(_ => {
+      this.props.dispatch({
+        type: 'user/fetchUsers',
+        payload: {
+          page: this.props.user.page,
+          pageSize: 5
+        }
+      });
+    })
   }
 
   render() {
@@ -437,7 +440,7 @@ class TableList extends Component {
                     message: '姓名不能为空',
                   },
                 ],
-              })(<Input placeholder="请输入工号" />)}
+              })(<Input placeholder="请输入姓名" />)}
             </FormItem>
             <FormItem label="初始密码" {...formItemLayout}>
               {getFieldDecorator('pwd', {
@@ -460,11 +463,11 @@ class TableList extends Component {
                 ],
               })(
                 <RadioGroup>
-                  <Radio value={'operatorI'}>初级用户</Radio>
-                  <Radio value={'operatorII'}>高级用户</Radio>
-                  <Radio value={'supervisor'}>监管员</Radio>
-                  <Radio value={'manager'}>Workcell经理</Radio>
-                  <Radio value={'admin'}>管理员</Radio>
+                  <Radio value={'ROLE_operator1'}>初级用户</Radio>
+                  <Radio value={'ROLE_operator2'}>高级用户</Radio>
+                  <Radio value={'ROLE_supervisor'}>监管员</Radio>
+                  <Radio value={'ROLE_manager'}>Workcell经理</Radio>
+                  <Radio value={'ROLE_admin'}>管理员</Radio>
                 </RadioGroup>,
               )}
             </FormItem>

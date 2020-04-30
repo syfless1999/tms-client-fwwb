@@ -1,8 +1,5 @@
 import {
   DingdingOutlined,
-  DownOutlined,
-  EllipsisOutlined,
-  InfoCircleOutlined,
 } from '@ant-design/icons';
 import {
   Badge,
@@ -11,17 +8,13 @@ import {
   Statistic,
   Descriptions,
   Divider,
-  Dropdown,
-  Menu,
   Popover,
   Steps,
   Table,
-  Tooltip,
   Empty,
   Row,
   Col,
   Popconfirm,
-  message,
 } from 'antd';
 import { GridContent, PageHeaderWrapper, RouteContext } from '@ant-design/pro-layout';
 import React, { Component, Fragment } from 'react';
@@ -32,17 +25,7 @@ import { compareAuthority } from '../../../utils/authority';
 
 
 const { Step } = Steps;
-const ButtonGroup = Button.Group;
 
-// const mobileMenu = (
-//   <Menu>
-//     <Menu.Item key="1">操作一</Menu.Item>
-//     <Menu.Item key="2">操作二</Menu.Item>
-//     <Menu.Item key="3">选项一</Menu.Item>
-//     <Menu.Item key="4">选项二</Menu.Item>
-//     <Menu.Item key="">选项三</Menu.Item>
-//   </Menu>
-// );
 
 
 const action = (status, click1, click2) => (
@@ -384,14 +367,13 @@ class $id extends Component {
       }
       return percent;
     }
-
     return (
       (<PageHeaderWrapper
         title="采购入库申请详细信息"
-        extra={action(info.status, this.firstConfirm, this.secondConfirm)}
+        extra={action(info.status.name, this.firstConfirm, this.secondConfirm)}
         className={styles.pageHeader}
-        extraContent={extra(info.status, info.number)}
-        content={description(info.subPerson.name, info.tDef.name, info.subTime, info.id)}
+        extraContent={extra(info.status.name, info.number)}
+        content={description(info.submitPerson.name, info.name, info.submitTime, info.id)}
         tabActiveKey={tabActiveKey}
         onTabChange={this.onTabChange}
       // tabList={[
@@ -418,10 +400,10 @@ class $id extends Component {
                   <Steps
                     direction={isMobile ? 'vertical' : 'horizontal'}
                     progressDot={customDot}
-                    current={getCurrent(info.status)}
-                    status={getStatus(info.status)}
+                    current={getCurrent(info.status.name)}
+                    status={getStatus(info.status.name)}
                   >
-                    <Step title="提出申请" description={desc(info.subPerson.name || "", info.subTime || "")} />
+                    <Step title="提出申请" description={desc(info.submitPerson.name || "", info.submitTime || "")} />
                     <Step title="初审" description={desc(info.firstPerson.name || "", info.firstTime || "")} />
                     <Step title="终审" description={desc(info.secondPerson.name || "", info.secondTime || "")} />
                     <Step title="完成" />
@@ -441,13 +423,13 @@ class $id extends Component {
                   marginBottom: 24,
                 }}
               >
-                <Descriptions.Item label="夹具代码">{info.tDef.code}</Descriptions.Item>
-                <Descriptions.Item label="名称">{info.tDef.name}</Descriptions.Item>
-                <Descriptions.Item label="所属大类">{info.tDef.family}</Descriptions.Item>
-                <Descriptions.Item label="点检周期">{info.tDef.pmPeriod}</Descriptions.Item>
-                <Descriptions.Item label="用途">{info.tDef.usedFor}</Descriptions.Item>
-                <Descriptions.Item label="每条生产线配备的数量">{info.tDef.upl}</Descriptions.Item>
-                <Descriptions.Item label="partNo">{info.tDef.partNo}</Descriptions.Item>
+                <Descriptions.Item label="夹具代码">{info.code || ""}</Descriptions.Item>
+                <Descriptions.Item label="名称">{info.name || ""}</Descriptions.Item>
+                <Descriptions.Item label="所属大类">{info.family || ""}</Descriptions.Item>
+                <Descriptions.Item label="点检周期">{info.pmPeriod || ""}</Descriptions.Item>
+                <Descriptions.Item label="用途">{info.usedFor || ""}</Descriptions.Item>
+                <Descriptions.Item label="每条生产线配备的数量">{info.upl || ""}</Descriptions.Item>
+                <Descriptions.Item label="partNo">{info.partNo || ""}</Descriptions.Item>
               </Descriptions>
               <Descriptions
                 style={{

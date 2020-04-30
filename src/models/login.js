@@ -1,8 +1,9 @@
 import { stringify } from 'querystring';
 import { router } from 'umi';
 import { fakeAccountLogin, getFakeCaptcha } from '@/services/login';
-import { setAuthority, setToken } from '@/utils/authority';
+import { setAuthority, setToken, setWorkcell } from '@/utils/authority';
 import { getPageQuery } from '@/utils/utils';
+import { message } from 'antd';
 const Model = {
   namespace: 'login',
   state: {
@@ -10,13 +11,18 @@ const Model = {
   },
   effects: {
     *login({ payload }, { call, put }) {
-      const response = yield call(fakeAccountLogin, payload);
-      yield put({
-        type: 'changeLoginStatus',
-        payload: response,
-      }); // Login successfully
+
+      let response = yield call(fakeAccountLogin, payload);
+
+
+
 
       if (response.status === 'success') {
+        yield put({
+          type: 'changeLoginStatus',
+          payload: response,
+        }); // Login successfully
+
 
         const urlParams = new URL(window.location.href);
 
@@ -36,8 +42,11 @@ const Model = {
             return;
           }
         }
-        redirect = "/welcome"
-        router.replace(redirect || '/');
+        redirect = "/";
+
+        router.replace(redirect);
+      } else {
+        message.error("密码错误")
       }
     },
 
@@ -62,10 +71,11 @@ const Model = {
   },
   reducers: {
     changeLoginStatus(state, { payload }) {
-      // setAuthority(payload.currentAuthority);
-      setAuthority(payload.data.user.position.name);
-      // localStorage存储accessToken和authority
+
+      setWorkcell(payload.data.user.workcell.id);
+      setAuthority(payload.data.user.position.name.slice(5));
       setToken(payload.data.token);
+
       return { ...state, status: payload.status, type: payload.type };
     },
   },

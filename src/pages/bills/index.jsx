@@ -26,6 +26,7 @@ import { connect } from 'dva';
 import { findDOMNode } from 'react-dom';
 import moment from 'moment';
 import styles from './style.less';
+import { status2Percent, status2Color } from './billStatus';
 
 const FormItem = Form.Item;
 const RadioButton = Radio.Button;
@@ -38,6 +39,9 @@ class Bills extends Component {
     visible: false,
     done: false,
     current: undefined,
+    page: 1,
+    pageSize: 5,
+    status: null,
   };
 
   formLayout = {
@@ -53,17 +57,35 @@ class Bills extends Component {
 
   componentDidMount() {
     const { dispatch } = this.props;
+    const { page, pageSize, status } = this.state;
+    const payload = {
+      page,
+      pageSize
+    }
+    if (status !== null) payload.status = status;
+
     dispatch({
       type: 'bills/fetch',
-      // payload: {
-      //   count: 5,
-      // },
-      payload: {
-        page: 1,
-        pageSize: 5,
-        status: 0
-      }
+      payload
     });
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    const { dispatch } = this.props;
+    const { page, pageSize, status } = this.state;
+    const { page: prevPage, pageSize: prevPageSize, status: prevStatus } = prevState;
+    if (page !== prevPage || pageSize !== prevPageSize || status !== prevStatus) {
+      const payload = {
+        page,
+        pageSize
+      }
+      if (status !== null) payload.status = status;
+
+      dispatch({
+        type: 'bills/fetch',
+        payload
+      });
+    }
 
   }
 
@@ -133,7 +155,9 @@ class Bills extends Component {
       loading,
     } = this.props;
 
-    const { list, page, pageSize, total } = this.props.bills;
+    const { list, total } = this.props.bills;
+
+    const { page, pageSize } = this.state;
 
     const {
       form: { getFieldDecorator },
@@ -175,35 +199,43 @@ class Bills extends Component {
 
 
     const statusChange = e => {
-      this.props.dispatch({
-        type: 'bills/fetch',
-        payload: {
-          status: e.target.value
-        }
-      });
+      this.setState({
+        status: e.target.value,
+      })
+      // this.props.dispatch({
+      //   type: 'bills/fetch',
+      //   payload: {
+      //     status: e.target.value
+      //   }
+      // });
     }
     const extraContent = (
       <div className={styles.extraContent}>
         <RadioGroup onChange={statusChange} defaultValue="all">
           <RadioButton value="0">全部</RadioButton>
-          <RadioButton value="已提交未初审">未处理</RadioButton>
-          <RadioButton value="已提交初审未通过">初审未通过</RadioButton>
-          <RadioButton value="已初审未终审">已初审</RadioButton>
-          <RadioButton value="已初审终审未通过">终审未通过</RadioButton>
-          <RadioButton value="已终审">已终审</RadioButton>
+          <RadioButton value="6">未处理</RadioButton>
+          <RadioButton value="1">初审未通过</RadioButton>
+          <RadioButton value="2">已初审</RadioButton>
+          <RadioButton value="3">终审未通过</RadioButton>
+          <RadioButton value="4">已终审</RadioButton>
         </RadioGroup>
         <Search className={styles.extraContentSearch} placeholder="请输入" onSearch={() => ({})} />
       </div>
     );
 
+
+
     const pageChange = page => {
-      this.props.dispatch({
-        type: 'bills/fetch',
-        payload: {
-          page: page,
-          pageSize: 5
-        }
-      });
+      this.setState({
+        page: page
+      })
+      // this.props.dispatch({
+      //   type: 'bills/fetch',
+      //   payload: {
+      //     page: page,
+      //     pageSize: 5
+      //   }
+      // });
     }
 
     const paginationProps = {
@@ -217,53 +249,27 @@ class Bills extends Component {
     };
 
 
-    const getPercent = status => {
-      let percent = 0;
-      switch (status) {
-        case "已提交未初审":
-          percent = 33.3;
-          break;
-        case "已提交初审未通过":
-          percent = 33.3;
-          break;
-        case "已初审未终审":
-          percent = 66.7;
-          break;
-        case "已初审终审未通过":
-          percent = 66.7;
-          break;
-        case "已终审":
-          percent = 100;
-          break;
-        default:
-          break;
-      }
-      return percent;
-    }
-
-    const ListContent = ({ data: { subPerson, subTime, status } }) => {
-      console.log("status");
-      console.log(status);
+    const ListContent = ({ data: { submitPerson, submitTime, status } }) => {
 
       return (
         <div className={styles.listContent}>
           <div className={styles.listContentItem}>
             <span>申请人</span>
-            <p>{subPerson.name}</p>
+            <p>{submitPerson.name}</p>
           </div>
           <div className={styles.listContentItem}>
             <span>申请时间</span>
-            <p>{moment(subTime).format('YYYY-MM-DD HH:mm')}</p>
+            <p>{moment(submitTime).format('YYYY-MM-DD HH:mm')}</p>
           </div>
           <div className={styles.listContentItem}>
             <span>状态</span>
-            <p style={{ width: '120px' }}>{status}</p>
+            <p style={{ width: '120px' }}>{status.name}</p>
           </div>
           <div className={styles.listContentItem}>
             {/* <span>{status}</span> */}
             <Progress
-              percent={getPercent(status)}
-              status={status.includes("未通过") ? "exception" : "active"}
+              percent={status2Percent(status.name)}
+              status={status.name.includes("未通过") ? "exception" : "active"}
               strokeWidth={6}
               style={{
                 width: 180,
@@ -370,6 +376,12 @@ class Bills extends Component {
       );
     };
 
+    const BillAvatar = ({ bill }) => {
+      return <Avatar shape="square" size="large" style={{ backgroundColor: status2Color(bill.status.name) }}>
+        {bill.name[0]}
+      </Avatar>
+    }
+
     return (
       <>
         <PageHeaderWrapper>
@@ -444,9 +456,9 @@ class Bills extends Component {
                     <ListContent data={item} /> */}
 
                     <List.Item.Meta
-                      avatar={<Avatar src={item.image} shape="square" size="large" />}
-                      title={<a onClick={() => this.getProfile(item.id)}>{item.tDef.name}</a>}
-                      description={item.tDef.usedFor}
+                      avatar={<BillAvatar bill={item}></BillAvatar>}
+                      title={<a onClick={() => this.getProfile(item.id)}>{item.name}</a>}
+                      description={item.usedFor || "暂无"}
                     />
                     <ListContent data={item} />
                   </List.Item>

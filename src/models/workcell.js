@@ -6,10 +6,8 @@ const WorkcellModel = {
     },
     effects: {
         *fetch(_, { call, put }) {
-            console.log('fetch');
             
             const response = yield call(fetchWorkcells);
-            console.log(response);
             
             yield put({
                 type: 'save',

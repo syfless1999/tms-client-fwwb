@@ -3,7 +3,7 @@ import { connect } from 'dva';
 import { PageLoading } from '@ant-design/pro-layout';
 import { Redirect } from 'umi';
 import { stringify } from 'querystring';
-
+import { getToken } from '../utils/authority';
 class SecurityLayout extends React.Component {
   state = {
     isReady: false,
@@ -14,7 +14,8 @@ class SecurityLayout extends React.Component {
       isReady: true,
     });
     const { dispatch } = this.props;
-
+    const token = getToken();
+    if (!token || token === '') return;
     if (dispatch) {
       dispatch({
         type: 'user/fetchCurrent',
@@ -33,7 +34,6 @@ class SecurityLayout extends React.Component {
     const queryString = stringify({
       redirect: window.location.href,
     });
-
     if ((!isLogin && loading) || !isReady) {
       return <PageLoading />;
     }

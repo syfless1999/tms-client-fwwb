@@ -1,4 +1,4 @@
-import { queryCurrent, query as queryUsers, fetchUsers, fetchWorkcells, addUser, addWorkcell, deleteUser, updateAuthority , changePwd ,changeEmail} from '@/services/user';
+import { queryCurrent, query as queryUsers, fetchUsers, fetchWorkcells, addUser, addWorkcell, deleteUser, updateAuthority, changePwd, changeEmail } from '@/services/user';
 import { setToken } from '@/utils/authority';
 const UserModel = {
   namespace: 'user',
@@ -20,7 +20,6 @@ const UserModel = {
     *fetchCurrent(_, { call, put }) {
       const response = yield call(queryCurrent);
       if (response.status === 'success') {
-        setToken(response.data.token);
         yield put({
           type: 'saveCurrentUser',
           payload: response,
@@ -33,8 +32,8 @@ const UserModel = {
         yield put({
           type: 'saveUsers',
           payload: {
-            users: response.data.users,
-            total: response.data.total,
+            users: response.data.users.list,
+            total: response.data.users.total,
             page: payload.page || 1,
           }
         });
@@ -50,12 +49,12 @@ const UserModel = {
     *updateAuthority({ payload }, { call }) {
       return yield call(updateAuthority, payload);
     },
-    
-    *changePwd({ payload }, { call}) {
+
+    *changePwd({ payload }, { call }) {
       return yield call(changePwd, payload);
     },
 
-    *changeEmail({ payload }, { call}) {
+    *changeEmail({ payload }, { call }) {
       return yield call(changeEmail, payload);
     },
 

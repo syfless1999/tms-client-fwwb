@@ -1,5 +1,5 @@
 import request from './request';
-import { getToken } from '../utils/authority';
+import { getToken, getWorkcell } from '../utils/authority';
 
 
 
@@ -8,12 +8,7 @@ export async function query() {
 }
 export async function queryCurrent() {
 
-  return request('/api/users/currentUser', {
-    method: 'POST',
-    // headers: {
-    //   'Authorization': "Bearer " + getToken(),
-    // }
-  });
+  return request('/api/users/currentUser');
 }
 export async function queryNotices() {
   return request('/api/notices');
@@ -27,8 +22,7 @@ export async function fetchWorkcells() {
 }
 
 export async function addWorkcell(params) {
-  console.log(params);
-  
+
   return request('/api/workcells', {
     method: 'POST',
     data: params
@@ -37,7 +31,10 @@ export async function addWorkcell(params) {
 
 export async function fetchUsers(params) {
   return request('/api/users', {
-    params
+    params: {
+      ...params,
+      workcell: getWorkcell()
+    }
   });
 }
 
@@ -49,8 +46,7 @@ export async function addUser(params) {
 }
 
 export async function updateAuthority(params) {
-  console.log(params);
-  
+
   return request(`/api/users/${params.no}`, {
     method: 'PATCH',
     data: {
@@ -60,7 +56,7 @@ export async function updateAuthority(params) {
 }
 
 export async function deleteUser(params) {
-  return request(`/api/users/${params.no}`, {
+  return request(`/api/users/${params.id}`, {
     method: 'DELETE'
   });
 }
