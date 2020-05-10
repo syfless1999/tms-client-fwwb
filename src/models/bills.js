@@ -88,7 +88,6 @@ const Model = {
     },
     setInfo(state, { payload }) {
       const info = { ...state.info, ...payload };
-      console.log({ ...state, info });
       return { ...state, info };
     },
 

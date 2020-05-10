@@ -199,8 +199,12 @@ class Bills extends Component {
 
 
     const statusChange = e => {
+        let value = e.target.value;
+        if(value==='all'){
+            value=null;
+        }
       this.setState({
-        status: e.target.value,
+        status:value,
       })
       // this.props.dispatch({
       //   type: 'bills/fetch',
@@ -212,8 +216,8 @@ class Bills extends Component {
     const extraContent = (
       <div className={styles.extraContent}>
         <RadioGroup onChange={statusChange} defaultValue="all">
-          <RadioButton value="0">全部</RadioButton>
-          <RadioButton value="6">未处理</RadioButton>
+          <RadioButton value="all">全部</RadioButton>
+          <RadioButton value="0">未处理</RadioButton>
           <RadioButton value="1">初审未通过</RadioButton>
           <RadioButton value="2">已初审</RadioButton>
           <RadioButton value="3">终审未通过</RadioButton>

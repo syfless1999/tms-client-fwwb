@@ -14,7 +14,8 @@ const Model = {
         workcell: {},
       },
       tool: {
-        tDef: {}
+        tDef: {},
+        code:""
       },
       firstPerson: {
         position: {},
@@ -36,8 +37,8 @@ const Model = {
       yield put({
         type: 'setData',
         payload: {
-          list: response.data.useRecords.list,
-          total: response.data.useRecords.total,
+          list: response.data.scraps.list,
+          total: response.data.scraps.total,
         }
       });
 

@@ -439,7 +439,7 @@ class Scraps extends Component {
 
     const ScrapAvatar = ({ scrap }) => {
       return <Avatar shape="square" size="large" style={{ backgroundColor: status2Color(scrap.status.name) }}>
-        {scrap.tool.code[0]}
+        {scrap.tool?scrap.tool.code[0]:'废'}
       </Avatar>
     }
 
@@ -503,7 +503,7 @@ class Scraps extends Component {
                       //   </Avatar>
                       //     }
                       avatar={<ScrapAvatar scrap={item}></ScrapAvatar>}
-                      title={<a onClick={() => this.getProfile(item.id)}>{item.tool.code}</a>}
+                      title={<a onClick={() => this.getProfile(item.id)}>{item.tool?item.tool.code:""}</a>}
                       description={item.description || "无"}
                     />
                     <ListContent data={item} />
