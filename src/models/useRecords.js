@@ -1,6 +1,7 @@
-import { addFakeList, removeFakeList, updateFakeList, queryUseRecords, useOut, queryInfo, firstCheck, secondCheck } from '../services/useRecords';
+import { addFakeList, removeFakeList, updateFakeList, queryUseRecords, useOut, useIn ,queryInfo, firstCheck, secondCheck } from '../services/useRecords';
 import { message } from 'antd';
 import { router } from 'umi';
+import { ConsoleSqlOutlined } from '@ant-design/icons';
 
 
 const Model = {
@@ -8,28 +9,35 @@ const Model = {
   state: {
     list: [],
     total: 0,
-    page: 1,
-    pageSize: 5,
-    status: {},
-    // info: {
-    //   subPerson: {},
-    //   tDef: {},
-    //   firstPerson: {},
-    //   secondPerson: {},
-    // },
+    useRecords: {
+      status: {},
+      staff: {},
+      tool: {
+        tDef: {},
+      },
+      recorder: {
+        position: {},
+        workcell: {},
+      },
+      productLine: {
+        workcell: {},
+      },
+      location: {
+        workcell: {},
+      },
+    },
   },
   effects: {
     *fetch({ payload }, { call, put, select }) {
       const response = yield call(queryUseRecords, payload);
-      const status = yield select(state => state.status);
-      console.log(response.data);
+//      const status = yield select(state => state.status);
       yield put({
         type: 'setData',
         payload: {
-          list: response.data.useRecords,
-          total: response.data.total,
-          page: payload.page || 1,
-          status: payload.status || status
+          list: response.data.useRecords.list,
+          total: response.data.useRecords.total,
+          // page: payload.page,
+          // status: payload.status
         }
       });
 
@@ -49,12 +57,25 @@ const Model = {
       return response;
     },
 
+    *useIn({ payload }, { call }) {
+      // console.log(payload);
+      const response = yield call(useIn, payload);
+      // yield put({
+      //   type: 'appendList',
+      //   payload: Array.isArray(response) ? response : [],
+      // });
+      //router.replace(`/bills/${response.data.bill.id}`)
+      return response;
+    },
+
     *fetchInfo({ payload }, { call, put }) {
       const response = yield call(queryInfo, payload);
       if (response && response.status === 'success') {
         yield put({
           type: 'setInfo',
-          payload: response.data,
+          payload: {
+            useRecords : response.data.useRecord
+          }
         });
       }
     },
@@ -98,24 +119,12 @@ const Model = {
     // queryList(state, action) {
     //   return { ...state, list: action.payload };
     // },
-    setData(state, { payload: { list, total, page, status } }) {
-
-      return { ...state, list, total, page, status }
+    setData(state, { payload: { list, total} }) {
+      console.log({ ...state, list, total});
+      return { ...state, list, total}
     },
-    setInfo(state, { payload }) {
-      if (!payload.tDef) {
-        payload.tDef = {};
-      }
-      if (!payload.subPerson) {
-        payload.subPerson = {};
-      }
-      if (!payload.secondPerson) {
-        payload.secondPerson = {};
-      }
-      if (!payload.firstPerson) {
-        payload.firstPerson = {};
-      }
-      return { ...state, info: payload };
+    setInfo(state, { payload: { useRecords } }) {
+      return { ...state, useRecords };
     },
 
     appendList(

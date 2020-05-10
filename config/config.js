@@ -148,9 +148,9 @@ export default {
                         },
                         {
                             name: 'useRecords',
-                            icon: 'arrow-right',
+                            icon: 'logout',
                             path: '/useRecords',
-                            authority: ['operator 1', 'operator 2', 'supervisor', 'manager', 'admin'],
+                            authority: ['operator 1', 'admin'],
                             routes: [
                                 {
                                     path: '/useRecords/list',
@@ -175,9 +175,9 @@ export default {
                         },
                         {
                             name: 'scraps',
-                            icon: 'arrow-left',
+                            icon: 'inbox',
                             path: '/scraps',
-                            authority: ['operator 1', 'operator 2', 'supervisor', 'manager', 'admin'],
+                            authority: ['supervisor', 'manager', 'admin'],
                             routes: [
                                 {
                                     path: '/scraps/list',
@@ -226,7 +226,7 @@ export default {
                         },
                         {
                             name: 'accountsettings',
-                            icon: 'smile',
+                            icon: 'setting',
                             path: '/accountsettings',
                             component: './AccountSettings',
                         },

@@ -29,6 +29,7 @@ import classNames from 'classnames';
 import { connect } from 'dva';
 import styles from './style.less';
 import { compareAuthority } from '../../../utils/authority';
+import { geoConicConformalPortugal } from '@antv/data-set';
 
 
 const { Step } = Steps;
@@ -97,175 +98,173 @@ const ButtonGroup = Button.Group;
 //   </RouteContext.Consumer >
 // );
 
-const judgeDisabled = (compareA, status, targetS) => {
+// const judgeDisabled = (compareA, status, targetS) => {
 
-  if (targetS === 1) {
-    return (compareAuthority(compareA) < 0) || getStr(status) === "已初审" || getStr(status) === "已终审";
-  }
-  if (targetS === 2) {
-    return compareAuthority(compareA) < 0 || getStr(status) === "已终审";
-  }
-}
+//   if (targetS === 1) {
+//     return (compareAuthority(compareA) < 0) || getStr(status) === "已初审" || getStr(status) === "已终审";
+//   }
+//   if (targetS === 2) {
+//     return compareAuthority(compareA) < 0 || getStr(status) === "已终审";
+//   }
+// }
 
-
-const getStr = status => {
-  let percent = 0;
-  switch (status) {
-    case "已提交未初审":
-      percent = "已提交";
-      break;
-    case "已提交初审未通过":
-      percent = "已初审";
-      break;
-    case "已初审未终审":
-      percent = "已初审";
-      break;
-    case "已初审终审未通过":
-      percent = "已终审";
-      break;
-    case "已终审":
-      percent = "已终审";
-      break;
-    default:
-      break;
-  }
-  return percent;
-}
-const extra = (status, number) => (
+// const getStr = status => {
+//   let percent = 0;
+//   switch (status) {
+//     case "已提交未初审":
+//       percent = "已提交";
+//       break;
+//     case "已提交初审未通过":
+//       percent = "已初审";
+//       break;
+//     case "已初审未终审":
+//       percent = "已初审";
+//       break;
+//     case "已初审终审未通过":
+//       percent = "已终审";
+//       break;
+//     case "已终审":
+//       percent = "已终审";
+//       break;
+//     default:
+//       break;
+//   }
+//   return percent;
+// }
+const extra = status => (
   <Row className={styles.moreInfo}>
     <Col span={12}>
-      <Statistic title="状态" value={getStr(status)} />
-    </Col>
-    <Col span={12}>
-      <Statistic title="申请数量" value={number} />
+      <Statistic value={status} />
     </Col>
   </Row>
 );
 
-const description = (subPersonName, tDefName, subTime, id) => (
+const description = (staff, recorder , tDefName , subTime , productLine , location) => (
   <RouteContext.Consumer>
     {({ isMobile }) => (
       <Descriptions className={styles.headerList} size="small" column={isMobile ? 1 : 2}>
-        <Descriptions.Item label="申请人">{subPersonName || ""}</Descriptions.Item>
-        <Descriptions.Item label="夹具名称">{tDefName || ""}</Descriptions.Item>
+        <Descriptions.Item label="员工">{staff || ""}</Descriptions.Item>
+        <Descriptions.Item label="记录员">{recorder || ""}</Descriptions.Item>
+        <Descriptions.Item label="夹具编号">{tDefName || ""}</Descriptions.Item>
+        <Descriptions.Item label="产线">{productLine || ""}</Descriptions.Item>
+        <Descriptions.Item label="夹具存储点">{location || ""}</Descriptions.Item>
         <Descriptions.Item label="创建时间">{subTime || ""}</Descriptions.Item>
-        <Descriptions.Item label="申请单号">{id || ""}</Descriptions.Item>
       </Descriptions>
     )}
   </RouteContext.Consumer>
 );
 
-const desc = (personName, time) => (
-  <div className={classNames(styles.textSecondary, styles.stepDescription)}>
-    <Fragment>
-      {personName}
-      <DingdingOutlined
-        style={{
-          marginLeft: 8,
-        }}
-      />
-    </Fragment>
-    <div>{time}</div>
-  </div>
-);
+// const desc = (personName, time) => (
+//   <div className={classNames(styles.textSecondary, styles.stepDescription)}>
+//     <Fragment>
+//       {personName}
+//       <DingdingOutlined
+//         style={{
+//           marginLeft: 8,
+//         }}
+//       />
+//     </Fragment>
+//     <div>{time}</div>
+//   </div>
+// );
 
-const popoverContent = (
-  <div
-    style={{
-      width: 160,
-    }}
-  >
-    吴加号
-    <span
-      className={styles.textSecondary}
-      style={{
-        float: 'right',
-      }}
-    >
-      <Badge
-        status="default"
-        text={
-          <span
-            style={{
-              color: 'rgba(0, 0, 0, 0.45)',
-            }}
-          >
-            未响应
-          </span>
-        }
-      />
-    </span>
-    <div
-      className={styles.textSecondary}
-      style={{
-        marginTop: 4,
-      }}
-    >
-      耗时：2小时25分钟
-    </div>
-  </div>
-);
+// const popoverContent = (
+//   <div
+//     style={{
+//       width: 160,
+//     }}
+//   >
+//     吴加号
+//     <span
+//       className={styles.textSecondary}
+//       style={{
+//         float: 'right',
+//       }}
+//     >
+//       <Badge
+//         status="default"
+//         text={
+//           <span
+//             style={{
+//               color: 'rgba(0, 0, 0, 0.45)',
+//             }}
+//           >
+//             未响应
+//           </span>
+//         }
+//       />
+//     </span>
+//     <div
+//       className={styles.textSecondary}
+//       style={{
+//         marginTop: 4,
+//       }}
+//     >
+//       耗时：2小时25分钟
+//     </div>
+//   </div>
+// );
 
-const customDot = (dot, { status }) => {
-  if (status === 'process') {
-    return (
-      <Popover placement="topLeft" arrowPointAtCenter content={popoverContent}>
-        {dot}
-      </Popover>
-    );
-  }
+// const customDot = (dot, { status }) => {
+//   if (status === 'process') {
+//     return (
+//       <Popover placement="topLeft" arrowPointAtCenter content={popoverContent}>
+//         {dot}
+//       </Popover>
+//     );
+//   }
 
-  return dot;
-};
+//   return dot;
+// };
 
-const operationTabList = [
-  {
-    key: 'tab1',
-    tab: '操作日志一',
-  },
-  {
-    key: 'tab2',
-    tab: '操作日志二',
-  },
-  {
-    key: 'tab3',
-    tab: '操作日志三',
-  },
-];
-const columns = [
-  {
-    title: '操作类型',
-    dataIndex: 'type',
-    key: 'type',
-  },
-  {
-    title: '操作人',
-    dataIndex: 'name',
-    key: 'name',
-  },
-  {
-    title: '执行结果',
-    dataIndex: 'status',
-    key: 'status',
-    render: text => {
-      if (text === 'agree') {
-        return <Badge status="success" text="成功" />;
-      }
+// const operationTabList = [
+//   {
+//     key: 'tab1',
+//     tab: '操作日志一',
+//   },
+//   {
+//     key: 'tab2',
+//     tab: '操作日志二',
+//   },
+//   {
+//     key: 'tab3',
+//     tab: '操作日志三',
+//   },
+// ];
+// const columns = [
+//   {
+//     title: '操作类型',
+//     dataIndex: 'type',
+//     key: 'type',
+//   },
+//   {
+//     title: '操作人',
+//     dataIndex: 'name',
+//     key: 'name',
+//   },
+//   {
+//     title: '执行结果',
+//     dataIndex: 'status',
+//     key: 'status',
+//     render: text => {
+//       if (text === 'agree') {
+//         return <Badge status="success" text="成功" />;
+//       }
 
-      return <Badge status="error" text="驳回" />;
-    },
-  },
-  {
-    title: '操作时间',
-    dataIndex: 'updatedAt',
-    key: 'updatedAt',
-  },
-  {
-    title: '备注',
-    dataIndex: 'memo',
-    key: 'memo',
-  },
-];
+//       return <Badge status="error" text="驳回" />;
+//     },
+//   },
+//   {
+//     title: '操作时间',
+//     dataIndex: 'updatedAt',
+//     key: 'updatedAt',
+//   },
+//   {
+//     title: '备注',
+//     dataIndex: 'memo',
+//     key: 'memo',
+//   },
+// ];
 
 class $id extends Component {
   state = {
@@ -321,79 +320,92 @@ class $id extends Component {
   // }
 
   render() {
-    const { operationKey, tabActiveKey } = this.state;
-    const { useRecordsAndId, loading, useRecords } = this.props;
-    const { advancedOperation1, advancedOperation2, advancedOperation3 } = useRecordsAndId;
-//    const info = useRecords.info;
+//    const { operationKey, tabActiveKey } = this.state;
+    const { useRecordsAndId, loading } = this.props;
+    const { useRecords } = this.props.useRecords
+//    const { advancedOperation1, advancedOperation2, advancedOperation3 } = useRecordsAndId;
 
 
-    const contentList = {
-      tab1: (
-        <Table
-          pagination={false}
-          loading={loading}
-          dataSource={advancedOperation1}
-          columns={columns}
-        />
-      ),
-      tab2: (
-        <Table
-          pagination={false}
-          loading={loading}
-          dataSource={advancedOperation2}
-          columns={columns}
-        />
-      ),
-      tab3: (
-        <Table
-          pagination={false}
-          loading={loading}
-          dataSource={advancedOperation3}
-          columns={columns}
-        />
-      ),
-    };
+    // const contentList = {
+    //   tab1: (
+    //     <Table
+    //       pagination={false}
+    //       loading={loading}
+    //       dataSource={advancedOperation1}
+    //       columns={columns}
+    //     />
+    //   ),
+    //   tab2: (
+    //     <Table
+    //       pagination={false}
+    //       loading={loading}
+    //       dataSource={advancedOperation2}
+    //       columns={columns}
+    //     />
+    //   ),
+    //   tab3: (
+    //     <Table
+    //       pagination={false}
+    //       loading={loading}
+    //       dataSource={advancedOperation3}
+    //       columns={columns}
+    //     />
+    //   ),
+    // };
 
-    const getStatus = (status = "") => {
+    // const getStatus = (status = "") => {
 
-      if (status.includes("通过")) {
-        return "error";
-      }
-      return "process";
-    }
+    //   if (status.includes("通过")) {
+    //     return "error";
+    //   }
+    //   return "process";
+    // }
 
-    const getCurrent = status => {
-      let percent = 0;
-      switch (status) {
-        case "已提交未初审":
-          percent = 1;
-          break;
-        case "已提交初审未通过":
-          percent = 1;
-          break;
-        case "已初审未终审":
-          percent = 2;
-          break;
-        case "已初审终审未通过":
-          percent = 2;
-          break;
-        case "已终审":
-          percent = 3;
-          break;
-        default:
-          break;
-      }
-      return percent;
-    }
+    // const getCurrent = status => {
+    //   let percent = 0;
+    //   switch (status) {
+    //     case "已提交未初审":
+    //       percent = 1;
+    //       break;
+    //     case "已提交初审未通过":
+    //       percent = 1;
+    //       break;
+    //     case "已初审未终审":
+    //       percent = 2;
+    //       break;
+    //     case "已初审终审未通过":
+    //       percent = 2;
+    //       break;
+    //     case "已终审":
+    //       percent = 3;
+    //       break;
+    //     default:
+    //       break;
+    //   }
+    //   return percent;
+    // }
+
+    // const test = ()=>{
+    //   console.log(useRecords);
+    // }
 
     return (
       (<PageHeaderWrapper
-        title="采购入库申请详细信息"
-//        extra={action(info.status, this.firstConfirm, this.secondConfirm)}
+        loading={loading}
+        title="工夹具进出库详细信息"
+
         className={styles.pageHeader}
-        extraContent={extra(useRecords.status.name, info.number)}
-        content={description(info.subPerson.name, info.tDef.name, info.subTime, info.id)}
-        tabActiveKey={tabActiveKey}
+        extraContent={extra(useRecords.status.name)}
+        content={description(
+          useRecords.staff.name, 
+          useRecords.recorder.name, 
+          useRecords.tool.tDef.name,
+          useRecords.time,
+          useRecords.productLine.name,
+          useRecords.location.name,
+          )}
+
+//        tabActiveKey={tabActiveKey}
         onTabChange={this.onTabChange}
       // tabList={[
       //   {
@@ -408,28 +420,7 @@ class $id extends Component {
       >
         <div className={styles.main}>
           <GridContent>
-            {/* <Card
-              title="流程进度"
-              style={{
-                marginBottom: 24,
-              }}
-            >
-              <RouteContext.Consumer>
-                {({ isMobile }) => (
-                  <Steps
-                    direction={isMobile ? 'vertical' : 'horizontal'}
-                    progressDot={customDot}
-                    current={getCurrent(info.status)}
-                    status={getStatus(info.status)}
-                  >
-                    <Step title="提出申请" description={desc(info.subPerson.name || "", info.subTime || "")} />
-                    <Step title="初审" description={desc(info.firstPerson.name || "", info.firstTime || "")} />
-                    <Step title="终审" description={desc(info.secondPerson.name || "", info.secondTime || "")} />
-                    <Step title="完成" />
-                  </Steps>
-                )}
-              </RouteContext.Consumer>
-            </Card> */}
+
             <Card
               title="夹具信息"
               style={{
@@ -442,91 +433,92 @@ class $id extends Component {
                   marginBottom: 24,
                 }}
               >
-                <Descriptions.Item label="夹具代码">{info.tDef.code}</Descriptions.Item>
-                <Descriptions.Item label="名称">{info.tDef.name}</Descriptions.Item>
-                <Descriptions.Item label="所属大类">{info.tDef.family}</Descriptions.Item>
-                <Descriptions.Item label="点检周期">{info.tDef.pmPeriod}</Descriptions.Item>
-                <Descriptions.Item label="用途">{info.tDef.usedFor}</Descriptions.Item>
-                <Descriptions.Item label="每条生产线配备的数量">{info.tDef.upl}</Descriptions.Item>
-                <Descriptions.Item label="partNo">{info.tDef.partNo}</Descriptions.Item>
+                <Descriptions.Item label="名称">{useRecords.tool.tDef.name}</Descriptions.Item>
+                <Descriptions.Item label="编号">{useRecords.tool.tDef.code}</Descriptions.Item>
+                <Descriptions.Item label="所属大类">{useRecords.tool.tDef.family}</Descriptions.Item>
+                <Descriptions.Item label="夹具模组">{useRecords.tool.tDef.model}</Descriptions.Item>
+                <Descriptions.Item label="夹具料号">{useRecords.tool.tDef.partNo}</Descriptions.Item>
+                <Descriptions.Item label="该夹具在每条产线上需要配备的数量">{useRecords.tool.tDef.upl}</Descriptions.Item>
+                <Descriptions.Item label="保养点检周期">{useRecords.tool.tDef.pmPeriod}</Descriptions.Item>
               </Descriptions>
-              <Descriptions
-                style={{
-                  marginBottom: 24,
-                }}
-                title="夹具预览图"
-              >
-                <Descriptions.Item>
-                  <img src={info.image} alt="" />
-                </Descriptions.Item>
-              </Descriptions>
-              <h4
-                style={{
-                  marginBottom: 16,
-                }}
-              >
-                信息组
-              </h4>
-              <Card type="inner" title="多层级信息组">
-                <Descriptions
-                  style={{
-                    marginBottom: 16,
-                  }}
-                  title="组名称"
-                >
-                  <Descriptions.Item label="负责人">林东东</Descriptions.Item>
-                  <Descriptions.Item label="角色码">1234567</Descriptions.Item>
-                  <Descriptions.Item label="所属部门">XX公司 - YY部</Descriptions.Item>
-                  <Descriptions.Item label="过期时间">2017-08-08</Descriptions.Item>
-                  <Descriptions.Item label="描述">
-                    这段描述很长很长很长很长很长很长很长很长很长很长很长很长很长很长...
-                  </Descriptions.Item>
-                </Descriptions>
-                <Divider
-                  style={{
-                    margin: '16px 0',
-                  }}
-                />
-                <Descriptions
-                  style={{
-                    marginBottom: 16,
-                  }}
-                  title="组名称"
-                  column={1}
-                >
-                  <Descriptions.Item label="学名">
-                    Citrullus lanatus (Thunb.) Matsum. et
-                    Nakai一年生蔓生藤本；茎、枝粗壮，具明显的棱。卷须较粗..
-                  </Descriptions.Item>
-                </Descriptions>
-                <Divider
-                  style={{
-                    margin: '16px 0',
-                  }}
-                />
-                <Descriptions title="组名称">
-                  <Descriptions.Item label="负责人">付小小</Descriptions.Item>
-                  <Descriptions.Item label="角色码">1234568</Descriptions.Item>
-                </Descriptions>
-              </Card>
             </Card>
+            
             <Card
-              title="用户近半年来电记录"
+              title="员工信息"
               style={{
                 marginBottom: 24,
               }}
               bordered={false}
             >
-              <Empty />
+              <Descriptions
+                style={{
+                  marginBottom: 24,
+                }}
+              >
+                <Descriptions.Item label="姓名">{useRecords.staff.name || ""}</Descriptions.Item>
+                <Descriptions.Item label="编号">{useRecords.staff.no || ""}</Descriptions.Item>
+                <Descriptions.Item label="ID">{useRecords.staff.id || ""}</Descriptions.Item>
+                <Descriptions.Item label="电子邮件">{useRecords.staff.email || ""}</Descriptions.Item>
+              </Descriptions>
             </Card>
+
             <Card
-              className={styles.tabsCard}
+              title="记录员信息"
+              style={{
+                marginBottom: 24,
+              }}
               bordered={false}
-              tabList={operationTabList}
-              onTabChange={this.onOperationTabChange}
             >
-              {contentList[operationKey]}
+              <Descriptions
+                style={{
+                  marginBottom: 24,
+                }}
+              >
+                <Descriptions.Item label="姓名">{useRecords.recorder.name || ""}</Descriptions.Item>
+                <Descriptions.Item label="编号">{useRecords.recorder.no || ""}</Descriptions.Item>
+                <Descriptions.Item label="ID">{useRecords.recorder.id || ""}</Descriptions.Item>
+                <Descriptions.Item label="职位">{useRecords.recorder.position.name || ""}</Descriptions.Item>
+                <Descriptions.Item label="部门">{useRecords.recorder.workcell.name || ""}</Descriptions.Item>
+                <Descriptions.Item label="电子邮件">{useRecords.recorder.email || ""}</Descriptions.Item>
+              </Descriptions>
             </Card>
+
+            <Card
+              title="夹具存储点信息"
+              style={{
+                marginBottom: 24,
+              }}
+              bordered={false}
+            >
+              <Descriptions
+                style={{
+                  marginBottom: 24,
+                }}
+              >
+                <Descriptions.Item label="名称">{useRecords.location.name || ""}</Descriptions.Item>
+                <Descriptions.Item label="ID">{useRecords.location.id || ""}</Descriptions.Item>
+                <Descriptions.Item label="部门">{useRecords.location.workcell.name || ""}</Descriptions.Item>
+              </Descriptions>
+            </Card>
+
+            <Card
+              title="产线信息"
+              style={{
+                marginBottom: 24,
+              }}
+              bordered={false}
+            >
+              <Descriptions
+                style={{
+                  marginBottom: 24,
+                }}
+              >
+                <Descriptions.Item label="名称">{useRecords.productLine.name || ""}</Descriptions.Item>
+                <Descriptions.Item label="编号">{useRecords.productLine.no || ""}</Descriptions.Item>
+                <Descriptions.Item label="部门">{useRecords.productLine.workcell.name || ""}</Descriptions.Item>
+              </Descriptions>
+            </Card>
+
           </GridContent>
         </div>
       </PageHeaderWrapper>)

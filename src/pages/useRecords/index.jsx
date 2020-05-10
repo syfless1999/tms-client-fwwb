@@ -38,6 +38,9 @@ class UseRecords extends Component {
     visible: false,
     done: false,
     current: undefined,
+    page: 1,
+    pageSize: 5,
+    status: null,
   };
 
   formLayout = {
@@ -53,25 +56,40 @@ class UseRecords extends Component {
 
   componentDidMount() {
     const { dispatch } = this.props;
+    const { page, pageSize, status } = this.state;
+    const payload = {
+      page,
+      pageSize,
+    }
+    if (status !== null) payload.status = status;
     dispatch({
       type: 'useRecords/fetch',
-      // payload: {
-      //   count: 5,
-      // },
-      payload: {
-        page: 1,
-        pageSize: 5,
-        status: 0
-      }
+      payload
     });
+  }
 
+  componentDidUpdate(prevProps, prevState) {
+    const { dispatch } = this.props;
+    const { page, pageSize, status } = this.state;
+    const { page: prevPage, pageSize: prevPageSize, status: prevStatus } = prevState;
+    if (page !== prevPage || pageSize !== prevPageSize || status !== prevStatus) {
+      const payload = {
+        page,
+        pageSize,
+      }
+      if (status !== null) payload.status = status;
+      dispatch({
+        type: 'useRecords/fetch',
+        payload
+      });
+    }
   }
 
   routerAppend = () => {
     router.replace('/useRecords/useout');
   };
 
-  getProfile = (id) => {
+  getProfile = id => {
     router.replace(`/useRecords/${id}`);
   }
 
@@ -131,7 +149,9 @@ class UseRecords extends Component {
   render() {
     const { loading } = this.props;
 
-    const { list, page, pageSize, total } = this.props.useRecords;
+    const { list, total } = this.props.useRecords;
+
+    const { page, pageSize } = this.state;
 
     const { form: { getFieldDecorator } } = this.props;
 
@@ -169,34 +189,33 @@ class UseRecords extends Component {
       </div>
     );
 
-
     const statusChange = e => {
-      this.props.dispatch({
-        type: 'useRecords/fetch',
-        payload: {
-          status: e.target.value
-        }
-      });
+      if(e.target.value === "0"){
+        this.setState({
+          status: null,
+        })
+      } else {
+        this.setState({
+          status: e.target.value,
+        })
+      }
     }
+
     const extraContent = (
       <div className={styles.extraContent}>
         <RadioGroup onChange={statusChange} defaultValue="all">
           <RadioButton value="0">全部</RadioButton>
-          <RadioButton value="出库">出库</RadioButton>
-          <RadioButton value="入库">入库</RadioButton>
+          <RadioButton value="1">出库</RadioButton>
+          <RadioButton value="3">入库</RadioButton>
         </RadioGroup>
         <Search className={styles.extraContentSearch} placeholder="请输入" onSearch={() => ({})} />
       </div>
     );
 
     const pageChange = page => {
-      this.props.dispatch({
-        type: 'useRecords/fetch',
-        payload: {
-          page: page,
-          pageSize: 5
-        }
-      });
+      this.setState({
+        page: page
+      })
     }
 
     const paginationProps = {
@@ -356,7 +375,7 @@ class UseRecords extends Component {
             <Card
               className={styles.listCard}
               bordered={false}
-              title="基本列表"
+              title="进出库操作记录"
               style={{
                 marginTop: 24,
               }}
@@ -365,7 +384,7 @@ class UseRecords extends Component {
               }}
               extra={extraContent}
             >
-              <Button
+              {/* <Button
                 type="dashed"
                 style={{
                   width: '100%',
@@ -380,6 +399,7 @@ class UseRecords extends Component {
                 <PlusOutlined />
                 添加
               </Button>
+               */}
               <List
                 size="large"
                 rowKey="id"

@@ -248,6 +248,29 @@ class Bills extends Component {
       onChange: pageChange,
     };
 
+    const getStatus = status =>{
+      let percent = "";
+      switch (status) {
+        case "已提交未初审":
+          percent = "active";
+          break;
+        case "已提交初审未通过":
+          percent = "exception";
+          break;
+        case "已初审未终审":
+          percent = "active";
+          break;
+        case "已初审终审未通过":
+          percent = "exception";
+          break;
+        case "已终审":
+          percent = "success";
+          break;
+        default:
+          break;
+      }
+      return percent;
+    }
 
     const ListContent = ({ data: { submitPerson, submitTime, status } }) => {
 
@@ -269,7 +292,7 @@ class Bills extends Component {
             {/* <span>{status}</span> */}
             <Progress
               percent={status2Percent(status.name)}
-              status={status.name.includes("未通过") ? "exception" : "active"}
+              status={getStatus(status.name)}
               strokeWidth={6}
               style={{
                 width: 180,

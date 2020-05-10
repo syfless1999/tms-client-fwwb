@@ -6,6 +6,7 @@ import { FormattedMessage, formatMessage } from 'umi-plugin-react/locale';
 import React, { Component } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { connect } from 'dva';
+import moment from 'moment';
 import styles from './style.less';
 import { router } from 'umi';
 
@@ -17,74 +18,27 @@ const { TextArea } = Input;
 
 class ScrapAppend extends Component {
 
-  state = {
-    fileData: [],
-  }
-
   handleSubmit = e => {
     const { dispatch, form } = this.props;
-
-    // 文件组
-    const files = this.state.fileData;
-
     e.preventDefault();
     form.validateFieldsAndScroll((err, values) => {
-      let formData = new FormData();
-      formData.append("image", files[0]);
-
-      for (let item in values) {
-        if (item !== 'image' && values[item]) {
-          formData.append(item, values[item]);
-        }
-      }
-
       if (!err) {
         dispatch({
           type: 'scraps/appendScrap',
-          payload: formData,
+          payload:{
+            ...values,
+            subTime: new moment(new Date()).format('YYYY-MM-DD hh:mm:ss'),
+        }
         }).then(res => {
           if (res && res.status === "success") {
-            message.success("添加成功");
+            message.success("报废申请成功");
             router.replace(`/scraps/${res.data.scrap.id}`)
           }
         });
       }
     });
   };
-
-
-  // 复制的代码
-  //这个是监听文件变化的
-  fileChange = (params) => {
-    const { file, fileList } = params;
-    if (file.status === 'uploading') {
-      setTimeout(() => {
-        this.setState({
-          percent: fileList.percent
-        })
-      }, 1000)
-    }
-  }
-  // 拦截文件上传
-  beforeUploadHandle = (file) => {
-    this.setState(({ fileData }) => ({
-      fileData: [...fileData, file],
-    }))
-    return false;
-  }
-  // 文件列表的删除
-  fileRemove = (file) => {
-    this.setState(({ fileData }) => {
-      const index = fileData.indexOf(file);
-      return {
-        fileData: fileData.filter((_, i) => i !== index)
-      }
-    })
-  }
-  // 完
-
-
-
+ 
   render() {
     const { submitting } = this.props;
     const {
@@ -137,19 +91,16 @@ class ScrapAppend extends Component {
               {...formItemLayout}
               label="夹具代码"
             >
-              {getFieldDecorator('code', {
+              {getFieldDecorator('toolId', {
                 rules: [
                   {
                     required: true,
                     message: "请输入夹具代码"
                   },
                 ],
-              })(
-                <Input
-                  placeholder='例如：EF2189'
-                />,
-              )}
+              })(<Input/>)}
             </FormItem>
+
             <FormItem
               {...formItemLayout}
               label="报废原因"
@@ -170,11 +121,19 @@ class ScrapAppend extends Component {
                 />,
               )}
             </FormItem>
+            
             <FormItem
               {...formItemLayout}
-              label="夹具使用时间"
+              label="夹具使用年份"
             >
-              {getFieldDecorator('usedCount')(
+              {getFieldDecorator('usedCount', {
+                rules: [
+                  {
+                    required: true,
+                    message: "请输入夹具使用年份"
+                  },
+                ],
+              })(
                 <InputNumber
                   min={0}
                   step={1}

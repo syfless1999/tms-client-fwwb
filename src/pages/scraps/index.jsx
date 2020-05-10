@@ -38,6 +38,9 @@ class Scraps extends Component {
     visible: false,
     done: false,
     current: undefined,
+    page: 1,
+    pageSize: 5,
+    status: null,
   };
 
   formLayout = {
@@ -53,25 +56,40 @@ class Scraps extends Component {
 
   componentDidMount() {
     const { dispatch } = this.props;
+    const { page, pageSize, status } = this.state;
+    const payload = {
+      page,
+      pageSize
+    }
+    if (status !== null) payload.status = status;
     dispatch({
       type: 'scraps/fetch',
-      // payload: {
-      //   count: 5,
-      // },
-      payload: {
-        page: 1,
-        pageSize: 5,
-        status: 0
-      }
+      payload
     });
+  }
 
+  componentDidUpdate(prevProps, prevState) {
+    const { dispatch } = this.props;
+    const { page, pageSize, status } = this.state;
+    const { page: prevPage, pageSize: prevPageSize, status: prevStatus } = prevState;
+    if (page !== prevPage || pageSize !== prevPageSize || status !== prevStatus) {
+      const payload = {
+        page,
+        pageSize
+      }
+      if (status !== null) payload.status = status;
+      dispatch({
+        type: 'scraps/fetch',
+        payload
+      });
+    }
   }
 
   routerAppend = () => {
     router.replace('/scraps/append');
   };
 
-  getProfile = (id) => {
+  getProfile = id => {
     router.replace(`/scraps/${id}`);
   }
 
@@ -133,7 +151,11 @@ class Scraps extends Component {
       loading,
     } = this.props;
 
-    const { list, page, pageSize, total } = this.props.scraps;
+    const { list , total } = this.props.scraps;
+
+    const { page, pageSize } = this.state;
+
+    console.log(list);
 
     const {
       form: { getFieldDecorator },
@@ -175,35 +197,34 @@ class Scraps extends Component {
 
 
     const statusChange = e => {
-      this.props.dispatch({
-        type: 'scraps/fetch',
-        payload: {
-          status: e.target.value
-        }
-      });
+      if(e.target.value === "5"){
+        this.setState({
+          status: null,
+        })
+      } else {
+        this.setState({
+          status: e.target.value,
+        })
+      }
     }
     const extraContent = (
       <div className={styles.extraContent}>
         <RadioGroup onChange={statusChange} defaultValue="all">
-          <RadioButton value="0">全部</RadioButton>
-          <RadioButton value="已提交未初审">未处理</RadioButton>
-          <RadioButton value="已提交初审未通过">初审未通过</RadioButton>
-          <RadioButton value="已初审未终审">已初审</RadioButton>
-          <RadioButton value="已初审终审未通过">终审未通过</RadioButton>
-          <RadioButton value="已终审">已终审</RadioButton>
+          <RadioButton value="5">全部</RadioButton>
+          <RadioButton value="0">未处理</RadioButton>
+          <RadioButton value="1">初审未通过</RadioButton>
+          <RadioButton value="2">已初审</RadioButton>
+          <RadioButton value="3">终审未通过</RadioButton>
+          <RadioButton value="4">已终审</RadioButton>
         </RadioGroup>
         <Search className={styles.extraContentSearch} placeholder="请输入" onSearch={() => ({})} />
       </div>
     );
 
     const pageChange = page => {
-      this.props.dispatch({
-        type: 'scraps/fetch',
-        payload: {
-          page: page,
-          pageSize: 5
-        }
-      });
+      this.setState({
+        page: page
+      })
     }
 
     const paginationProps = {
@@ -215,7 +236,6 @@ class Scraps extends Component {
       current: page,
       onChange: pageChange,
     };
-
 
     const getPercent = status => {
       let percent = 0;
@@ -241,6 +261,30 @@ class Scraps extends Component {
       return percent;
     }
 
+    const getStatus = status =>{
+      let percent = "";
+      switch (status) {
+        case "已提交未初审":
+          percent = "active";
+          break;
+        case "已提交初审未通过":
+          percent = "exception";
+          break;
+        case "已初审未终审":
+          percent = "active";
+          break;
+        case "已初审终审未通过":
+          percent = "exception";
+          break;
+        case "已终审":
+          percent = "success";
+          break;
+        default:
+          break;
+      }
+      return percent;
+    }
+
     const ListContent = ({ data: { subPerson, subTime, status } }) => {
 
       return (
@@ -255,13 +299,13 @@ class Scraps extends Component {
           </div>
           <div className={styles.listContentItem}>
             <span>状态</span>
-            <p style={{ width: '120px' }}>{status}</p>
+            <p style={{ width: '120px' }}>{status.name}</p>
           </div>
           <div className={styles.listContentItem}>
             {/* <span>{status}</span> */}
             <Progress
-              percent={getPercent(status)}
-              status={status.includes("未通过") ? "exception" : "active"}
+              percent={getPercent(status.name)}
+              status={getStatus(status.name)}
               strokeWidth={6}
               style={{
                 width: 180,
@@ -368,28 +412,46 @@ class Scraps extends Component {
       );
     };
 
+    const status2Color = status => {
+      const colorList = ['#7265e6', '#f56a00', '#d42a00'];  
+      let color="";
+      switch (status) {
+        case "已提交未初审":
+          color = colorList[0];
+          break;
+        case "已提交初审未通过":
+          color = colorList[2];
+          break;
+        case "已初审未终审":
+          color = colorList[0];
+          break;
+        case "已初审终审未通过":
+          color = colorList[2];
+          break;
+        case "已终审":
+          color = colorList[1];
+          break;
+        default:
+          break;
+      }
+      return color; 
+    }
+
+    const ScrapAvatar = ({ scrap }) => {
+      return <Avatar shape="square" size="large" style={{ backgroundColor: status2Color(scrap.status.name) }}>
+        {scrap.tool.code[0]}
+      </Avatar>
+    }
+
     return (
       <>
         <PageHeaderWrapper>
           <div className={styles.standardList}>
-            <Card bordered={false}>
-              <Row>
-                <Col sm={8} xs={24}>
-                  <Info title="我的待办" value="8个任务" bordered />
-                </Col>
-                <Col sm={8} xs={24}>
-                  <Info title="本周任务平均处理时间" value="32分钟" bordered />
-                </Col>
-                <Col sm={8} xs={24}>
-                  <Info title="本周完成任务数" value="24个任务" />
-                </Col>
-              </Row>
-            </Card>
-
+            
             <Card
               className={styles.listCard}
               bordered={false}
-              title="基本列表"
+              title="报废申请列表"
               style={{
                 marginTop: 24,
               }}
@@ -406,7 +468,7 @@ class Scraps extends Component {
                 }}
                 onClick={this.routerAppend}
                 ref={component => {
-                  // eslint-disable-next-line  react/no-find-dom-node
+
                   this.addBtn = findDOMNode(component);
                 }}
               >
@@ -434,16 +496,15 @@ class Scraps extends Component {
                       <MoreBtn key="more" item={item} />,
                     ]}
                   >
-                    {/* <List.Item.Meta
-                      avatar={<Avatar src={item.logo} shape="square" size="large" />}
-                      title={<a href={item.href}>{item.title}</a>}
-                      description={item.subDescription}
-                    />
-                    <ListContent data={item} /> */}
-
                     <List.Item.Meta
-                      avatar={<Avatar src={item.image} shape="square" size="large" />}
-                      title={<a onClick={() => this.getProfile(item.id)}>{item.tDef.name}</a>}
+                      // avatar={
+                      //   <Avatar shape="square" size="large">
+                      //     {item.name}
+                      //   </Avatar>
+                      //     }
+                      avatar={<ScrapAvatar scrap={item}></ScrapAvatar>}
+                      title={<a onClick={() => this.getProfile(item.id)}>{item.tool.code}</a>}
+                      description={item.description || "无"}
                     />
                     <ListContent data={item} />
                   </List.Item>

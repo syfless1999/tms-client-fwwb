@@ -477,11 +477,11 @@ function patchCheck(req, res) {
 }
 
 export default {
-  'GET  /api/fake_list': getFakeList,
-//  'GET /api/useRecords': getUseRecordList,
-  'POST /api/useRecords': postUseRecord,
-  'POST  /api/fake_list': postFakeList,
-  'GET /api/useRecords/:id': getInfo,
-  'PATCH /api/useRecords/:id/firstCheck': patchCheck,
-  'PATCH /api/useRecords/:id/secondCheck': patchCheck,
+  // 'GET  /api/fake_list': getFakeList,
+  // 'GET /api/useRecords': getUseRecordList,
+  // 'POST /api/useRecords': postUseRecord,
+  // 'POST  /api/fake_list': postFakeList,
+  // 'GET /api/useRecords/:id': getInfo,
+  // 'PATCH /api/useRecords/:id/firstCheck': patchCheck,
+  // 'PATCH /api/useRecords/:id/secondCheck': patchCheck,
 };

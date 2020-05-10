@@ -49,12 +49,12 @@ handleSubmitEmail = e => {
         >
           <Form {...formItemLayout}>
             
-            <Form.Item label="email" hasFeedback>
+            <Form.Item label="新邮箱" hasFeedback>
               {getFieldDecorator('email', {
                 rules: [
                   {
                     required: true,
-                    message: 'Please input your oldpwd!',
+                    message: '请输入新邮箱地址!',
                   },
                   {
                     type: 'email',

@@ -4,21 +4,11 @@ import '@ant-design/compatible/assets/index.css';
 import { router } from 'umi';
 
 import {
-  Avatar,
   Button,
   Card,
-  Col,
-  DatePicker,
-  Dropdown,
-  Input,
   List,
-  Menu,
   Modal,
-  Progress,
-  Radio,
-  Row,
-  Select,
-  Result,
+  message
 } from 'antd';
 import React, { Component } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
@@ -27,17 +17,11 @@ import { findDOMNode } from 'react-dom';
 import moment from 'moment';
 import styles from './style.less';
 
-const FormItem = Form.Item;
-const RadioButton = Radio.Button;
-const RadioGroup = Radio.Group;
-const SelectOption = Select.Option;
-const { Search, TextArea } = Input;
-
-class UseRecords extends Component {
+class UseIn extends Component {
   state = {
-    visible: false,
-    done: false,
-    current: undefined,
+    page: 1,
+    pageSize: 5,
+    status: 1,
   };
 
   formLayout = {
@@ -53,369 +37,135 @@ class UseRecords extends Component {
 
   componentDidMount() {
     const { dispatch } = this.props;
+    const { page, pageSize, status } = this.state;
+    const payload = {
+      page,
+      pageSize,
+      status
+    }
     dispatch({
       type: 'useRecords/fetch',
-      // payload: {
-      //   count: 5,
-      // },
-      payload: {
-        page: 1,
-        pageSize: 5,
-        status: 0
-      }
+      payload
     });
-
   }
 
-  routerAppend = () => {
-    router.replace('/useRecords/useout');
-  };
+  componentDidUpdate(prevProps, prevState) {
+    const { dispatch } = this.props;
+    const { page, pageSize, status } = this.state;
+    const { page: prevPage, pageSize: prevPageSize, status: prevStatus } = prevState;
+    if (page !== prevPage || pageSize !== prevPageSize || status !== prevStatus) {
+      const payload = {
+        page,
+        pageSize,
+        status
+      }
+      dispatch({
+        type: 'useRecords/fetch',
+        payload
+      });
+    }
+  }
 
-  getProfile = (id) => {
+  getProfile = id => {
     router.replace(`/useRecords/${id}`);
   }
 
-  showEditModal = item => {
-    this.setState({
-      visible: true,
-      current: item,
-    });
-  };
-
-  handleDone = () => {
-    setTimeout(() => this.addBtn && this.addBtn.blur(), 0);
-    this.setState({
-      done: false,
-      visible: false,
-    });
-  };
-
-  handleCancel = () => {
-    setTimeout(() => this.addBtn && this.addBtn.blur(), 0);
-    this.setState({
-      visible: false,
-    });
-  };
-
-  handleSubmit = e => {
-    e.preventDefault();
-    const { dispatch, form } = this.props;
-    const { current } = this.state;
-    const id = current ? current.id : '';
-    setTimeout(() => this.addBtn && this.addBtn.blur(), 0);
-    form.validateFields((err, fieldsValue) => {
-      if (err) return;
-      this.setState({
-        done: true,
-      });
-      dispatch({
-        type: 'useRecords/submit',
-        payload: {
-          id,
-          ...fieldsValue,
-        },
-      });
-    });
-  };
-
-  deleteItem = id => {
+  InItem = currentItem => {
     const { dispatch } = this.props;
+    const { tool , staff ,time, productLine , location } = currentItem;
     dispatch({
-      type: 'useRecords/submit',
+      type: 'useRecords/useIn',
       payload: {
-        id,
+        staffId : staff.id,
+        productLineId : productLine.no,
+        locationId: location.id,
+        toolId : tool.id,
+        time,
+        status : 0
       },
-    });
+    }).then(res => {
+      if (res && res.status === "success") {
+        message.success("入库成功");
+        router.replace(`/useRecords/${res.data.useRecord.id}`)
+      }
+    });;
   };
 
   render() {
-    const {
-      loading,
-    } = this.props;
+    const { loading } = this.props;
 
-    const { list, page, pageSize, total } = this.props.useRecords;
+    const { list, total } = this.props.useRecords;
 
-    const {
-      form: { getFieldDecorator },
-    } = this.props;
+    const { page, pageSize } = this.state;
 
-    const { visible, done, current = {} } = this.state;
-
-    const editAndDelete = currentItem => {
-      // if (key === 'edit') this.showEditModal(currentItem);
-      // else if (key === 'delete') {
-        Modal.confirm({
-          title: '删除任务',
-          content: '确定删除该任务吗？',
-          okText: '确认',
-          cancelText: '取消',
-          onOk: () => this.deleteItem(currentItem.id),
-        });
-      // }
+    const InOperation = currentItem => {
+      Modal.confirm({
+        title: '入库',
+        content: '确定将该工夹具入库吗？',
+        okText: '确认',
+        cancelText: '取消',
+        onOk: () => this.InItem(currentItem),
+      });
     };
 
-    const modalFooter = done
-      ? {
-        footer: null,
-        onCancel: this.handleDone,
-      }
-      : {
-        okText: '保存',
-        onOk: this.handleSubmit,
-        onCancel: this.handleCancel,
-      };
-
-    const Info = ({ title, value, bordered }) => (
-      <div className={styles.headerInfo}>
-        <span>{title}</span>
-        <p>{value}</p>
-        {bordered && <em />}
-      </div>
-    );
-
-
-    const statusChange = e => {
-      this.props.dispatch({
-        type: 'useRecords/fetch',
-        payload: {
-          status: e.target.value
-        }
-      });
-    }
-    const extraContent = (
-      <div className={styles.extraContent}>
-        <RadioGroup onChange={statusChange} defaultValue="all">
-          <RadioButton value="0">全部</RadioButton>
-          <RadioButton value="已提交未初审">未处理</RadioButton>
-          <RadioButton value="已提交初审未通过">初审未通过</RadioButton>
-          <RadioButton value="已初审未终审">已初审</RadioButton>
-          <RadioButton value="已初审终审未通过">终审未通过</RadioButton>
-          <RadioButton value="已终审">已终审</RadioButton>
-        </RadioGroup>
-        <Search className={styles.extraContentSearch} placeholder="请输入" onSearch={() => ({})} />
-      </div>
-    );
-
     const pageChange = page => {
-      this.props.dispatch({
-        type: 'useRecords/fetch',
-        payload: {
-          page: page,
-          pageSize: 5
-        }
-      });
+      this.setState({
+        page
+      })
     }
 
     const paginationProps = {
       showQuickJumper: true,
-      // pageSize: 5,
-      pageSize: pageSize,
-      // total: 50,
-      total: total,
+      pageSize,
+      total,
       current: page,
       onChange: pageChange,
     };
 
-
-    const getPercent = status => {
-      let percent = 0;
-      switch (status) {
-        case "已提交未初审":
-          percent = 33.3;
-          break;
-        case "已提交初审未通过":
-          percent = 33.3;
-          break;
-        case "已初审未终审":
-          percent = 66.7;
-          break;
-        case "已初审终审未通过":
-          percent = 66.7;
-          break;
-        case "已终审":
-          percent = 100;
-          break;
-        default:
-          break;
-      }
-      return percent;
-    }
-
-    const ListContent = ({ data: { subPerson, subTime, status } }) => {
-      console.log("status");
-      console.log(status);
-
-      return (
+    const ListContent = ({ data: { recorder , staff ,time, status , productLine , location} }) => (
         <div className={styles.listContent}>
           <div className={styles.listContentItem}>
-            <span>申请人</span>
-            <p>{subPerson.name}</p>
+            <span>借用人</span>
+            <p>{recorder.name}</p>
           </div>
           <div className={styles.listContentItem}>
-            <span>申请时间</span>
-            <p>{moment(subTime).format('YYYY-MM-DD HH:mm')}</p>
+            <span>操作员</span>
+            <p>{staff.name}</p>
           </div>
           <div className={styles.listContentItem}>
-            <span>状态</span>
-            <p style={{ width: '120px' }}>{status}</p>
+            <span>夹具存储点</span>
+            <p>{location.name}</p>
           </div>
           <div className={styles.listContentItem}>
-            {/* <span>{status}</span> */}
-            <Progress
-              percent={getPercent(status)}
-              status={status.includes("未通过") ? "exception" : "active"}
-              strokeWidth={6}
-              style={{
-                width: 180,
-              }}
-            />
+            <span>产线</span>
+            <p>{productLine.name}</p>
           </div>
+          <div className={styles.listContentItem}>
+            <span>操作时间</span>
+            <p>{moment(time).format('YYYY-MM-DD HH:mm:ss')}</p>
+          </div>
+           <div className={styles.listContentItem}>
+             <span>状态</span>
+             <p style={{ width: '120px' }}>{status.name}</p>
+           </div>
         </div >
-      )
-    };
-
-    const MoreBtn = ({ item }) => (
-      <Dropdown
-        overlay={
-          <Menu onClick={() => editAndDelete(item)}>
-          {/* <Menu onClick={({ key }) => editAndDelete(key, item)}> */}
-            {/* <Menu.Item key="edit">编辑</Menu.Item> */}
-            <Menu.Item key="delete">删除</Menu.Item>
-          </Menu>
-        }
-      >
-        <a>
-          更多 <DownOutlined />
-        </a>
-      </Dropdown>
-    );
-
-    const getModalContent = () => {
-      if (done) {
-        return (
-          <Result
-            status="success"
-            title="操作成功"
-            subTitle="一系列的信息描述，很短同样也可以带标点。"
-            extra={
-              <Button type="primary" onClick={this.handleDone}>
-                知道了
-              </Button>
-            }
-            className={styles.formResult}
-          />
-        );
-      }
-
-      return (
-        <Form onSubmit={this.handleSubmit}>
-          <FormItem label="任务名称" {...this.formLayout}>
-            {getFieldDecorator('title', {
-              rules: [
-                {
-                  required: true,
-                  message: '请输入任务名称',
-                },
-              ],
-              initialValue: current.title,
-            })(<Input placeholder="请输入" />)}
-          </FormItem>
-          <FormItem label="开始时间" {...this.formLayout}>
-            {getFieldDecorator('createdAt', {
-              rules: [
-                {
-                  required: true,
-                  message: '请选择开始时间',
-                },
-              ],
-              initialValue: current.createdAt ? moment(current.createdAt) : null,
-            })(
-              <DatePicker
-                showTime
-                placeholder="请选择"
-                format="YYYY-MM-DD HH:mm:ss"
-                style={{
-                  width: '100%',
-                }}
-              />,
-            )}
-          </FormItem>
-          <FormItem label="任务负责人" {...this.formLayout}>
-            {getFieldDecorator('owner', {
-              rules: [
-                {
-                  required: true,
-                  message: '请选择任务负责人',
-                },
-              ],
-              initialValue: current.owner,
-            })(
-              <Select placeholder="请选择">
-                <SelectOption value="付晓晓">付晓晓</SelectOption>
-                <SelectOption value="周毛毛">周毛毛</SelectOption>
-              </Select>,
-            )}
-          </FormItem>
-          <FormItem {...this.formLayout} label="产品描述">
-            {getFieldDecorator('subDescription', {
-              rules: [
-                {
-                  message: '请输入至少五个字符的产品描述！',
-                  min: 5,
-                },
-              ],
-              initialValue: current.subDescription,
-            })(<TextArea rows={4} placeholder="请输入至少五个字符" />)}
-          </FormItem>
-        </Form>
       );
-    };
 
     return (
       <>
         <PageHeaderWrapper>
           <div className={styles.standardList}>
-            <Card bordered={false}>
-              <Row>
-                <Col sm={8} xs={24}>
-                  <Info title="我的待办" value="8个任务" bordered />
-                </Col>
-                <Col sm={8} xs={24}>
-                  <Info title="本周任务平均处理时间" value="32分钟" bordered />
-                </Col>
-                <Col sm={8} xs={24}>
-                  <Info title="本周完成任务数" value="24个任务" />
-                </Col>
-              </Row>
-            </Card>
-
             <Card
               className={styles.listCard}
               bordered={false}
-              title="基本列表"
+              title="已出库工夹具"
               style={{
                 marginTop: 24,
               }}
               bodyStyle={{
                 padding: '0 32px 40px 32px',
               }}
-              extra={extraContent}
             >
-              <Button
-                type="dashed"
-                style={{
-                  width: '100%',
-                  marginBottom: 8,
-                }}
-                onClick={this.routerAppend}
-                ref={component => {
-                  // eslint-disable-next-line  react/no-find-dom-node
-                  this.addBtn = findDOMNode(component);
-                }}
-              >
-                <PlusOutlined />
-                添加
-              </Button>
               <List
                 size="large"
                 rowKey="id"
@@ -424,58 +174,22 @@ class UseRecords extends Component {
                 dataSource={list}
                 renderItem={item => (
                   <List.Item
-                    actions={[
-                      <a
-                        key="edit"
-                        onClick={e => {
-                          e.preventDefault();
-                          this.showEditModal(item);
-                        }}
-                      >
-                        编辑
-                      </a>,
-                      <MoreBtn key="more" item={item} />,
+                    actions={[  
+                      <Button type="primary" onClick={() => InOperation(item)}>入库</Button>
                     ]}
                   >
-                    {/* <List.Item.Meta
-                      avatar={<Avatar src={item.logo} shape="square" size="large" />}
-                      title={<a href={item.href}>{item.title}</a>}
-                      description={item.subDescription}
-                    />
-                    <ListContent data={item} /> */}
-
                     <List.Item.Meta
-                      avatar={<Avatar src={item.image} shape="square" size="large" />}
-                      title={item.tDef.name}
-                      description={item.tDef.usedFor}
+                      title={<a onClick={() => this.getProfile(item.id)}>{item.tool.tDef.code}</a>}
+                      description={item.tool.tDef.name}
                     />
                     <ListContent data={item} />
                   </List.Item>
                 )}
               />
             </Card>
+
           </div>
         </PageHeaderWrapper>
-
-        <Modal
-          title={done ? null : `任务${current ? '编辑' : '添加'}`}
-          className={styles.standardListForm}
-          width={640}
-          bodyStyle={
-            done
-              ? {
-                padding: '72px 0',
-              }
-              : {
-                padding: '28px 0 0',
-              }
-          }
-          destroyOnClose
-          visible={visible}
-          {...modalFooter}
-        >
-          {getModalContent()}
-        </Modal>
       </>
     );
   }
@@ -484,4 +198,4 @@ class UseRecords extends Component {
 export default connect(({ useRecords, loading }) => ({
   useRecords,
   loading: loading.models.useRecords,
-}))(Form.create()(UseRecords));
+}))(Form.create()(UseIn));

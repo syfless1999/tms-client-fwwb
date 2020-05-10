@@ -86,26 +86,26 @@ class ChangePwd extends Component {
           <Form
            {...formItemLayout}
           >
-            <Form.Item label="oldpwd" hasFeedback>
+            <Form.Item label="原密码" hasFeedback>
               {getFieldDecorator('oldpwd', {
                 rules: [
                   {
                     required: true,
-                    message: 'Please input your oldpwd!',
+                    message: '请输入原密码!',
                   },
-                  {
-                    validator: this.CheckOldPwd,
-                  },
+                  // {
+                  //   validator: this.CheckOldPwd,
+                  // },
                 ],
               })(<Input />)}
             </Form.Item>
 
-            <Form.Item label="newpwd" hasFeedback>
+            <Form.Item label="新密码" hasFeedback>
               {getFieldDecorator('newpwd', {
                 rules: [
                   {
                     required: true,
-                    message: 'Please input your newpwd!',
+                    message: '请输入新密码!',
                   },
                   {
                     validator: this.CheckSamePwd,
@@ -114,12 +114,12 @@ class ChangePwd extends Component {
               })(<Input.Password />)}
             </Form.Item>
 
-            <Form.Item label="confirmpwd" hasFeedback>
+            <Form.Item label="确认密码" hasFeedback>
               {getFieldDecorator('confirmpwd', {
                 rules: [
                   {
                     required: true,
-                    message: 'Please input your confirmpwd!',
+                    message: '请再次输入新密码!',
                   },
                   {
                     validator: this.CheckPwd,

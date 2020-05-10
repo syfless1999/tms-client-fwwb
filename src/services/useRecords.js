@@ -15,6 +15,13 @@ export async function useOut(params) {
   });
 }
 
+export async function useIn(params) {
+  return request('/api/useRecords', {
+    method: 'POST',
+    data: params,
+  });
+}
+
 export async function queryInfo(params) {
   return request(`/api/useRecords/${params.id}`)
 }
