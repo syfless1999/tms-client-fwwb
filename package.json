@@ -47,7 +47,7 @@
     "@ant-design/pro-layout": "^4.10.0",
     "@ant-design/pro-table": "^1.0.33",
     "@antv/data-set": "^0.11.4",
-    "@antv/g2plot": "^1.0.3",
+    "@antv/g2plot": "^1.0.4",
     "@antv/g6": "^3.4.7",
     "@types/lodash.debounce": "^4.0.6",
     "antd": "^3.23.6",

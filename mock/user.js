@@ -228,7 +228,7 @@ export default {
 //   'POST /api/users': appendUser,
 //   'PATCH /api/users/:no': patchUser,
   // 'DELETE /api/users/:no': deleteUser,
-  'PATCH /api/users': change,
+ // 'PATCH /api/users': change,
   // 支持值为 Object 和 Array
   // 'GET /api/currentUser': {
   //   name: 'Serati Ma',

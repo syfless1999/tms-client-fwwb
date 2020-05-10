@@ -34,79 +34,27 @@ import { compareAuthority } from '../../../utils/authority';
 const { Step } = Steps;
 const ButtonGroup = Button.Group;
 
-// const mobileMenu = (
-//   <Menu>
-//     <Menu.Item key="1">操作一</Menu.Item>
-//     <Menu.Item key="2">操作二</Menu.Item>
-//     <Menu.Item key="3">选项一</Menu.Item>
-//     <Menu.Item key="4">选项二</Menu.Item>
-//     <Menu.Item key="">选项三</Menu.Item>
-//   </Menu>
+// const checkOperation1 = (click) => (
+//   <Popconfirm
+//     placement="bottomLeft"
+//     title="是否通过初审"
+//     onConfirm={() => click("已初审未终审")}
+//     onCancel={() => click("已提交初审未通过")}
+//     okText="Yes"
+//     cancelText="No">
+//   </Popconfirm>
 // );
 
-
-const action = (status, click1, click2) => (
-  <RouteContext.Consumer>
-    {({ isMobile }) => {
-      {/* if (isMobile) {
-        return (
-          <Dropdown.Button
-            type="primary"
-            icon={<DownOutlined />}
-            //overlay={mobileMenu}
-            placement="bottomRight"
-          >
-            主操作
-          </Dropdown.Button>
-        );
-      } */}
-
-      return (
-        <Fragment>
-          审核操作：
-          {/* <ButtonGroup>
-            <Button>操作一</Button>
-            <Button>操作二</Button>
-            <Dropdown overlay={menu} placement="bottomRight">
-              <Button>
-                <EllipsisOutlined />
-              </Button>
-            </Dropdown>
-          </ButtonGroup> */}
-          <Popconfirm
-            placement="bottomLeft"
-            title="是否通过初审"
-            onConfirm={() => click1("已初审未终审")}
-            onCancel={() => click1("已提交初审未通过")}
-            okText="Yes"
-            cancelText="No">
-            <Button type="primary" disabled={judgeDisabled("supervisor", status, 1)}>初审</Button>
-          </Popconfirm>
-          <Popconfirm
-            placement="bottomLeft"
-            title="是否通过终审"
-            onConfirm={() => click2("已终审")}
-            onCancel={() => click2("已初审终审未通过")}
-            okText="Yes"
-            cancelText="No">
-            <Button type="danger" disabled={judgeDisabled("manager", status, 2)}>终审</Button>
-          </Popconfirm>
-        </Fragment>
-      );
-    }}
-  </RouteContext.Consumer >
-);
-
-const judgeDisabled = (compareA, status, targetS) => {
-
-  if (targetS === 1) {
-    return (compareAuthority(compareA) < 0) || getStr(status) === "已初审" || getStr(status) === "已终审";
-  }
-  if (targetS === 2) {
-    return compareAuthority(compareA) < 0 || getStr(status) === "已终审";
-  }
-}
-
+// const checkOperation2 = (click) => (
+//   <Popconfirm
+//     placement="bottomLeft"
+//     title="是否通过初审"
+//     onConfirm={() => click("已初审未终审")}
+//     onCancel={() => click("已提交初审未通过")}
+//     okText="Yes"
+//     cancelText="No">
+//   </Popconfirm>
+// );
 
 const getStr = status => {
   let percent = 0;
@@ -131,6 +79,88 @@ const getStr = status => {
   }
   return percent;
 }
+
+const judgeDisabled = (compareA, status, targetS) => {
+  if(status.includes("未通过")) return true
+  if (targetS === 1) {
+    return (compareAuthority(compareA) < 0) || getStr(status) === "已初审" || getStr(status) === "已终审";
+  }
+  if (targetS === 2) {
+    return compareAuthority(compareA) < 0 || getStr(status) === "已终审" || getStr(status) === "已提交";
+  }
+  return true
+}
+
+const action = (status, click1, click2) => (
+  <RouteContext.Consumer>
+    {() => (
+        <Fragment>
+          审核操作：
+          <Popconfirm
+            placement="bottomLeft"
+            title="是否通过初审"
+            onConfirm={() => click1("已初审未终审")}
+            onCancel={() => click1("已提交初审未通过")}
+            okText="Yes"
+            cancelText="No">
+            <Button type="primary" disabled={judgeDisabled("supervisor", status.name, 1)}>初审</Button>
+          </Popconfirm>
+
+          {/* <Button 
+            type="primary" 
+            disabled={judgeDisabled("supervisor", status.name, 1)}
+            onClick={() => checkOperation1(click1)}
+            >
+              初审
+          </Button> */}
+
+          <Popconfirm
+            placement="bottomLeft"
+            title="是否通过终审"
+            onConfirm={() => click2("已终审")}
+            onCancel={() => click2("已初审终审未通过")}
+            okText="Yes"
+            cancelText="No">
+            <Button type="danger" disabled={judgeDisabled("manager", status.name, 2)}>终审</Button>
+          </Popconfirm>
+
+          {/* <Button 
+            type="primary" 
+            disabled={judgeDisabled("supervisor", status.name, 2)}
+            onClick={() => checkOperation2(click2)}
+            >
+              终审
+          </Button> */}
+
+        </Fragment>
+      )}
+  </RouteContext.Consumer >
+);
+
+const getStatus = status => {
+  let percent = 0;
+  switch (status) {
+    case "已提交未初审":
+      percent = 0;
+      break;
+    case "已提交初审未通过":
+      percent = 1;
+      break;
+    case "已初审未终审":
+      percent = 2;
+      break;
+    case "已初审终审未通过":
+      percent = 3;
+      break;
+    case "已终审":
+      percent = 4;
+      break;
+    default:
+      break;
+  }
+  return percent;
+}
+
 const extra = status => (
   <Row className={styles.moreInfo}>
     <Col span={12}>
@@ -139,18 +169,19 @@ const extra = status => (
   </Row>
 );
 
-const description = (subPersonName, tDefName, subTime, id) => (
+const description = (subPersonName, toolCode, subTime, reason) => (
   <RouteContext.Consumer>
     {({ isMobile }) => (
       <Descriptions className={styles.headerList} size="small" column={isMobile ? 1 : 2}>
         <Descriptions.Item label="申请人">{subPersonName || ""}</Descriptions.Item>
-        <Descriptions.Item label="夹具名称">{tDefName || ""}</Descriptions.Item>
-        <Descriptions.Item label="创建时间">{subTime || ""}</Descriptions.Item>
-        <Descriptions.Item label="申请单号">{id || ""}</Descriptions.Item>
+        <Descriptions.Item label="夹具代码">{toolCode || ""}</Descriptions.Item>
+        <Descriptions.Item label="报废原因">{reason || ""}</Descriptions.Item>
+        <Descriptions.Item label="申请时间">{subTime || ""}</Descriptions.Item>
       </Descriptions>
     )}
   </RouteContext.Consumer>
 );
+
 const desc = (personName, time) => (
   <div className={classNames(styles.textSecondary, styles.stepDescription)}>
     <Fragment>
@@ -214,55 +245,6 @@ const customDot = (dot, { status }) => {
   return dot;
 };
 
-const operationTabList = [
-  {
-    key: 'tab1',
-    tab: '操作日志一',
-  },
-  {
-    key: 'tab2',
-    tab: '操作日志二',
-  },
-  {
-    key: 'tab3',
-    tab: '操作日志三',
-  },
-];
-const columns = [
-  {
-    title: '操作类型',
-    dataIndex: 'type',
-    key: 'type',
-  },
-  {
-    title: '操作人',
-    dataIndex: 'name',
-    key: 'name',
-  },
-  {
-    title: '执行结果',
-    dataIndex: 'status',
-    key: 'status',
-    render: text => {
-      if (text === 'agree') {
-        return <Badge status="success" text="成功" />;
-      }
-
-      return <Badge status="error" text="驳回" />;
-    },
-  },
-  {
-    title: '操作时间',
-    dataIndex: 'updatedAt',
-    key: 'updatedAt',
-  },
-  {
-    title: '备注',
-    dataIndex: 'memo',
-    key: 'memo',
-  },
-];
-
 class $id extends Component {
   state = {
     operationKey: 'tab1',
@@ -292,63 +274,34 @@ class $id extends Component {
 
   firstConfirm = status => {
     const { dispatch } = this.props;
-    const id = this.props.match.params.id;
+    const {id} = this.props.match.params;
 
     dispatch({
       type: 'scraps/firstCheck',
       payload: {
-        id: id,
-        status: status
+        id,
+        status: getStatus(status)
       }
     });
   }
 
   secondConfirm = status => {
     const { dispatch } = this.props;
-    const id = this.props.match.params.id;
+    const {id} = this.props.match.params;
 
     dispatch({
       type: 'scraps/secondCheck',
       payload: {
-        id: id,
-        status: status
+        id,
+        status: getStatus(status)
       }
     });
   }
 
   render() {
-    const { operationKey, tabActiveKey } = this.state;
-    const { scrapsAndId, loading, scraps } = this.props;
-    const { advancedOperation1, advancedOperation2, advancedOperation3 } = scrapsAndId;
-    const info = scraps.info;
-
-
-    const contentList = {
-      tab1: (
-        <Table
-          pagination={false}
-          loading={loading}
-          dataSource={advancedOperation1}
-          columns={columns}
-        />
-      ),
-      tab2: (
-        <Table
-          pagination={false}
-          loading={loading}
-          dataSource={advancedOperation2}
-          columns={columns}
-        />
-      ),
-      tab3: (
-        <Table
-          pagination={false}
-          loading={loading}
-          dataSource={advancedOperation3}
-          columns={columns}
-        />
-      ),
-    };
+    const { tabActiveKey } = this.state;
+    const { scraps} = this.props;
+    const {info} = scraps;
 
     const getStatus = (status = "") => {
 
@@ -387,20 +340,10 @@ class $id extends Component {
         title="报废申请详细信息"
         extra={action(info.status, this.firstConfirm, this.secondConfirm)}
         className={styles.pageHeader}
-        extraContent={extra(info.status)}
-        content={description(info.subPerson.name, info.tDef.name, info.subTime, info.id)}
+        extraContent={extra(info.status.name)}
+        content={description(info.subPerson.name, info.tool.code , info.subTime, info.description)}
         tabActiveKey={tabActiveKey}
         onTabChange={this.onTabChange}
-      // tabList={[
-      //   {
-      //     key: 'detail',
-      //     tab: '详情',
-      //   },
-      //   {
-      //     key: 'rule',
-      //     tab: '规则',
-      //   },
-      // ]}
       >
         <div className={styles.main}>
           <GridContent>
@@ -415,8 +358,8 @@ class $id extends Component {
                   <Steps
                     direction={isMobile ? 'vertical' : 'horizontal'}
                     progressDot={customDot}
-                    current={getCurrent(info.status)}
-                    status={getStatus(info.status)}
+                    current={getCurrent(info.status.name)}
+                    status={getStatus(info.status.name)}
                   >
                     <Step title="提出申请" description={desc(info.subPerson.name || "", info.subTime || "")} />
                     <Step title="初审" description={desc(info.firstPerson.name || "", info.firstTime || "")} />
@@ -426,6 +369,7 @@ class $id extends Component {
                 )}
               </RouteContext.Consumer>
             </Card>
+
             <Card
               title="夹具信息"
               style={{
@@ -438,10 +382,13 @@ class $id extends Component {
                   marginBottom: 24,
                 }}
               >
-                <Descriptions.Item label="夹具代码">{info.tDef.code}</Descriptions.Item>
-                <Descriptions.Item label="报废原因">{info.tDef.description}</Descriptions.Item>
-                <Descriptions.Item label="夹具使用时间">{info.tDef.usedCount}</Descriptions.Item>
-
+                <Descriptions.Item label="夹具代码">{info.tool.tDef.code || ""}</Descriptions.Item>
+                <Descriptions.Item label="名称">{info.tool.tDef.name || ""}</Descriptions.Item>
+                <Descriptions.Item label="所属大类">{info.tool.tDef.family || ""}</Descriptions.Item>
+                <Descriptions.Item label="点检周期">{info.tool.tDef.pmPeriod || ""}</Descriptions.Item>
+                <Descriptions.Item label="用途">{info.tool.tDef.usedFor || ""}</Descriptions.Item>
+                <Descriptions.Item label="每条生产线配备的数量">{info.tool.tDef.upl || ""}</Descriptions.Item>
+                <Descriptions.Item label="partNo">{info.tool.tDef.partNo || ""}</Descriptions.Item>
               </Descriptions>
               <Descriptions
                 style={{
@@ -452,74 +399,75 @@ class $id extends Component {
                 <Descriptions.Item>
                   <img src={info.image} alt="" />
                 </Descriptions.Item>
-              </Descriptions>
-              <h4
-                style={{
-                  marginBottom: 16,
-                }}
-              >
-                信息组
-              </h4>
-              <Card type="inner" title="多层级信息组">
-                <Descriptions
-                  style={{
-                    marginBottom: 16,
-                  }}
-                  title="组名称"
-                >
-                  <Descriptions.Item label="负责人">林东东</Descriptions.Item>
-                  <Descriptions.Item label="角色码">1234567</Descriptions.Item>
-                  <Descriptions.Item label="所属部门">XX公司 - YY部</Descriptions.Item>
-                  <Descriptions.Item label="过期时间">2017-08-08</Descriptions.Item>
-                  <Descriptions.Item label="描述">
-                    这段描述很长很长很长很长很长很长很长很长很长很长很长很长很长很长...
-                  </Descriptions.Item>
-                </Descriptions>
-                <Divider
-                  style={{
-                    margin: '16px 0',
-                  }}
-                />
-                <Descriptions
-                  style={{
-                    marginBottom: 16,
-                  }}
-                  title="组名称"
-                  column={1}
-                >
-                  <Descriptions.Item label="学名">
-                    Citrullus lanatus (Thunb.) Matsum. et
-                    Nakai一年生蔓生藤本；茎、枝粗壮，具明显的棱。卷须较粗..
-                  </Descriptions.Item>
-                </Descriptions>
-                <Divider
-                  style={{
-                    margin: '16px 0',
-                  }}
-                />
-                <Descriptions title="组名称">
-                  <Descriptions.Item label="负责人">付小小</Descriptions.Item>
-                  <Descriptions.Item label="角色码">1234568</Descriptions.Item>
-                </Descriptions>
-              </Card>
+              </Descriptions>             
             </Card>
+
             <Card
-              title="用户近半年来电记录"
+              title="申请人信息"
               style={{
                 marginBottom: 24,
               }}
               bordered={false}
             >
-              <Empty />
+              <Descriptions
+                style={{
+                  marginBottom: 24,
+                }}
+              >
+                <Descriptions.Item label="姓名">{info.subPerson.name || ""}</Descriptions.Item>
+                <Descriptions.Item label="编号">{info.subPerson.no || ""}</Descriptions.Item>
+                <Descriptions.Item label="ID">{info.subPerson.id || ""}</Descriptions.Item>
+                <Descriptions.Item label="职位">{info.subPerson.position.name || ""}</Descriptions.Item>
+                <Descriptions.Item label="部门">{info.subPerson.workcell.name || ""}</Descriptions.Item>
+                <Descriptions.Item label="电子邮件">{info.subPerson.email || ""}</Descriptions.Item>
+                <Descriptions.Item label="申请时间">{info.subTime || ""}</Descriptions.Item>
+              </Descriptions>
             </Card>
+
             <Card
-              className={styles.tabsCard}
+              title="初审人信息"
+              style={{
+                marginBottom: 24,
+              }}
               bordered={false}
-              tabList={operationTabList}
-              onTabChange={this.onOperationTabChange}
             >
-              {contentList[operationKey]}
+              <Descriptions
+                style={{
+                  marginBottom: 24,
+                }}
+              >
+                <Descriptions.Item label="姓名">{info.firstPerson.name || ""}</Descriptions.Item>
+                <Descriptions.Item label="编号">{info.firstPerson.no || ""}</Descriptions.Item>
+                <Descriptions.Item label="ID">{info.firstPerson.id || ""}</Descriptions.Item>
+                <Descriptions.Item label="职位">{info.firstPerson.position.name || ""}</Descriptions.Item>
+                <Descriptions.Item label="部门">{info.firstPerson.workcell.name || ""}</Descriptions.Item>
+                <Descriptions.Item label="电子邮件">{info.firstPerson.email || ""}</Descriptions.Item>
+                <Descriptions.Item label="初审时间">{info.firstTime || ""}</Descriptions.Item>
+              </Descriptions>
             </Card>
+
+            <Card
+              title="终审人信息"
+              style={{
+                marginBottom: 24,
+              }}
+              bordered={false}
+            >
+              <Descriptions
+                style={{
+                  marginBottom: 24,
+                }}
+              >
+                <Descriptions.Item label="姓名">{info.secondPerson.name || ""}</Descriptions.Item>
+                <Descriptions.Item label="编号">{info.secondPerson.no || ""}</Descriptions.Item>
+                <Descriptions.Item label="ID">{info.secondPerson.id || ""}</Descriptions.Item>
+                <Descriptions.Item label="职位">{info.secondPerson.position.name || ""}</Descriptions.Item>
+                <Descriptions.Item label="部门">{info.secondPerson.workcell.name || ""}</Descriptions.Item>
+                <Descriptions.Item label="电子邮件">{info.secondPerson.email || ""}</Descriptions.Item>
+                <Descriptions.Item label="终审时间">{info.secondTime || ""}</Descriptions.Item>
+              </Descriptions>
+            </Card>
+
           </GridContent>
         </div>
       </PageHeaderWrapper>)

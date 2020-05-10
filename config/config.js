@@ -84,6 +84,7 @@ export default {
                 },
             ],
         },
+
         {
             path: '/',
             component: '../layouts/SecurityLayout',
@@ -146,10 +147,37 @@ export default {
                             ],
                         },
                         {
+                            name: 'useRecords',
+                            icon: 'logout',
+                            path: '/useRecords',
+                            authority: ['operator 1', 'admin'],
+                            routes: [
+                                {
+                                    path: '/useRecords/list',
+                                    name: 'list',
+                                    component: './useRecords',
+                                },
+                                {
+                                    name: 'useout',
+                                    path: '/useRecords/useout',
+                                    component: './useRecords/useout',
+                                },
+                                {
+                                    name: 'usein',
+                                    path: '/useRecords/usein',
+                                    component: './useRecords/usein',
+                                },
+                                {
+                                    path: '/useRecords/:id',
+                                    component: './useRecords/$id',
+                                },
+                            ],
+                        },
+                        {
                             name: 'scraps',
-                            icon: 'arrow-left',
+                            icon: 'inbox',
                             path: '/scraps',
-                            authority: ['operator 1', 'operator 2', 'supervisor', 'manager', 'admin'],
+                            authority: ['supervisor', 'manager', 'admin'],
                             routes: [
                                 {
                                     path: '/scraps/list',
@@ -198,7 +226,7 @@ export default {
                         },
                         {
                             name: 'accountsettings',
-                            icon: 'smile',
+                            icon: 'setting',
                             path: '/accountsettings',
                             component: './AccountSettings',
                         },

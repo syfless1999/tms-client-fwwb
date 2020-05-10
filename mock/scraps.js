@@ -383,12 +383,12 @@ const titles = [
   }
   
   export default {
-    'GET  /api/fake_list': getFakeList,
-    'GET /api/scraps': getScrapList,
-    'POST /api/scraps': postScrap,
-    'POST  /api/fake_list': postFakeList,
-    'GET /api/scraps/:id': getInfo,
-    'PATCH /api/scraps/:id/firstCheck': patchCheck,
-    'PATCH /api/scraps/:id/secondCheck': patchCheck,
+    // 'GET  /api/fake_list': getFakeList,
+    // 'GET /api/scraps': getScrapList,
+    // 'POST /api/scraps': postScrap,
+    // 'POST  /api/fake_list': postFakeList,
+    // 'GET /api/scraps/:id': getInfo,
+    // 'PATCH /api/scraps/:id/firstCheck': patchCheck,
+    // 'PATCH /api/scraps/:id/secondCheck': patchCheck,
   };
   

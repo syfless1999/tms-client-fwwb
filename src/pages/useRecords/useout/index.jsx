@@ -16,7 +16,7 @@ const { Option } = Select;
 const { RangePicker } = DatePicker;
 const { TextArea } = Input;
 
-class ScrapAppend extends Component {
+class UseOut extends Component {
 
   handleSubmit = e => {
     const { dispatch, form } = this.props;
@@ -24,21 +24,22 @@ class ScrapAppend extends Component {
     form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         dispatch({
-          type: 'scraps/appendScrap',
-          payload:{
-            ...values,
-            subTime: new moment(new Date()).format('YYYY-MM-DD hh:mm:ss'),
-        }
+          type: 'useRecords/useOut',
+          payload: {
+              ...values,
+              time: new moment(new Date()).format('YYYY-MM-DD hh:mm:ss'),
+              status: 1
+          }
         }).then(res => {
           if (res && res.status === "success") {
-            message.success("报废申请成功");
-            router.replace(`/scraps/${res.data.scrap.id}`)
+            message.success("出库成功");
+            router.replace(`/useRecords/${res.data.useRecord.id}`)
           }
         });
       }
     });
   };
- 
+
   render() {
     const { submitting } = this.props;
     const {
@@ -78,7 +79,7 @@ class ScrapAppend extends Component {
       },
     };
     return (
-      <PageHeaderWrapper content={<FormattedMessage id="scrapsandscrapappend.basic.description" />}>
+      <PageHeaderWrapper content={<FormattedMessage id="billsandbillappend.basic.description" />}>
         <Card bordered={false}>
           <Form
             onSubmit={this.handleSubmit}
@@ -89,54 +90,72 @@ class ScrapAppend extends Component {
           >
             <FormItem
               {...formItemLayout}
-              label="夹具代码"
+              label="工夹具ID"
             >
               {getFieldDecorator('toolId', {
                 rules: [
                   {
                     required: true,
-                    message: "请输入夹具代码"
+                    message: "请输入工夹具ID"
                   },
                 ],
-              })(<Input/>)}
+              })(
+                <Input
+//                  placeholder='例如：EF2189'
+                />,
+              )}
             </FormItem>
 
             <FormItem
               {...formItemLayout}
-              label="报废原因"
+              label="夹具存储点ID"
             >
-              {getFieldDecorator('description', {
+              {getFieldDecorator('locationId', {
                 rules: [
                   {
                     required: true,
-                    message: "请输入报废原因"
+                    message: "请输入夹具存储点"
                   },
                 ],
               })(
-                <TextArea
-                  style={{
-                    minHeight: 32,
-                  }}
-                  rows={4}
+                <Input
+//                  placeholder='例如：16-A2'
                 />,
               )}
             </FormItem>
-            
+
             <FormItem
               {...formItemLayout}
-              label="夹具使用年份"
+              label="员工ID"
             >
-              {getFieldDecorator('usedCount', {
+              {getFieldDecorator('staffId', {
                 rules: [
                   {
                     required: true,
-                    message: "请输入夹具使用年份"
+                    message: "请输入员工ID"
                   },
                 ],
               })(
-                <InputNumber
-                  min={0}
-                  step={1}
+                <Input
+//                  placeholder='例如：A18'
+                />,
+              )}
+            </FormItem>
+
+            <FormItem
+              {...formItemLayout}
+              label="产线ID"
+            >
+              {getFieldDecorator('productLineId', {
+                rules: [
+                  {
+                    required: true,
+                    message: "请输入生产线ID"
+                  },
+                ],
+              })(
+                <Input
+//                  placeholder='例如：7'
                 />,
               )}
             </FormItem>
@@ -148,17 +167,15 @@ class ScrapAppend extends Component {
               }}
             >
               <Button type="primary" htmlType="submit" loading={submitting}>
-                <FormattedMessage id="scrapsandscrapappend.form.submit" />
+                <FormattedMessage id="billsandbillappend.form.submit" />
               </Button>
-
               <Button
                 style={{
                   marginLeft: 8,
                 }}
               >
-                <FormattedMessage id="scrapsandscrapappend.form.save" />
+                <FormattedMessage id="billsandbillappend.form.save" />
               </Button>
-
             </FormItem>
           </Form>
         </Card>
@@ -169,6 +186,6 @@ class ScrapAppend extends Component {
 
 export default Form.create()(
   connect(({ loading }) => ({
-    submitting: loading.effects['scraps/appendScrap'],
-  }))(ScrapAppend),
+    submitting: loading.effects['useRecords/useOut'],
+  }))(UseOut),
 );

@@ -6,29 +6,38 @@ import { router } from 'umi';
 const Model = {
   namespace: 'scraps',
   state: {
-    list: [],
-    total: 0,
-    page: 1,
-    pageSize: 5,
-    status: 0,
+    // list: [],
+    // total: 0,
     info: {
-      subPerson: {},
-      tDef: {},
-      firstPerson: {},
-      secondPerson: {},
+      subPerson: {
+        position: {},
+        workcell: {},
+      },
+      tool: {
+        tDef: {}
+      },
+      firstPerson: {
+        position: {},
+        workcell: {},
+      },
+      secondPerson: {
+        position: {},
+        workcell: {},
+      },
+      status: {
+        name: ""
+      },
     },
   },
   effects: {
     *fetch({ payload }, { call, put, select }) {
       const response = yield call(queryScraps, payload);
-      const status = yield select(state => state.status);
+//      const status = yield select(state => state.status);
       yield put({
         type: 'setData',
         payload: {
-          list: response.data.scraps,
-          total: response.data.total,
-          page: payload.page || 1,
-          page: payload.status || status,
+          list: response.data.useRecords.list,
+          total: response.data.useRecords.total,
         }
       });
 
@@ -50,10 +59,11 @@ const Model = {
 
     *fetchInfo({ payload }, { call, put }) {
       const response = yield call(queryInfo, payload);
+//      console.log(response.data);
       if (response && response.status === 'success') {
         yield put({
           type: 'setInfo',
-          payload: response.data.info || {},
+          payload: response.data.scrap || {}
         });
       }
     },
@@ -97,24 +107,13 @@ const Model = {
     // queryList(state, action) {
     //   return { ...state, list: action.payload };
     // },
-    setData(state, { payload: { list, total, page, status } }) {
-
-      return { ...state, list, total, page, status }
+    setData(state, { payload: { list, total } }) {
+//      console.log({ ...state, list, total })
+      return { ...state, list, total }
     },
     setInfo(state, { payload }) {
-      if (!payload.tDef) {
-        payload.tDef = {};
-      }
-      if (!payload.subPerson) {
-        payload.subPerson = {};
-      }
-      if (!payload.secondPerson) {
-        payload.secondPerson = {};
-      }
-      if (!payload.firstPerson) {
-        payload.firstPerson = {};
-      }
-      return { ...state, info: payload };
+      const info = { ...state.info, ...payload };
+      return { info };
     },
 
     appendList(
