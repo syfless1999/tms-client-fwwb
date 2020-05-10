@@ -22,7 +22,6 @@ export async function queryInfo(params) {
 }
 
 export async function checkRepair(params) {
-  console.log(params);
   return request(`/api/repairApps/${params.id}`, {
     method: "PATCH",
     data: {

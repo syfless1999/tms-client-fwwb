@@ -59,8 +59,8 @@ const action = (status, click1, click2) => (
           <Popconfirm
             placement="bottomLeft"
             title="是否通过初审"
-            onConfirm={() => click1("已初审未终审")}
-            onCancel={() => click1("已提交初审未通过")}
+            onConfirm={() => click1(2)}
+            onCancel={() => click1(1)}
             okText="Yes"
             cancelText="No">
             <Button type="primary" disabled={judgeDisabled("supervisor", status, 1)}>初审</Button>
@@ -68,8 +68,8 @@ const action = (status, click1, click2) => (
           <Popconfirm
             placement="bottomLeft"
             title="是否通过终审"
-            onConfirm={() => click2("已终审")}
-            onCancel={() => click2("已初审终审未通过")}
+            onConfirm={() => click2(4)}
+            onCancel={() => click2(3)}
             okText="Yes"
             cancelText="No">
             <Button type="danger" disabled={judgeDisabled("manager", status, 2)}>终审</Button>

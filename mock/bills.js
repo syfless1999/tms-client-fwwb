@@ -393,6 +393,6 @@ export default {
   // 'POST /api/bills': postBill,
 //   'POST  /api/fake_list': postFakeList,
   // 'GET /api/bills/:id': getInfo,
-  'PATCH /api/bills/:id/firstCheck': patchCheck,
-  'PATCH /api/bills/:id/secondCheck': patchCheck,
+//   'PATCH /api/bills/:id/firstCheck': patchCheck,
+//   'PATCH /api/bills/:id/secondCheck': patchCheck,
 };

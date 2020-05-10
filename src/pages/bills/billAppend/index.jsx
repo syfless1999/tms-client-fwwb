@@ -246,7 +246,8 @@ class BillAppend extends Component {
                 <FormItem {...formItemLayout} label='物品图片上传'>
                   {getFieldDecorator('image')(
                     <Upload action='路径'
-                      multiple uploadList
+                      uploadList
+                      listType="picture-card"
                       beforeUpload={this.beforeUploadHandle}
                       onChange={this.fileChange}
                       onRemove={this.fileRemove}
@@ -329,7 +330,7 @@ class BillAppend extends Component {
                   {...formItemLayout}
                   label="采购数量"
                 >
-                  {getFieldDecorator('number')(
+                  {getFieldDecorator('count')(
                     <InputNumber
                       min={0}
                       step={1}

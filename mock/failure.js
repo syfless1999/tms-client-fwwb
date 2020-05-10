@@ -11,5 +11,5 @@ const getFailure = (req, res) => {
 
 
 export default {
-  'GET /api/failure': getFailure,
+//   'GET /api/failure': getFailure,
 }
