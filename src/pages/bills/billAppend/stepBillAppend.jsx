@@ -24,6 +24,7 @@ class App extends React.Component {
             current: 0,
             excel: [],
             images: [],
+            loading: false,
         };
     }
 
@@ -38,11 +39,11 @@ class App extends React.Component {
     }
 
     //   下载模版excel上传文件
-    downloadTemplate = () => {
+    download = () => {
         downloadTemplate().then(res => res.blob()).then(blob => {
             var a = document.createElement('a');
             var url = window.URL.createObjectURL(blob);
-            var filename = 'template.xlsx';
+            var filename = '批量采购入库申请模版文件.xlsx';
             a.href = url;
             a.download = filename;
             a.click();
@@ -96,24 +97,31 @@ class App extends React.Component {
 
         formData.append('images', images);
 
-        uploadFiles(formData).then(res => res.json()).then(res => {
-            if (res.status === 'success') {
-                message.success('批量申请成功');
-                this.next();
-            } else {
-                message.error('批量申请失败');
-            }
-            this.setState({
-                excel: null,
-                images: [],
+        this.setState({
+            loading: true
+        }, () => {
+            uploadFiles(formData).then(res => res.json()).then(res => {
+                if (res.status === 'success') {
+                    message.success('批量申请成功');
+                    this.next();
+                } else {
+                    message.error('批量申请失败，' + res.description || "原因不明");
+                }
+                this.setState({
+                    excel: null,
+                    images: [],
+                    loading: false
+                })
             })
         })
+
+
     }
 
 
 
     render() {
-        const { current, excel, images } = this.state;
+        const { current, excel, images, loading } = this.state;
 
         const excelProps = {
             name: 'file',
@@ -138,7 +146,7 @@ class App extends React.Component {
                     <div className={styles.firstStep}>
                         <div>
                             下载模版：
-                        <Button type="primary" ghost onClick={this.downloadTemplate}>
+                        <Button type="primary" ghost onClick={this.download}>
                                 <DownloadOutlined />Download
                             </Button>
                         </div>
@@ -162,7 +170,7 @@ class App extends React.Component {
                 content: (
                     <>
                         <div>
-                            <Dragger {...imageProps} listType="picture">
+                            <Dragger {...imageProps} listType="picture" directory>
                                 <p className="ant-upload-drag-icon">
                                     <InboxOutlined />
                                 </p>
@@ -176,7 +184,7 @@ class App extends React.Component {
                         <div className={styles.stepBtn}>
                             <Button type="primary" onClick={() => this.prev()}>上一步</Button>
                             <Divider type="vertical"></Divider>
-                            <Button type="primary" onClick={this.submitBills}>提交申请</Button>
+                            <Button type="primary" onClick={this.submitBills} loading={loading}>提交申请</Button>
                         </div>
                     </>
                 ),

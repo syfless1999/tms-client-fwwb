@@ -15,6 +15,7 @@ class Login extends Component {
     state = {
         type: 'account',
         autoLogin: true,
+        loading: false,
     };
     changeAutoLogin = e => {
         this.setState({
@@ -32,25 +33,30 @@ class Login extends Component {
             });
 
 
-            fetch('/api/users/login', {
-                method: 'post',
-                body: formData,
-            }).then(res => res.json())
-                .then(res => {
-                    if (res && res.status === 'success') {
-                        dispatch({
-                            type: 'login/changeLoginStatus',
-                            payload: res
-                        });
-                        return res.status;
-                    } else {
-                        message.error(res && res.message);
-                    }
-                }).then(res => {
-                    if (res === 'success') {
-                        router.replace('/');
-                    }
-                })
+            this.setState({
+                loading: true,
+            }, () => {
+                fetch('/api/users/login', {
+                    method: 'post',
+                    body: formData,
+                }).then(res => res.json())
+                    .then(res => {
+                        if (res && res.status === 'success') {
+                            dispatch({
+                                type: 'login/changeLoginStatus',
+                                payload: res
+                            });
+                            return res.status;
+                        } else {
+                            message.error(res && res.message);
+                        }
+                    }).then(res => {
+                        if (res === 'success') {
+                            router.replace('/');
+                        }
+                    })
+            })
+
 
 
         }
@@ -99,6 +105,7 @@ class Login extends Component {
         const { userLogin = {}, submitting } = this.props;
         const { status, type: loginType } = userLogin;
         const { type, autoLogin } = this.state;
+        const {loading} = this.state;
         return (
             <div className={styles.main}>
                 <LoginComponents
@@ -250,7 +257,7 @@ class Login extends Component {
                             <FormattedMessage id="user-login.login.forgot-password" />
                         </a>
                     </div>
-                    <Submit loading={submitting}>
+                    <Submit loading={loading}>
                         <FormattedMessage id="user-login.login.login" />
                     </Submit>
                     <div className={styles.other}>

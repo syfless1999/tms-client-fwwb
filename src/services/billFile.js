@@ -2,7 +2,12 @@ import request from './request';
 import { getToken } from '../utils/authority';
 
 export async function downloadTemplate() {
-    return request('/api/bills/download');
+    return fetch('/api/bills/download', {
+        method: 'GET',
+        headers: {
+            Authorization: "Bearer " + getToken(),
+        }
+    });
 }
 
 

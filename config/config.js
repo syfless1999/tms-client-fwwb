@@ -99,17 +99,17 @@ export default {
                             redirect: '/dashboardanalysis',
                         },
                         {
-                            name: 'dashboard',
+                            name: 'welcome',
                             icon: 'smile',
                             path: '/dashboardanalysis',
                             component: './DashboardAnalysis',
                         },
-                        {
-                            path: '/welcome',
-                            name: 'welcome',
-                            icon: 'smile',
-                            component: './Welcome',
-                        },
+                        // {
+                        //     path: '/welcome',
+                        //     name: 'welcome',
+                        //     icon: 'smile',
+                        //     component: './Welcome',
+                        // },
                         {
                             path: '/tdefs',
                             name: 'tdef',

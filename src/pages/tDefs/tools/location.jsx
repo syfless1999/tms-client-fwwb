@@ -1,65 +1,51 @@
 import React, { useEffect, useRef } from 'react';
 import ReactDOM from 'react-dom';
-import G6 from '@antv/g6';
 
+
+import mapGraphRender from '@/components/MapGraph/render';
 import { location2node } from '../../../utils/location';
 
 
-const location = ({ data }) => {
+
+
+const location = ({ data, width, height }) => {
 
     // ref
     const container = useRef();
 
-    const locations = location2node(data.locations, 'location');
-    const productLines = location2node(data.productLines, 'productLine');
-    const nodes = [...locations, ...productLines];
+    // 样式
+    const containerStyle = {
+        border: '1px solid #ccc',
+        width: width + 40,
+        height: height + 20
+    };
+
+    const canvasStyle = {
+        margin: '10px auto',
+        width,
+        height
+    };
 
 
+    const nodes = location2node(data)
     useEffect(() => {
+        // 数据
         const data = {
-            nodes: nodes
+            nodes
         };
 
-        const graph = new G6.Graph({
-            container: ReactDOM.findDOMNode(container.current),
-            width: 780,
-            height: 560,
-            defaultEdge: {
-                color: '#e2e2e2',
-                lineAppendWidth: 3,
-            },
-            defaultNode: {
-                size: 50,
-                style: {
-                    fill: '#DEE9FF',
-                    stroke: '#5B8FF9',
-                },
-                labelCfg: {
-                    style: {
-                        fontSize: 10,
-                    }
-                }
-            },
-            nodeStateStyles: {
-                hover: {
-                    lineWidth: 5,
-                    fillOpacity: 1,
-                },
-            },
-            edgeStateStyles: {
-                hover: {
-                    lineWidth: 3,
-                },
-            },
-        });
-        graph.data(data);
-        graph.render();
+        // 容器
+        const reactContainer = ReactDOM.findDOMNode(container.current);
+
+        // 抽离渲染
+        mapGraphRender(data, reactContainer, width, height);
+
 
     }, []);
 
     return (
-        <div>
-            <div ref={container} style={{ border: '1px solid #ccc' }}></div>
+        <div style={containerStyle}>
+            <div ref={container} style={canvasStyle}></div>
         </div>
     )
 }

@@ -70,12 +70,19 @@ const FailureTab = ({ data }) => {
   )
 }
 
+
+const styleLocation = {
+    width:1020,
+    height:680
+}
+
+
 // 位置tab
 const LocationTab = ({ data }) => {
   return (
     <>
       <Title level={4}>夹具的位置</Title>
-      <Location data={data}></Location>
+      <Location data={data} {...styleLocation}></Location>
     </>
   )
 }
