@@ -1,4 +1,5 @@
 import { DefaultFooter, getMenuData, getPageTitle } from '@ant-design/pro-layout';
+import {Icon} from 'antd';
 import { Helmet } from 'react-helmet';
 import { Link } from 'umi';
 import React from 'react';
@@ -51,7 +52,23 @@ const UserLayout = props => {
           </div>
           {children}
         </div>
-        <DefaultFooter />
+        <DefaultFooter
+    copyright="东大坂46团队"
+    links={[
+      {
+        key: 'yuque group',
+        title: <Icon type="yuque" />,
+        href: 'https://www.yuque.com/syfless',
+        blankTarget: true,
+      },
+      {
+        key: 'syfless',
+        title: 'syfless',
+        href: 'https://www.syfless.com',
+        blankTarget: true,
+      },
+    ]}
+  />
       </div>
     </>
   );

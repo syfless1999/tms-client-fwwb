@@ -158,7 +158,7 @@ const IntroduceRow = ({ loading,
                     }
                     contentHeight={46}
                 >
-                    <MiniProgress percent={78} strokeWidth={8} target={80} color="#13C2C2" />
+                    <MiniProgress percent={scrapInfo.scrapRate*100} strokeWidth={8} target={100} color="#13C2C2" />
                 </ChartCard>
             </Col>
         </Row>

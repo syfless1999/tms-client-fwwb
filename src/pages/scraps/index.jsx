@@ -150,13 +150,8 @@ class Scraps extends Component {
     const {
       loading,
     } = this.props;
-
     const { list , total } = this.props.scraps;
-
     const { page, pageSize } = this.state;
-
-    console.log(list);
-
     const {
       form: { getFieldDecorator },
     } = this.props;

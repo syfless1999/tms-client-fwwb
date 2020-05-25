@@ -384,7 +384,6 @@ function postUseRecord(req, res) {
     status: "出库",
     image: avatars[6],
   };
-  console.log(req.body);
   useRecords.push(newUseRecords);
   res.json({
     status: "success",

@@ -296,7 +296,6 @@ function postBill(req, res) {
     status: "已终审",
     image: avatars[6],
   };
-  console.log(req.body);
   bills.push(newBill);
   res.json({
     status: "success",

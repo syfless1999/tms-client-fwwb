@@ -49,22 +49,11 @@ const Model = {
 
     *useOut({ payload }, { call }) {
       const response = yield call(useOut, payload);
-      // yield put({
-      //   type: 'appendList',
-      //   payload: Array.isArray(response) ? response : [],
-      // });
-      //router.replace(`/bills/${response.data.bill.id}`)
       return response;
     },
 
     *useIn({ payload }, { call }) {
-      // console.log(payload);
       const response = yield call(useIn, payload);
-      // yield put({
-      //   type: 'appendList',
-      //   payload: Array.isArray(response) ? response : [],
-      // });
-      //router.replace(`/bills/${response.data.bill.id}`)
       return response;
     },
 
@@ -116,11 +105,7 @@ const Model = {
     },
   },
   reducers: {
-    // queryList(state, action) {
-    //   return { ...state, list: action.payload };
-    // },
     setData(state, { payload: { list, total} }) {
-      console.log({ ...state, list, total});
       return { ...state, list, total}
     },
     setInfo(state, { payload: { useRecords } }) {

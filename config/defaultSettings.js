@@ -1,3 +1,7 @@
+/**
+ * 更换主题
+ * url:https://pro.ant.design/docs/theme-cn
+ */
 export default {
   navTheme: 'dark', // 导航菜单主题
   primaryColor: 'daybreak', // 页面基础色
@@ -13,4 +17,5 @@ export default {
   title: 'JABIL Group',
   pwa: false,
   iconfontUrl: '',
+  fixSiderbar: true, // 固定菜单
 };
