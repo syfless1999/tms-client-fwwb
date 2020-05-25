@@ -1,4 +1,4 @@
-import { addFakeList, removeFakeList, updateFakeList, queryUseRecords, useOut, useIn ,queryInfo, firstCheck, secondCheck } from '../services/useRecords';
+import { addFakeList, removeFakeList, updateFakeList, queryUseRecords, useOut, useIn ,queryInfo, queryUseRecordsOut } from '../services/useRecords';
 import { message } from 'antd';
 import { router } from 'umi';
 import { ConsoleSqlOutlined } from '@ant-design/icons';
@@ -28,23 +28,26 @@ const Model = {
     },
   },
   effects: {
-    *fetch({ payload }, { call, put, select }) {
+    *fetch({ payload }, { call, put }) {
       const response = yield call(queryUseRecords, payload);
-//      const status = yield select(state => state.status);
       yield put({
         type: 'setData',
         payload: {
           list: response.data.useRecords.list,
           total: response.data.useRecords.total,
-          // page: payload.page,
-          // status: payload.status
         }
       });
+    },
 
-      // yield put({
-      //   type: 'queryList',
-      //   payload: Array.isArray(response) ? response : [],
-      // });
+    *fetchOut({ payload }, { call, put }) {
+      const response = yield call(queryUseRecordsOut, payload);
+      yield put({
+        type: 'setData',
+        payload: {
+          list: response.data.useRecords.list,
+          total: response.data.useRecords.total,
+        }
+      });
     },
 
     *useOut({ payload }, { call }) {

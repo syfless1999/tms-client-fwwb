@@ -21,7 +21,6 @@ class UseIn extends Component {
   state = {
     page: 1,
     pageSize: 5,
-    status: 1,
   };
 
   formLayout = {
@@ -37,30 +36,28 @@ class UseIn extends Component {
 
   componentDidMount() {
     const { dispatch } = this.props;
-    const { page, pageSize, status } = this.state;
+    const { page, pageSize } = this.state;
     const payload = {
       page,
       pageSize,
-      status
     }
     dispatch({
-      type: 'useRecords/fetch',
+      type: 'useRecords/fetchOut',
       payload
     });
   }
 
   componentDidUpdate(prevProps, prevState) {
     const { dispatch } = this.props;
-    const { page, pageSize, status } = this.state;
-    const { page: prevPage, pageSize: prevPageSize, status: prevStatus } = prevState;
-    if (page !== prevPage || pageSize !== prevPageSize || status !== prevStatus) {
+    const { page, pageSize } = this.state;
+    const { page: prevPage, pageSize: prevPageSize} = prevState;
+    if (page !== prevPage || pageSize !== prevPageSize) {
       const payload = {
         page,
         pageSize,
-        status
       }
       dispatch({
-        type: 'useRecords/fetch',
+        type: 'useRecords/fetchOut',
         payload
       });
     }
@@ -72,7 +69,7 @@ class UseIn extends Component {
 
   InItem = currentItem => {
     const { dispatch } = this.props;
-    const { tool , staff ,time, productLine , location } = currentItem;
+    const { tool , staff , productLine , location } = currentItem;
     dispatch({
       type: 'useRecords/useIn',
       payload: {
@@ -80,13 +77,16 @@ class UseIn extends Component {
         productLineId : productLine.no,
         locationId: location.id,
         toolId : tool.id,
-        time,
+        time: new moment(new Date()).format('YYYY-MM-DD hh:mm:ss'),
         status : 0
       },
     }).then(res => {
       if (res && res.status === "success") {
         message.success("入库成功");
         router.replace(`/useRecords/${res.data.useRecord.id}`)
+      }
+      else {
+        message.success("入库请求失败");
       }
     });;
   };

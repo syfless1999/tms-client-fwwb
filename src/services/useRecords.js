@@ -8,6 +8,13 @@ export async function queryUseRecords(params) {
   });
 }
 
+export async function queryUseRecordsOut(params) {
+  return request('/api/useRecords/out', {
+    method: 'GET',
+    params,
+  });
+}
+
 export async function useOut(params) {
   return request('/api/useRecords', {
     method: 'POST',
