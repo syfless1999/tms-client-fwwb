@@ -12,7 +12,7 @@ const FormItem = Form.Item;
 const { Paragraph } = Typography;
 
 
-// const getKey = (id, index) => `${id}-${index}`;
+
 
 const Repairs = ({ dispatch, repairs: { list = [], total }, loading }) => {
 

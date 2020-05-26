@@ -51,7 +51,7 @@ const action = (status, click) => (
 
 
 const judgeDisabled = (compareA, status) => {
-    return (compareAuthority(compareA) < 0) || status !== '已提交未处理';
+    return (compareAuthority(compareA) < 0) || status != '已提交未处理';
 }
 
 
@@ -149,12 +149,11 @@ class $id extends Component {
     render() {
         const { repairs } = this.props;
         const info = repairs.info;
-
         if (info.tool.tDef.name) {
             return (
                 <PageHeaderWrapper
                     title="报修详细信息"
-                    extra={action(info.tool.status.name, this.repairConfirm)}
+                    extra={action(info.status.name, this.repairConfirm)}
                     className={styles.pageHeader}
                     extraContent={extra(info.tool.status.name)}
                     content={description(info.subPerson.name, info.tool.tDef.name, info.subTime, info.id)}
