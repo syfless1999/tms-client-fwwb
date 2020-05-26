@@ -47,7 +47,7 @@ class RepairAppend extends Component {
         }
       }).then(res => res.json()).then((res) => {
         if (res && res.status === 'success') {
-          message.success('添加成功');
+          message.success('报修申请添加成功');
           router.replace(`/repairs/${res.data.repairApp.id}`);
         } else {
           message.success(res.description);
@@ -157,12 +157,12 @@ class RepairAppend extends Component {
                 rules: [
                   {
                     required: true,
-                    message: "请输入夹具代码"
+                    message: "请输入夹具ID"
                   },
                 ],
               })(
                 <Input
-                  placeholder='例如：EF2189'
+                  placeholder='例如：21'
                 />,
               )}
             </FormItem>
