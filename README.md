@@ -10,11 +10,13 @@ Install `node_modules`:
 npm install
 ```
 
-or
+(too slow you can use cpm, surf the internet how to get cpm)
 
-```bash
-yarn
+```powershell
+cnpm install
 ```
+
+
 
 ## Run Project
 
@@ -24,11 +26,7 @@ Run project with these command :
 npm run start
 ```
 
-or
 
-```sh
-yarn start
-```
 
 Login with ID following authorities
 
