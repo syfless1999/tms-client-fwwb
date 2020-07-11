@@ -135,7 +135,7 @@ class Login extends Component {
                             name="username"
                             placeholder={`${formatMessage({
                                 id: 'user-login.login.userName',
-                            })}: 1230936`}
+                            })}: 2017303092`}
                             rules={[
                                 {
                                     required: true,
@@ -150,7 +150,7 @@ class Login extends Component {
                             name="password"
                             placeholder={`${formatMessage({
                                 id: 'user-login.login.password',
-                            })}: 123`}
+                            })}: 123456`}
                             rules={[
                                 {
                                     required: true,

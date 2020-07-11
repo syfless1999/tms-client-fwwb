@@ -97,7 +97,7 @@ class ChangePwd extends Component {
                   //   validator: this.CheckOldPwd,
                   // },
                 ],
-              })(<Input />)}
+              })(<Input.Password />)}
             </Form.Item>
 
             <Form.Item label="新密码" hasFeedback>

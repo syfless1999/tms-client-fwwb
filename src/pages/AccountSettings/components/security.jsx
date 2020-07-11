@@ -90,7 +90,7 @@ class SecurityView extends Component {
           id: 'accountsettings.security.email-description',
         },
         {},
-      )}：ant***sign.com`,
+      )}：****.com`,
       actions: [
         <a key="changeEmail"
           onClick={e => {

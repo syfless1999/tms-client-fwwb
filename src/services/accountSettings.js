@@ -1,7 +1,7 @@
 import request from './request';
 
 export async function queryCurrent() {
-  return request('/api/currentUser');
+  return request('/api/users/currentUser');
 }
 export async function queryProvince() {
   return request('/api/geographic/province');
