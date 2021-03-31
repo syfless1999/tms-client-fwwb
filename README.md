@@ -30,7 +30,7 @@ win the second prize of 2020 China Students Service Outsourcing Innovation and E
 
 ## Environment Prepare
 
-run project also need this [server](https://gitee.com/ozj127), and this is only a client.
+run project also need this [server](https://gitee.com/twilightsxy/TMS), and this is only a client.
 
 This client project is initialized with [Ant Design Pro](https://pro.ant.design). Follow is the quick guide for how to use.
 
