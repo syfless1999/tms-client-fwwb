@@ -157,12 +157,6 @@ const routes = [
                         component: './AccountSettings',
                     },
                     {
-                        name: 'accountcenter',
-                        icon: 'smile',
-                        path: '/accountcenter',
-                        component: './AccountCenter',
-                    },
-                    {
                         name: 'changetdefs',
                         icon: 'arrow-right',
                         path: '/changetdefs',
